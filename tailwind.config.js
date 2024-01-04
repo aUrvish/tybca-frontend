@@ -5,15 +5,15 @@ module.exports = {
   darkMode: true, // or 'media' or 'class'
   theme: {
     extend: {
-      colors : {
-        "primary" : "#ff6347",
-        "primary-200" : "#ff634733",
-        "primary-100" : "#ff63471a"
+      colors: {
+        "primary": "#ff6347",
+        "primary-50": "#ff634715",
+        "primary-200": "#ff634733",
+        "primary-100": "#ff63471a"
       }
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
 }
