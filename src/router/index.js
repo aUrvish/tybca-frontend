@@ -16,7 +16,12 @@ const router = createRouter({
           path : '',
           name : 'App',
           component : () => import('@/views/App/overview/index.vue'),
-        }
+        },
+        {
+          path : 'payment',
+          name : 'Payment',
+          component : () => import('@/views/App/payment/index.vue'),
+        },
       ]
     },
   ]

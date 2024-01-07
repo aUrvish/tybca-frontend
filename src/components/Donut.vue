@@ -77,10 +77,10 @@ const series = ref([{
     <div class="w-full bg-white rounded-lg border pt-4 px-4 md:px-4 md:pt-3.5">
         <div class="flex justify-between">
             <div>
-                <h5 class="leading-none text-3xl font-bold text-gray-900 pb-2">99.99%</h5>
-                <p class="text-base font-normal text-gray-500">Performance</p>
+                <h5 class="leading-none sm:text-3xl text-2xl font-bold pb-2">99.99%</h5>
+                <p class="text-base font-normal">Performance</p>
             </div>
-            <div class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500 text-center">
+            <div class="flex items-center px-2.5 py-0.5 sm:text-base text-[13px] font-semibold text-green-500 text-center">
                 12%
                 <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 14">

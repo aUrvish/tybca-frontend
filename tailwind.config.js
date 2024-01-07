@@ -10,6 +10,10 @@ module.exports = {
         "primary-50": "#ff634715",
         "primary-200": "#ff634733",
         "primary-100": "#ff63471a"
+      },
+      screens : {
+        '5xl' : '1694px',
+        '2lg' : '1152px',
       }
     },
   },
