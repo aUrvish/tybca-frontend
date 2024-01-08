@@ -5,7 +5,7 @@ import Table from '@/components/Table.vue';
 <template>
     <div class="grid gap-4 grid-cols-4 overflow-hidden">
         <div class="col-start-1 xl:col-span-3 col-span-4">
-            <div class="border rounded-md min-h-[150px] p-4 flex justify-between">
+            <div class="border rounded-md min-h-[200px] p-4 flex justify-between">
                 <div class="border h-fit p-1 aspect-square grid place-items-center rounded-md" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" class="w-10" viewBox="0 0 576 512">
                         <path
@@ -13,8 +13,8 @@ import Table from '@/components/Table.vue';
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-[24px] font-bold" >₹500.00</h2>
-                    <p class="text-center font-semibold" >Total Profit</p>
+                    <h2 class="sm:text-[30px] text-[18px] font-bold" >₹500.00</h2>
+                    <p class="text-center text-base text-[14px] font-semibold" >Total Profit</p>
                 </div>
             </div>
 
