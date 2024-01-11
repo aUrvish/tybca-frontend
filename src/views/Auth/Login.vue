@@ -28,12 +28,12 @@ import Btn from '@/components/Btn.vue'
               <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
             </div>
           </div>
-          <RouterLink to="#" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</RouterLink>
+          <RouterLink to="#" class="text-sm font-medium hover:underline">Forgot password?</RouterLink>
         </div>
 
 
         <div class="mt-7">
-          <Btn type="submit" class="w-full text-white bg-primary hover:bg-primary font-medium rounded-md text-sm px-5 py-2.5 text-center">
+          <Btn type="submit" class="w-full text-white bg-gray-950 font-medium rounded-md text-sm px-5 py-2.5 text-center">
             Sign In
           </Btn>
         </div>

@@ -25,7 +25,7 @@ import Table from '@/components/Table.vue';
                             Notifications
                         </div>
                         <div class="border-y">
-                            <a href="#" class="flex py-3 px-4 hover:bg-primary-100" v-for="i in 7" :key="i">
+                            <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="i in 7" :key="i">
                                 <div class="flex-shrink-0">
                                     <img class="w-11 h-11 rounded-full"
                                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
@@ -36,7 +36,7 @@ import Table from '@/components/Table.vue';
                                         New message from Bonnie Green "Hey,
                                         what's up? All set for the presentation?"
                                     </div>
-                                    <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
+                                    <div class="text-xs font-medium">
                                         a few moments ago
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@ import Table from '@/components/Table.vue';
                     Notifications
                 </div>
                 <div class="border-y">
-                    <a href="#" class="flex py-3 px-4 hover:bg-primary-100" v-for="i in 7" :key="i">
+                    <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="i in 7" :key="i">
                         <div class="flex-shrink-0">
                             <img class="w-11 h-11 rounded-full"
                                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
@@ -80,7 +80,7 @@ import Table from '@/components/Table.vue';
                                 New message from Bonnie Green "Hey,
                                 what's up? All set for the presentation?"
                             </div>
-                            <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
+                            <div class="text-xs font-medium">
                                 a few moments ago
                             </div>
                         </div>

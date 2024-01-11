@@ -17,7 +17,7 @@ const isShowUserMenu = ref(false);
     <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 fixed left-0 right-0 top-0 z-50">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
-                <button class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-primary-100">
+                <button class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100">
                     <img src="@/assets/svgs/menu.svg" class="w-6 h-6" alt="menu">
                     <img src="@/assets/svgs/close.svg" class="w-6 h-6 hidden" alt="close">
                 </button>
@@ -28,26 +28,26 @@ const isShowUserMenu = ref(false);
             <div class="flex items-center lg:order-2">
                 <!-- github -->
                 <a href="https://github.com/aUrvish/tybca-frontend"
-                    class="p-2 mr-1 rounded-full border hover:bg-primary-100">
+                    class="p-2 mr-1 rounded-full border hover:bg-gray-100">
                     <img src="@/assets/svgs/github.svg" class="w-5 h-5" alt="github">
                 </a>
 
                 <!-- Notifications -->
-                <button type="button" class="p-2 mx-1 rounded-full border hover:bg-primary-100 relative" @click="isShowNotification =! isShowNotification" v-click-outside="() => isShowNotification = false">
+                <button type="button" class="p-2 mx-1 rounded-full border hover:bg-gray-100 relative" @click="isShowNotification =! isShowNotification" v-click-outside="() => isShowNotification = false">
                     <!-- Bell icon -->
                     <img src="../assets/svgs/bell.svg" class="w-5 h-5" alt="bell">
                     <div class="w-2 aspect-square rounded-full bg-red-500 absolute right-0" ></div>
                 </button>
 
                 <!-- Dropdown menu -->
-                <div class="overflow-hidden absolute top-full sm:right-5 right-1 z-50 my-4 max-w-sm text-base list-none bg-white rounded-md divide-y divide-primary-100 border dark:divide-gray-600 dark:bg-gray-700" :class="isShowNotification ? '' : 'hidden'"
+                <div class="overflow-hidden absolute top-full sm:right-5 right-1 z-50 my-4 max-w-sm text-base list-none bg-white rounded-md border" :class="isShowNotification ? '' : 'hidden'"
                     id="notification-dropdown">
                     <div
                         class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
                         Notifications
                     </div>
                     <div class="border-y">
-                        <a href="#" class="flex py-3 px-4 hover:bg-primary-100">
+                        <a href="#" class="flex py-3 px-4 hover:bg-gray-100">
                             <div class="flex-shrink-0">
                                 <img class="w-11 h-11 rounded-full"
                                     src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
@@ -58,14 +58,14 @@ const isShowUserMenu = ref(false);
                                     New message from Bonnie Green "Hey,
                                     what's up? All set for the presentation?"
                                 </div>
-                                <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
+                                <div class="text-xs font-medium">
                                     a few moments ago
                                 </div>
                             </div>
                         </a>
                     </div>
                     <a href="#"
-                        class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-primary-100">
+                        class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 dark:text-gray-400"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@ const isShowUserMenu = ref(false);
                 </button>
 
                 <!-- Dropdown menu -->
-                <div class="absolute top-full right-5 z-50 my-4 w-56 text-base list-none bg-white divide-y divide-primary-100 border rounded-md" :class="isShowUserMenu ? '' : 'hidden'"
+                <div class="absolute top-full right-5 z-50 my-4 w-56 text-base list-none bg-white divide-y border rounded-md" :class="isShowUserMenu ? '' : 'hidden'"
                     id="dropdown">
                     <div class="py-3 px-4">
                         <span class="block text-sm font-semibold text-gray-900 dark:text-white">Neil Sims</span>
@@ -97,19 +97,19 @@ const isShowUserMenu = ref(false);
                     <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
                         <li>
                             <a href="#"
-                                class="block py-2 px-4 text-sm hover:bg-primary-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">My
+                                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">My
                                 profile</a>
                         </li>
                         <li>
                             <a href="#"
-                                class="block py-2 px-4 text-sm hover:bg-primary-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Account
+                                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Account
                                 settings</a>
                         </li>
                     </ul>
                     <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
                         <li>
                             <a href="#"
-                                class="block py-2 px-4 text-sm hover:bg-primary-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
+                                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
                                 out</a>
                         </li>
                     </ul>
