@@ -5,7 +5,7 @@ import Table from '@/components/Table.vue';
 <template>
     <div class="grid gap-4 grid-cols-4 overflow-hidden">
         <div class="col-start-1 xl:col-span-3 col-span-4">
-            <div class="border rounded-md min-h-[200px] p-4 flex justify-between">
+            <div class="border rounded-md min-h-[200px] bg-white p-4 flex justify-between">
                 <div class="border h-fit p-1 aspect-square grid place-items-center rounded-md" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" class="w-10" viewBox="0 0 576 512">
                         <path
