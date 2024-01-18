@@ -1,7 +1,17 @@
+<script setup>
+
+const props = defineProps(
+    {
+        isShow : {
+            default : false
+        }
+    }
+)
+</script>
+
 <template>
     <aside
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-        aria-label="Sidenav" id="drawer-navigation">
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform  bg-white border-r border-gray-200 lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700" :class="isShow ? 'translate-x-0' : '-translate-x-full'">
         <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
             <ul class="space-y-2">
                 <li>
@@ -71,7 +81,7 @@
             </ul>
 
         </div>
-        <div class="hidden absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-white z-20">
+        <div class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex hidden bg-white z-20">
             <ul class="w-full">
                 <li>
                     <a href="#"
@@ -91,10 +101,10 @@
 
 <style scoped>
 .router-link-exact-active {
-    @apply bg-gray-100
+    @apply bg-[#00adfd] text-white
 }
 
 .router-link-exact-active svg {
-    @apply fill-gray-950
+    @apply fill-white
 }
 </style>
