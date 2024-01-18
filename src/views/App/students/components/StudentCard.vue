@@ -1,7 +1,7 @@
 <template>
     <RouterLink :to="{ name : 'Profile' }" >
         <div
-            class="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto border rounded-md hover:shadow-lg cursor-pointer group">
+            class="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto border rounded-md hover:shadow-lg cursor-pointer group bg-white">
             <div class="rounded-t-lg h-32 overflow-hidden">
                 <img class="object-cover object-bottom w-full" src='@/assets/images/back-img4.jpg' alt='Mountain'>
             </div>

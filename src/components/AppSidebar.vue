@@ -81,7 +81,7 @@ const props = defineProps(
             </ul>
 
         </div>
-        <div class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full flex bg-white z-20">
+        <div class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex hidden bg-white z-20">
             <ul class="w-full">
                 <li>
                     <a href="#"

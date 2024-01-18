@@ -5,7 +5,7 @@ import Btn from '@/components/Btn.vue';
 
 <template>
     <div class="min-h-[320px] -mx-4 -mt-6 profile-thubnil md:p-10 px-4 pt-10 bg-no-repeat object-cover bg-center bg-cover">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between flex-wrap gap-4 items-start">
             <div class="flex items-center">
 
                 <div class="w-20 border-[3px] rounded-full overflow-hidden border-white aspect-square">
@@ -17,16 +17,44 @@ import Btn from '@/components/Btn.vue';
                     <p class="text-white font-normal text-lg underline">#12345678</p>
                 </div>
             </div>
-            <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" height="20" class="fill-current text-green-400" width="14"
-                    viewBox="0 0 320 512">
-                    <path
-                        d="M318 177.5c3.8-8.8 2-19-4.6-26l-136-144C172.9 2.7 166.6 0 160 0s-12.9 2.7-17.4 7.5l-136 144c-6.6 7-8.4 17.2-4.6 26S14.4 192 24 192H96l0 288c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32l0-288h72c9.6 0 18.2-5.7 22-14.5z" />
-                </svg>
-                <p class="text-white font-bold ml-2 text-xl">12%</p>
+            <div class="md:flex hidden items-center gap-x-5">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" class="fill-current text-green-400" width="14"
+                        viewBox="0 0 320 512">
+                        <path
+                            d="M318 177.5c3.8-8.8 2-19-4.6-26l-136-144C172.9 2.7 166.6 0 160 0s-12.9 2.7-17.4 7.5l-136 144c-6.6 7-8.4 17.2-4.6 26S14.4 192 24 192H96l0 288c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32l0-288h72c9.6 0 18.2-5.7 22-14.5z" />
+                    </svg>
+                    <p class="text-white font-bold ml-2 text-xl">12%</p>
+                </div>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" class="fill-current text-primary" width="20"
+                        viewBox="0 0 512 512">
+                        <path
+                            d="M453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-52.1 52.1 0 0-1-1 0 0-16-16-96-96-17-17 52.1-52.1c25-25 65.5-25 90.5 0zM241 114.9c-9.4-9.4-24.6-9.4-33.9 0L105 217c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L173.1 81c28.1-28.1 73.7-28.1 101.8 0L288 94.1l17 17 96 96 16 16 1 1-17 17L229.5 412.5c-48 48-109.2 80.8-175.8 94.1l-25 5c-7.9 1.6-16-.9-21.7-6.6s-8.1-13.8-6.6-21.7l5-25c13.3-66.6 46.1-127.8 94.1-175.8L254.1 128 241 114.9z" />
+                    </svg>
+                    <p class="text-white font-bold ml-2 text-xl">5</p>
+                </div>
             </div>
         </div>
-        <div class=" flex justify-end mt-20">
+        <div class=" flex md:justify-end justify-between mt-24 ">
+            <div class="md:hidden items-center gap-x-5 flex">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" class="fill-current text-green-400" width="14"
+                        viewBox="0 0 320 512">
+                        <path
+                            d="M318 177.5c3.8-8.8 2-19-4.6-26l-136-144C172.9 2.7 166.6 0 160 0s-12.9 2.7-17.4 7.5l-136 144c-6.6 7-8.4 17.2-4.6 26S14.4 192 24 192H96l0 288c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32l0-288h72c9.6 0 18.2-5.7 22-14.5z" />
+                    </svg>
+                    <p class="text-white font-bold ml-2 text-xl">12%</p>
+                </div>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" class="fill-current text-primary" width="20"
+                        viewBox="0 0 512 512">
+                        <path
+                            d="M453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-52.1 52.1 0 0-1-1 0 0-16-16-96-96-17-17 52.1-52.1c25-25 65.5-25 90.5 0zM241 114.9c-9.4-9.4-24.6-9.4-33.9 0L105 217c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L173.1 81c28.1-28.1 73.7-28.1 101.8 0L288 94.1l17 17 96 96 16 16 1 1-17 17L229.5 412.5c-48 48-109.2 80.8-175.8 94.1l-25 5c-7.9 1.6-16-.9-21.7-6.6s-8.1-13.8-6.6-21.7l5-25c13.3-66.6 46.1-127.8 94.1-175.8L254.1 128 241 114.9z" />
+                    </svg>
+                    <p class="text-white font-bold ml-2 text-xl">5</p>
+                </div>
+            </div>
             <Btn class="text-white bg-green-400 font-medium rounded-md text-base flex items-center px-4 py-1.5 text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" class="fill-white" width="16" viewBox="0 0 512 512">
                     <path
@@ -36,12 +64,65 @@ import Btn from '@/components/Btn.vue';
             </Btn>
         </div>
     </div>
-    <div class="px-6 -mt-10">
-        <div class="grid grid-cols-4 gap-6">
+    <div class="md:px-6 -mt-10">
+        <div class="grid 5xl:grid-cols-4 3lg:grid-cols-3 lg:grid-cols-1 2md:grid-cols-2 grid-cols-1 gap-4">
             <div>
                 <Donut class="rounded-sm" />
+
+                <div class="p-4 border rounded-sm my-4 bg-white">
+                    <h5 class="text-lg font-semibold mb-4">Info</h5>
+                    <div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <p class="font-semibold">Full Name :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">Nitesh N Nageshri</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 my-2">
+                            <p class="font-semibold">Mobile :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">+91 85865 86969</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <p class="font-semibold">E-mail :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">nitesh@gmail.com</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 my-2">
+                            <p class="font-semibold">Location :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">Mumbai, India</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <p class="font-semibold">Join :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">24 Nov 2021</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 border rounded-sm my-4 bg-white">
+                    <h5 class="text-lg font-semibold mb-4">Course</h5>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <p
+                            class="px-3 py-1.5 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC]">
+                            Data Science</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#1F75F71A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#1F75F7]">
+                            Big Data</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#FD3C3C1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FD3C3C]">
+                            Artificial Intelligence</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#11CD0E1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#11CD0E]">
+                            Cloud Computing</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#00BFFB1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#00BFFB]">
+                            Project Management</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#0AE1A11A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#0AE1A1]">
+                            Networking</p>
+                        <p
+                            class="px-3 py-1.5 bg-[#FF94321A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FF9432]">
+                            Software Development</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-start-2 col-end-5">
+            <div class="3lg:col-start-2 3lg:col-end-5">
                 <div class="bg-white rounded-sm p-10 pt-5 border">
                     <h1 class="mb-10 text-lg font-bold">Activity</h1>
                     <ol class="relative border-s border-gray-200 dark:border-gray-700">
@@ -91,6 +172,40 @@ import Btn from '@/components/Btn.vue';
                                 components are first designed in Figma and we keep a parity between the two versions even as
                                 we update the project.</p>
                         </li>
+                        <li class="mb-10 ms-6">
+                            <span
+                                class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+                                <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </span>
+                            <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">Flowbite Figma v1.3.0</h3>
+                            <time
+                                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released
+                                on December 7th, 2021</time>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">All of the pages and
+                                components are first designed in Figma and we keep a parity between the two versions even as
+                                we update the project.</p>
+                        </li>
+                        <li class="mb-10 ms-6">
+                            <span
+                                class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+                                <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </span>
+                            <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">Flowbite Figma v1.3.0</h3>
+                            <time
+                                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released
+                                on December 7th, 2021</time>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">All of the pages and
+                                components are first designed in Figma and we keep a parity between the two versions even as
+                                we update the project.</p>
+                        </li>
                         <li class="ms-6">
                             <span
                                 class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
@@ -115,16 +230,15 @@ import Btn from '@/components/Btn.vue';
 
                 <Btn
                     class="text-white bg-red-400 font-medium rounded-md text-base mt-5 flex items-center px-4 py-1.5 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="16" class="fill-white" width="14" viewBox="0 0 448 512">
-                        <path
-                            d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                    </svg>
-                    <p class="ml-2"> Remove </p>
-                </Btn>
-            </div>
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" class="fill-white" width="14" viewBox="0 0 448 512">
+                    <path
+                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                </svg>
+                <p class="ml-2"> Remove </p>
+            </Btn>
         </div>
     </div>
-</template>
+</div></template>
 
 <style scoped>.profile-thubnil {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://cdn.pixabay.com/photo/2024/01/07/10/59/mountains-8492823_1280.jpg');

@@ -18,7 +18,7 @@ const isShowSidebar = ref(false);
     <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 fixed left-0 right-0 top-0 z-50">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
-                <button class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100" @click="isShowSidebar =! isShowSidebar , $emit('showSidebar' , isShowSidebar)">
+                <button class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100" @click="isShowSidebar =! isShowSidebar , $emit('showSidebar' , isShowSidebar)" v-click-outside="() => isShowSidebar = false , $emit('showSidebar' , isShowSidebar)">
                     <img src="@/assets/svgs/menu.svg" class="w-6 h-6" :class="isShowSidebar ? 'hidden' : ''" alt="menu">
                     <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'" alt="close">
                 </button>
