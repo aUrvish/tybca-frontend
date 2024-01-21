@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
 body,
 html,
 #app {
@@ -21,6 +26,10 @@ html,
 
 .left-right {
     transform-origin: 0% 50%;
+}
+
+.group-option:hover > .group-option-svg {
+    visibility: visible !important;
 }
 
 @keyframes progress {

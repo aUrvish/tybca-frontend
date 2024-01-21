@@ -28,6 +28,11 @@ const router = createRouter({
           component : () => import('@/views/App/students/index.vue'),
         },
         {
+          path : 'quiz/details',
+          name : 'QuizDetails',
+          component : () => import('@/views/App/quiz/Details.vue'),
+        },
+        {
           path : 'profile',
           name : 'Profile',
           component : () => import('@/views/App/profile/index.vue'),
