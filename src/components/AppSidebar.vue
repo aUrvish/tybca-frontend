@@ -40,7 +40,7 @@ const props = defineProps(
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink to="/abc"
+                    <RouterLink :to="{ name : 'QuizDetails' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 text-gray-500 group-hover:text-gray transition duration-75"
