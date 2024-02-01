@@ -14,7 +14,7 @@ import Table from '@/components/Table.vue';
                 </div>
                 <div>
                     <h2 class="sm:text-[30px] text-[18px] font-bold" >₹500.00</h2>
-                    <p class="text-center text-base text-[14px] font-semibold" >Total Profit</p>
+                    <p class="text-center text-base text-[14px] font-semibold" >Total payment</p>
                 </div>
             </div>
 

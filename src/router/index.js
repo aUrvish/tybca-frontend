@@ -33,6 +33,16 @@ const router = createRouter({
           component : () => import('@/views/App/quiz/Details.vue'),
         },
         {
+          path : 'certificate',
+          name : 'certificateList',
+          component : () => import('@/views/App/certificate/index.vue'),
+        },
+        {
+          path : 'certificate/add',
+          name : 'certificateAdd',
+          component : () => import('@/views/App/certificate/Add.vue'),
+        },
+        {
           path : 'profile',
           name : 'Profile',
           component : () => import('@/views/App/profile/index.vue'),
