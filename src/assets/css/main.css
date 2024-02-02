@@ -32,6 +32,14 @@ html,
     visibility: visible !important;
 }
 
+.tox-tinymce {
+    height: 1000px !important;
+}
+
+.tox-statusbar__branding {
+    display: none;
+}
+
 @keyframes progress {
     0% {
         transform: translateX(0) scaleX(0);

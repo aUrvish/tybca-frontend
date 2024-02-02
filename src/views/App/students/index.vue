@@ -5,9 +5,9 @@ import Btn from '@/components/Btn.vue';
 <template>
     <div>
         <div class="flex justify-between items-center">
-            <h1 class="text-[24px] font-semibold">Students List</h1>
+            <h1 class="text-[24px] font-semibold">Users List</h1>
             <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-5 py-2.5 text-center">
-                Add Students
+                Add Users
             </Btn>
         </div>
         <div class="pt-10 flex justify-end items-center">

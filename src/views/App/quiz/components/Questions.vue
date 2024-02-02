@@ -7,9 +7,16 @@ const dropItem = ref(['options', 'dropdown', 'checkboxes'])
 const questions = ref(
     [
         {
+            defaultIndex: 0,
+            dragIndex: 0,
             title: 'Multiple Choice Question',
             type: 'options',
-            option: ['Option'],
+            option: [
+                {
+                    name: 'Option',
+                    isCorrect: false
+                }
+            ],
             isRequire: false,
         },
     ]
@@ -26,7 +33,10 @@ const setDropdownItem = (index, value) => {
 }
 
 const addOption = (index) => {
-    questions.value[index].option.push('Option');
+    questions.value[index].option.push({
+        name: 'Option',
+        isCorrect: false
+    });
 }
 
 const removeOption = (queIndex, optIndex) => {
@@ -35,9 +45,16 @@ const removeOption = (queIndex, optIndex) => {
 
 const addQuestion = () => {
     questions.value.push({
+        defaultIndex: questions.value.length,
+        dragIndex: questions.value.length,
         title: 'Multiple Choice Question',
         type: 'options',
-        option: ['Option'],
+        option: [
+            {
+                name: 'Option',
+                isCorrect: false
+            }
+        ],
         isRequire: false,
     })
 }
@@ -45,14 +62,23 @@ const addQuestion = () => {
 const removeQuestion = (index) => {
     questions.value.splice(index, 1);
 }
+
+const isCorrectOption = (queIndex, optIndex) => {
+    questions.value[queIndex].option[optIndex].isCorrect = !questions.value[queIndex].option[optIndex].isCorrect
+}
+
+const chandeDragIndex = (e) => {
+    questions.value[e.newIndex].dragIndex = e.newIndex
+    questions.value[e.oldIndex].dragIndex = e.oldIndex
+}
 </script>
 
 <template>
     <div class="max-w-screen-lg mx-auto">
-        <VueDraggableNext tag="div">
+        <VueDraggableNext tag="div" v-model="questions" @end="chandeDragIndex">
             <div class="px-10 mb-4 relative" v-for="(que, index) in questions" :key="index">
                 <div class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
-                    <p class="absolute left-0 text-[32px] font-bold text-primary -translate-x-1/2">{{ index + 1 }}</p>
+                    <p class="absolute left-0 text-[32px] font-bold text-primary -translate-x-1/2">{{ que.defaultIndex + 1 }}</p>
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="max-w-6 fill-gray-400 absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 invisible group-hover:visible"
                         viewBox="0 0 448 512">
@@ -69,7 +95,8 @@ const removeQuestion = (index) => {
                             <div class="flex justify-between items-center cursor-pointer border py-1.5 px-3 rounded-md"
                                 @click="dropdownToggle(index)" v-click-outside="() => dropdownClose(index)">
                                 <h5 class="capitalize">{{ que.type }}</h5>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5" viewBox="0 0 320 512">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 fill-gray-400"
+                                    viewBox="0 0 320 512">
                                     <path
                                         d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
                                 </svg>
@@ -87,15 +114,23 @@ const removeQuestion = (index) => {
 
                     <div class="grid grid-cols-2 gap-5 mt-10">
                         <div class="flex items-center justify-between border rounded-md py-3 px-4 group-option"
-                            v-for="(option, ind) in que.option" :key="ind">
+                            v-for="(option, ind) in que.option" :key="ind"
+                            :class="option.isCorrect ? 'border-green-400' : ''">
                             <div class="grow items-center flex">
                                 <input :name="`que${index}`" type="radio" class="w-4 h-4" v-if="que.type == 'options'"
                                     :checked="ind == 0" disabled>
                                 <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
                                     v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
                                 <p class="font-semibold text-gray-500" v-else>1.</p>
-                                <input class="ml-3 outline-0" v-model="questions[index].option[ind]">
+                                <input class="ml-3 outline-0" v-model="questions[index].option[ind].name">
                             </div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                class="max-w-4 ml-3 cursor-pointer group-option-svg invisible" :class="questions[index].option[ind].isCorrect
+                                    ? 'fill-green-400' : 'fill-gray-300'" @click="isCorrectOption(index, ind)">
+                                <path
+                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="max-w-4 ml-3 fill-gray-400 cursor-pointer group-option-svg invisible"
