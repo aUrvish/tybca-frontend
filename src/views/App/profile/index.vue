@@ -99,14 +99,14 @@ import Btn from '@/components/Btn.vue';
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
                         <p
-                            class="px-3 py-1.5 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC]">
-                            Data Science</p>
+                        class="px-3 py-1.5 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC]">
+                        Data Science</p>
+                        <p
+                        class="px-3 py-1.5 bg-[#FD3C3C1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FD3C3C]">
+                        Artificial Intelligence</p>
                         <p
                             class="px-3 py-1.5 bg-[#1F75F71A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#1F75F7]">
                             Big Data</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#FD3C3C1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FD3C3C]">
-                            Artificial Intelligence</p>
                         <p
                             class="px-3 py-1.5 bg-[#11CD0E1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#11CD0E]">
                             Cloud Computing</p>

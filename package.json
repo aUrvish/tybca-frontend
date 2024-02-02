@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^5.1.1",
     "apexcharts": "^3.45.1",
     "click-outside-vue3": "^4.0.1",
     "vue": "^3.3.11",

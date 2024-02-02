@@ -28,6 +28,22 @@ const props = defineProps(
                     </RouterLink>
                 </li>
                 <li>
+                    <RouterLink :to="{name : 'noticeList'}"
+                        class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+                            class="w-5 h-5 text-gray-500 group-hover:text-gray transition duration-75" fill="currentColor"
+                            viewBox="0 0 512 512">
+                            <path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/>
+                        </svg>
+                        <span class="ml-3.5 group-hover:text-gray">Notice</span>
+                        <span class="text-sm bg-red-500 px-2 text-white rounded-full ml-auto" >3</span>
+                    </RouterLink>
+                </li>
+               
+            </ul>
+            <ul class="space-y-2 mt-2 border-t pt-2">
+                <li>
                     <RouterLink :to="{ name: 'StudentList' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
 
@@ -41,7 +57,7 @@ const props = defineProps(
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="{ name: 'QuizDetails' }"
+                    <RouterLink :to="{ name: 'QuizList' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 text-gray-500 group-hover:text-gray transition duration-75" fill="currentColor"
@@ -50,21 +66,6 @@ const props = defineProps(
                                 d="M368.4 18.3L312.7 74.1 437.9 199.3l55.7-55.7c21.9-21.9 21.9-57.3 0-79.2L447.6 18.3c-21.9-21.9-57.3-21.9-79.2 0zM288 94.6l-9.2 2.8L134.7 140.6c-19.9 6-35.7 21.2-42.3 41L3.8 445.8c-3.8 11.3-1 23.9 7.3 32.4L164.7 324.7c-3-6.3-4.7-13.3-4.7-20.7c0-26.5 21.5-48 48-48s48 21.5 48 48s-21.5 48-48 48c-7.4 0-14.4-1.7-20.7-4.7L33.7 500.9c8.6 8.3 21.1 11.2 32.4 7.3l264.3-88.6c19.7-6.6 35-22.4 41-42.3l43.2-144.1 2.8-9.2L288 94.6z" />
                         </svg>
                         <span class="ml-3.5 group-hover:text-gray">Quiz</span>
-                    </RouterLink>
-                </li>
-            </ul>
-            <ul class="space-y-2 mt-2 border-t pt-2">
-                <li>
-                    <RouterLink :to="{name : 'certificateList'}"
-                        class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                            class="w-5 h-5 text-gray-500 group-hover:text-gray transition duration-75" fill="currentColor"
-                            viewBox="0 0 512 512">
-                            <path
-                                d="M211 7.3C205 1 196-1.4 187.6 .8s-14.9 8.9-17.1 17.3L154.7 80.6l-62-17.5c-8.4-2.4-17.4 0-23.5 6.1s-8.5 15.1-6.1 23.5l17.5 62L18.1 170.6c-8.4 2.1-15 8.7-17.3 17.1S1 205 7.3 211l46.2 45L7.3 301C1 307-1.4 316 .8 324.4s8.9 14.9 17.3 17.1l62.5 15.8-17.5 62c-2.4 8.4 0 17.4 6.1 23.5s15.1 8.5 23.5 6.1l62-17.5 15.8 62.5c2.1 8.4 8.7 15 17.1 17.3s17.3-.2 23.4-6.4l45-46.2 45 46.2c6.1 6.2 15 8.7 23.4 6.4s14.9-8.9 17.1-17.3l15.8-62.5 62 17.5c8.4 2.4 17.4 0 23.5-6.1s8.5-15.1 6.1-23.5l-17.5-62 62.5-15.8c8.4-2.1 15-8.7 17.3-17.1s-.2-17.4-6.4-23.4l-46.2-45 46.2-45c6.2-6.1 8.7-15 6.4-23.4s-8.9-14.9-17.3-17.1l-62.5-15.8 17.5-62c2.4-8.4 0-17.4-6.1-23.5s-15.1-8.5-23.5-6.1l-62 17.5L341.4 18.1c-2.1-8.4-8.7-15-17.1-17.3S307 1 301 7.3L256 53.5 211 7.3z" />
-                        </svg>
-                        <span class="ml-3.5 group-hover:text-gray">Certificate</span>
                     </RouterLink>
                 </li>
                 <li>

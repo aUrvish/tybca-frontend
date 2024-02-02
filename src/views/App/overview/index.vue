@@ -22,7 +22,7 @@ import Table from '@/components/Table.vue';
                         id="notification-dropdown">
                         <div
                             class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
-                            Notifications
+                            Notice
                         </div>
                         <div class="border-y">
                             <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="i in 7" :key="i">
@@ -66,7 +66,7 @@ import Table from '@/components/Table.vue';
             <div class="overflow-hidden text-base list-none rounded-md border 5xl:block hidden" id="notification-dropdown">
                 <div
                     class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
-                    Notifications
+                    Notice
                 </div>
                 <div class="border-y">
                     <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="i in 7" :key="i">
