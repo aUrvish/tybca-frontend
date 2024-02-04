@@ -1,7 +1,9 @@
 <script setup >
 import Donut from '@/components/Donut.vue'
 import SocialProf from './components/SocialProf.vue';
-import Table from '@/components/Table.vue';
+import QuizTable from './components/QuizTable.vue';
+import UserTable from './components/UserTable.vue';
+import PaymentTable from './components/PaymentTable.vue';
 </script>
 <template>
     <div class="grid gap-4 grid-cols-4 overflow-hidden">
@@ -13,9 +15,9 @@ import Table from '@/components/Table.vue';
                         <Donut />
                         <Donut />
                     </div>
-                    <Table :max="7" />
-                    <Table :max="7" class="5xl:hidden" />
-                    <Table :max="7" class="5xl:hidden" />
+                    <QuizTable :max="7" />
+                    <UserTable :max="7" class="5xl:hidden" />
+                    <PaymentTable :max="7" class="5xl:hidden" />
                 </div>
                 <div class="2lg:block hidden">
                     <div class="overflow-hidden text-base list-none rounded-md border 5xl:hidden xl:block hidden"
@@ -68,7 +70,7 @@ import Table from '@/components/Table.vue';
                     class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
                     Notice
                 </div>
-                <div class="border-y">
+                <div class="border-y last:border-b-0">
                     <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="i in 7" :key="i">
                         <div class="flex-shrink-0">
                             <img class="w-11 h-11 rounded-full"
@@ -105,10 +107,10 @@ import Table from '@/components/Table.vue';
     </div>
     <div class="5xl:grid grid-cols-2 gap-4 hidden">
         <div>
-            <Table :max="7" />
+            <UserTable :max="7" />
         </div>
         <div>
-            <Table :max="7" />
+            <PaymentTable :max="7" />
         </div>
     </div>
 </template>

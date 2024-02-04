@@ -13,7 +13,12 @@ module.exports = {
         "primary": "#00adfd",
         "primary-50": "#00adfd15",
         "primary-200": "#00adfd33",
-        "primary-100": "#00adfd1a"
+        "primary-100": "#00adfd1a",
+        "blue": "#026DEB",
+        "warning": "#ffc107",
+        "warning-100": "#ffc1071a",
+        "success": "#2AC869",
+        "success-100": "#2AC8691a",
       },
       screens : {
         '5xl' : '1694px',
