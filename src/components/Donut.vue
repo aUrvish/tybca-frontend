@@ -5,13 +5,17 @@ const props = defineProps({
     data : {
         default : [
             {
-                time : '2018-09-19',
+                time : 'Today',
+                data : 0
+            },
+            {
+                time : 'Today',
                 data : 0
             }
         ]
     },
     pattern : {
-        default : null
+        default : '%'
     },
     isPrefix : {
         default : false

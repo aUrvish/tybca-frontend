@@ -3,9 +3,19 @@ import { ref ,  computed } from 'vue'
 
 const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
 
-const username = ref('Mandaliya Urvish');
+const username = ref('Admin');
+const isUsernameWordSingle = ref(false)
 
-const nameInit = computed(() => username.value.split(" ")[0].charAt(0).toUpperCase() + username.value.split(" ")[1].charAt(0).toUpperCase())
+const nameInit = computed(() => {
+    let nameArr = username.value.split(" ")
+    console.log(nameArr);
+    if (nameArr.length > 1) {
+        return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
+    }
+
+    isUsernameWordSingle.value = true
+    return username.value.charAt(0).toUpperCase()
+})
 
 const randColorIndex = ref(Math.floor(Math.random() * 19))
 
@@ -85,7 +95,7 @@ const isShowSidebar = ref(false);
                     <!-- <img class="w-9 h-9 rounded-full"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
                         alt="user photo" /> -->
-                    <h1 class="text-white font-bold" >{{ nameInit }}</h1>
+                    <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'" >{{ nameInit }}</h1>
                 </button>
 
                 <!-- Dropdown menu -->

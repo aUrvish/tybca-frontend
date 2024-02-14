@@ -87,7 +87,7 @@ const props = defineProps(
             <ul class="w-full">
                 <li>
                     <a href="#"
-                        class="py-2 px-4 text-base font-medium text-gray-900 rounded-lg transition duration-75 group flex justify-between items-center border border-red-300 bg-red-100">
+                        class="py-2 px-4 text-base font-medium text-gray-900 rounded-lg transition duration-75 group flex justify-between items-center bg-red-100">
                         <span class="text-red-600">Logout</span>
                         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" class="fill-red-600"
                             viewBox="0 0 512 512">
