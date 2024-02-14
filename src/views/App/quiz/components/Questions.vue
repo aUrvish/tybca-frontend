@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-const isDropDownShow = ref([false, false]);
+const isDropDownShow = ref([false]);
 const dropItem = ref(['options', 'dropdown', 'checkboxes'])
 
 const questions = ref(
@@ -26,6 +26,7 @@ const dropdownToggle = (index) => {
     isDropDownShow.value[index] = !isDropDownShow.value[index]
 }
 const dropdownClose = (index) => {
+    console.log("close", index);
     isDropDownShow.value[index] = false
 }
 const setDropdownItem = (index, value) => {
@@ -57,6 +58,8 @@ const addQuestion = () => {
         ],
         isRequire: false,
     })
+
+    isDropDownShow.value.push(false)
 }
 
 const removeQuestion = (index) => {
@@ -95,7 +98,7 @@ const chandeDragIndex = (e) => {
                             <!-- v-click-outside="() => isDropIndex = index" -->
                             <div class="max-w-48 w-full relative select-none">
                                 <div class="flex justify-between items-center cursor-pointer border py-1.5 px-3 rounded-md"
-                                    @click="dropdownToggle(index)" v-click-outside="() => dropdownClose(index)">
+                                    @click="dropdownToggle(que.defaultIndex)" v-click-outside="() => dropdownClose(que.defaultIndex)">
                                     <h5 class="capitalize">{{ que.type }}</h5>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 fill-gray-400"
                                         viewBox="0 0 320 512">
@@ -104,7 +107,7 @@ const chandeDragIndex = (e) => {
                                     </svg>
                                 </div>
                                 <ul class="absolute mt-3 rounded-md bg-white border p-1.5 w-full"
-                                    :class="isDropDownShow[index] ? '' : 'hidden'">
+                                    :class="isDropDownShow[que.defaultIndex] ? '' : 'hidden'">
                                     <li class="py-2 px-3 hover:bg-gray-100 rounded-md cursor-pointer capitalize"
                                         v-for="(item, ind) in dropItem" :key="ind" @click="setDropdownItem(index, item)">{{
                                             item

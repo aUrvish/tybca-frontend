@@ -100,7 +100,7 @@ const hideActionMenu = (index) => {
                                             </svg>
                                         </button>
                                         <div class="absolute z-10 w-44 bg-white border rounded-md divide-y divide-gray-100"
-                                            v-show="isShowActionMenu == i" :class="7 - 3 < i ? 'bottom-full' : 'top-full'">
+                                            v-show="isShowActionMenu == i" :class="10 - 3 < i ? 'bottom-full' : 'top-full'">
                                             <ul class="py-1 text-sm text-gray-700">
                                                 <li>
                                                     <a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a>
