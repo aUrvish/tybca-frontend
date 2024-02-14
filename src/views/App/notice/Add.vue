@@ -13,6 +13,8 @@ const editorInit = ref(
             { value: 'Email', title: 'Email' },
         ]
     })
+
+    const noticeTitle = ref('Notice title')
 </script>
 
 <template>
@@ -20,9 +22,9 @@ const editorInit = ref(
         <h1 class="text-[24px] font-semibold">Notice</h1>
 
         <div class="mt-10 bg-white border rounded-lg p-10 pb-0">
-            <div class="flex justify-between items-center pb-10">
-                <div>
-                    <h2 class="text-[20px] font-semibold">Notice title</h2>
+            <div class="flex justify-between items-center pb-10 gap-8">
+                <div class="grow">
+                    <input type="text" class="text-[20px] font-semibold outline-none w-full" v-model="noticeTitle">
                     <p class="text-gray-400 text-sm">Created at <span class="font-semibold">22 Jan 2024</span> </p>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 cursor-pointer" viewBox="0 0 512 512">
