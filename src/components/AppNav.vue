@@ -44,7 +44,7 @@ const isShowSidebar = ref(false);
                 <div class="overflow-hidden absolute top-full sm:right-5 right-1 z-50 my-4 max-w-sm text-base list-none bg-white rounded-md border" :class="isShowNotification ? '' : 'hidden'"
                     id="notification-dropdown">
                     <div
-                        class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
+                        class="block py-2 px-4 text-base font-medium text-center text-gray-700 dark:bg-gray-600 dark:text-gray-300">
                         Notifications
                     </div>
                     <div class="border-y">
@@ -66,7 +66,7 @@ const isShowSidebar = ref(false);
                         </a>
                     </div>
                     <a href="#"
-                        class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100">
+                        class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 dark:text-gray-400"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
