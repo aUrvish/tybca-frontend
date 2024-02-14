@@ -19,7 +19,7 @@ const questions = ref(
             ],
             isRequire: false,
         }
-    ]
+    ],
 );
 
 const dropdownToggle = (index) => {
