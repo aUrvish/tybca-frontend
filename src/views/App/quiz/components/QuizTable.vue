@@ -29,8 +29,8 @@ const hideActionMenu = (index) => {
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
                     <h1 class="text-[20px] font-bold">Quiz</h1>
-                    <div class="flex items-center gap-4">
-                        <Btn class="bg-black text-white text-sm py-1 px-2 rounded-md">Publish Result</Btn>
+                    <div class="flex items-center sm:gap-4 gap-2">
+                        <Btn class="bg-black text-white sm:text-sm text-[12px] py-1 px-2 rounded-md">Publish Result</Btn>
                         <div class="w-full sm:max-w-[200px] max-w-[150px]">
                             <form class="flex items-center">
                                 <label for="simple-search" class="sr-only">Search</label>
@@ -126,7 +126,7 @@ const hideActionMenu = (index) => {
                     </table>
                 </div>
 
-                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                <nav class="flex justify-between items-center space-y-0 p-4"
                     aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">
                         Showing

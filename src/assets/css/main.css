@@ -28,7 +28,7 @@ html,
     transform-origin: 0% 50%;
 }
 
-.group-option:hover > .group-option-svg {
+.group-option:hover>.group-option-svg {
     visibility: visible !important;
 }
 
@@ -70,4 +70,29 @@ html,
 
 .fade-leave-active {
     position: absolute;
+}
+
+/* srollbar */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 8px;
+}
+
+@media screen and (max-width : 696px) {
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 5px;
+    }
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
 }
