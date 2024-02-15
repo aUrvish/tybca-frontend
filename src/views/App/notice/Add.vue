@@ -11,7 +11,8 @@ const editorInit = ref(
         mergetags_list: [
             { value: 'First.Name', title: 'First Name' },
             { value: 'Email', title: 'Email' },
-        ]
+        ],
+        draggable_modal: true
     })
 
     const noticeTitle = ref('Notice title')

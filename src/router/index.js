@@ -33,6 +33,21 @@ const router = createRouter({
           component : () => import('@/views/App/quiz/index.vue'),
         },
         {
+          path : 'test',
+          name : 'testList',
+          component : () => import('@/views/App/test/index.vue'),
+        },
+        {
+          path : 'certificate',
+          name : 'Certificate',
+          component : () => import('@/views/App/certificate/index.vue'),
+        },
+        {
+          path : 'result',
+          name : 'Result',
+          component : () => import('@/views/App/result/index.vue'),
+        },
+        {
           path : 'quiz/details',
           name : 'QuizDetails',
           component : () => import('@/views/App/quiz/Details.vue'),
@@ -54,7 +69,10 @@ const router = createRouter({
         },
       ]
     },
-  ]
+  ],
+  scrollBehavior() {
+    document.getElementById('app').scrollIntoView();
+}
 })
 
 export default router

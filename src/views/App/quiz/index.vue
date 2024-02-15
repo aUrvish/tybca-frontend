@@ -1,17 +1,16 @@
 <script setup >
-import Donut from '@/components/Donut.vue'
-import Table from '@/components/Table.vue';
 import Btn from '@/components/Btn.vue'
+import QuizTable from './components/QuizTable.vue';
 </script>
 <template>
     <div class="grid gap-4 grid-cols-4 overflow-hidden">
         <div class="col-start-1 xl:col-span-3 col-span-4">
-            <div class="border rounded-md bg-white p-4 flex justify-between">
+            <div class="border rounded-md bg-white p-4 flex items-center justify-between">
                 <h1 class="text-[24px] font-semibold">Quiz</h1>
                 <div>
-                    <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
+                    <RouterLink :to="{ name : 'QuizDetails'}" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
                         Create Quiz
-                    </Btn>
+                    </RouterLink>
                 </div>
             </div>
 
@@ -54,7 +53,7 @@ import Btn from '@/components/Btn.vue'
                     </div>
                 </div>
             </div>
-            <Table :max="10" />
+            <QuizTable :max="10" />
         </div>
         <div class="xl:block hidden">
             <div class="p-4 border rounded-md bg-white">
