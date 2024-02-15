@@ -1,6 +1,7 @@
 <script setup >
 import AppNav from '@/components/AppNav.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
+import AppSkeleton from '@/skeleton/App.vue'
 import { RouterView } from 'vue-router';
 import {onMounted, onUpdated, ref} from "vue" 
 
@@ -20,4 +21,5 @@ const isShowSidebar = ref(false);
             <RouterView/>
         </main>
     </div>
+    <!-- <AppSkeleton/> -->
 </template>

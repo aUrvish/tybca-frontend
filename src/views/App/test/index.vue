@@ -12,10 +12,10 @@ const pad = (n) => {
 
         <div class="mt-10">
             <h2 class="text-[20px] font-semibold">Active Test</h2>
-            <div class="mt-3 grid grid-cols-4 gap-4">
+            <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
                 <div class="group: overflow-hidden group cursor-pointer relative">
                     <router-link to="#">
-                        <div class="w-full bg-white rounded-lg aspect-[5/3] px-4 py-2 flex flex-col">
+                        <div class="w-full bg-white border rounded-lg aspect-[5/3] px-4 py-2 flex flex-col">
                             <div class="w-2 animate-ping aspect-square absolute top-2 right-3 bg-success rounded-full">
                             </div>
                             <p class="text-gray-300 text-sm group-hover:underline font-semibold">#0020</p>
@@ -37,10 +37,10 @@ const pad = (n) => {
 
         <div class="mt-8">
             <h2 class="text-[20px] font-semibold">Pending Test</h2>
-            <div class="mt-3 grid grid-cols-4 gap-4">
+            <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
                 <div v-for="i in 4" class="group: overflow-hidden group cursor-pointer relative">
                     <router-link to="#">
-                        <div class="w-full bg-white rounded-lg aspect-[5/3] px-4 py-2 flex flex-col">
+                        <div class="w-full bg-white rounded-lg aspect-[5/3] px-4 py-2 flex flex-col border">
                             <div class="flex justify-between items-center">
                                 <p class="text-gray-300 text-sm group-hover:underline font-semibold">#0020</p>
 
