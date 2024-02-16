@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 const isDropDownShow = ref([false]);
 const dropItem = ref(['options', 'dropdown', 'checkboxes'])
+const mediaOnTitle = ref(null)
 
 const questions = ref(
     [
@@ -10,14 +11,18 @@ const questions = ref(
             defaultIndex: 0,
             dragIndex: 0,
             title: 'Multiple Choice Question',
+            titleImg: null,
+            blobTitleImg: null,
             type: 'options',
             option: [
                 {
                     name: 'Option',
+                    type: 'text',
                     isCorrect: false
                 }
             ],
             isRequire: false,
+            point : 1
         }
     ],
 );
@@ -57,6 +62,7 @@ const addQuestion = () => {
             }
         ],
         isRequire: false,
+        point : 1
     })
 
     isDropDownShow.value.push(false)
@@ -74,16 +80,30 @@ const chandeDragIndex = (e) => {
     questions.value[e.newIndex].dragIndex = e.newIndex
     questions.value[e.oldIndex].dragIndex = e.oldIndex
 }
+
+const clickOnTitleMedia = (index) => {
+    mediaOnTitle.value[index].click();
+}
+
+const uploadTitleImage = (index, value) => {
+    questions.value[index].titleImg = value.files[0]
+    
+    let url = URL.createObjectURL(value.files[0])
+    questions.value[index].blobTitleImg = url
+}
+
+const cleareTitleImage = (index) => {
+    questions.value[index].titleImg = null
+    questions.value[index].blobTitleImg = null
+}
 </script>
 
 <template>
     <div class="max-w-screen-lg mx-auto">
         <VueDraggableNext v-model="questions" @end="chandeDragIndex" :delay="100">
             <transition-group type="transition" name="fade">
-                <div class="md:px-10 px-0 mb-4 relative" v-for="(que, index) in questions"
-                    :key="que.defaultIndex">
-                    <div
-                        class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
+                <div class="md:px-10 px-0 mb-4 relative" v-for="(que, index) in questions" :key="que.defaultIndex">
+                    <div class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
                         <p
                             class="absolute left-0 top-0 md:text-[32px] text-2xl font-bold text-primary translate-x-4 md:-translate-x-1/4  md:translate-y-1/2 translate-y-1/4 md:block hidden">
                             {{ que.defaultIndex +
@@ -95,14 +115,25 @@ const chandeDragIndex = (e) => {
                                 d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 288zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 160z" />
                         </svg>
                         <div class="flex md:flex-row flex-col justify-between md:items-center gap-4">
-                            <div class="flex items-center gap-4" >
+                            <div class="flex items-center gap-3 grow">
                                 <p class="md:text-[32px] text-2xl font-bold text-primary md:hidden">
                                     {{ que.defaultIndex +
                                         1 }}</p>
-                                <div>
-                                    <input type="text" class="text-lg font-semibold outline-0 w-full"
-                                        v-model="questions[index].title">
-                                    <p class="text-gray-400 text-sm -mt-1">Title</p>
+                                <div class="flex justify-between items-center w-full">
+                                    <div>
+                                        <input type="text" class="md:text-lg font-semibold outline-0 w-full"
+                                            v-model="questions[index].title">
+                                        <p class="text-gray-400 text-sm -mt-1">Title</p>
+                                        <input type="file" class="w-0 h-0 hidden" ref="mediaOnTitle"
+                                            @change="(e) => uploadTitleImage(index, e.target)">
+                                    </div>
+
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="md:max-w-5 max-w-4 cursor-pointer fill-gray-400" viewBox="0 0 512 512"
+                                        @click="clickOnTitleMedia(que.defaultIndex)">
+                                        <path
+                                            d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                                    </svg>
                                 </div>
                             </div>
                             <!-- v-click-outside="() => isDropIndex = index" -->
@@ -128,7 +159,17 @@ const chandeDragIndex = (e) => {
                             </div>
                         </div>
 
-                        <div class="grid md:grid-cols-2 md:gap-5 gap-3 md:mt-10 mt-8">
+                        <div class="mt-4 relative" v-if="que && que.blobTitleImg">
+                            <div class="py-1 px-1.5 bg-red-400 aspect-square absolute rounded-full cursor-pointer translate-x-1/2 -translate-y-1/2 right-0" @click="cleareTitleImage(index)" >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 w-full fill-gray-200" viewBox="0 0 384 512">
+                                    <path
+                                        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                </svg>
+                            </div>
+                            <img :src="que.blobTitleImg" class="w-full rounded-md border" alt="blob image">
+                        </div>
+
+                        <div class="grid md:grid-cols-2 md:gap-5 gap-3 mt-6">
                             <div class="flex items-center justify-between border rounded-md py-3 px-4 group-option"
                                 v-for="(option, ind) in que.option" :key="ind"
                                 :class="option.isCorrect ? 'border-green-400' : ''">
@@ -164,17 +205,25 @@ const chandeDragIndex = (e) => {
                             </div>
                         </div>
 
-                        <div class="md:mt-10 mt-6 flex items-center justify-end">
+                        <div class="md:mt-10 mt-6 flex items-center justify-between gap-5">
                             <div class="flex items-center">
-                                <input type="checkbox" class="h-5 w-5 mr-3" id="require1"
-                                    v-model="questions[index].isRequire">
-                                <label for="require1">Required</label>
+                                <input type="number" maxlength="1" size="1" min="1" max="9"
+                                    class="h-5 outline-0 border-b w-7 mr-2 md:text-base text-sm" id="require1"
+                                    v-model="questions[index].point">
+                                <label for="require1" class="md:text-base text-sm">Points</label>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 fill-red-400 ml-5 cursor-pointer"
-                                viewBox="0 0 448 512" @click="removeQuestion(index)">
-                                <path
-                                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                            </svg>
+                            <div class="flex gap-5 items-center">
+                                <div class="flex items-center">
+                                    <input type="checkbox" class="md:h-5 md:w-5 h-4 w-4 mr-2" id="require1"
+                                        v-model="questions[index].isRequire">
+                                    <label for="require1" class="md:text-base text-sm" >Required</label>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="md:max-w-4 max-w-3 w-full fill-red-400 cursor-pointer"
+                                    viewBox="0 0 448 512" @click="removeQuestion(index)">
+                                    <path
+                                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,10 +233,9 @@ const chandeDragIndex = (e) => {
             <div class="border-4 border-dashed md:py-10 py-4 grid place-items-center cursor-pointer border-primary rounded-md"
                 @click="addQuestion()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="max-w-10 fill-primary" viewBox="0 0 448 512">
-                    <path
-                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                </svg>
-            </div>
+                <path
+                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+            </svg>
         </div>
     </div>
-</template>
+</div></template>
