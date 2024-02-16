@@ -33,7 +33,7 @@ const isShowSidebar = ref(false);
                     <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'" alt="close">
                 </button>
                 <RouterLink :to="{ name: 'Login' }">
-                    <img src="@/assets/svgs/logo.svg" class="max-w-[150px] md:max-w-max py-1.5 md:py-0" alt="Logo">
+                    <img src="@/assets/svgs/logo.svg" class="max-w-[120px] md:max-w-max py-1.5 md:py-0" alt="Logo">
                 </RouterLink>
             </div>
             <div class="flex items-center lg:order-2">

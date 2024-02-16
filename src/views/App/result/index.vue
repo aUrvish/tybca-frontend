@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl mx-auto">
         <h1 class="text-[24px] font-semibold">Results</h1>
 
-        <div class="mt-5 grid grid-cols-5 gap-4" >
+        <div class="mt-5 grid xl:grid-cols-5 md:grid-cols-4 grid-cols-2 gap-4" >
             <div v-for="i in 5" class="rounded-lg overflow-hidden group cursor-pointer" >
                 <router-link to="#">
                     <img src="@/assets/images/result.png" class="border aspect-[3.5/5] w-full rounded-lg" alt="certificate">

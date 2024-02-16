@@ -2,7 +2,7 @@
 import AppNav from '@/components/AppNav.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import { RouterView } from 'vue-router';
-import {onMounted, onUpdated, ref} from "vue" 
+import {ref} from "vue" 
 
 const isShowSidebar = ref(false);
 
