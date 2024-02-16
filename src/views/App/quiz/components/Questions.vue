@@ -26,11 +26,11 @@ const dropdownToggle = (index) => {
     isDropDownShow.value[index] = !isDropDownShow.value[index]
 }
 const dropdownClose = (index) => {
-    console.log("close", index);
     isDropDownShow.value[index] = false
 }
 const setDropdownItem = (index, value) => {
     questions.value[index].type = value
+    isDropDownShow.value[index] = false
 }
 
 const addOption = (index) => {
@@ -78,27 +78,38 @@ const chandeDragIndex = (e) => {
 
 <template>
     <div class="max-w-screen-lg mx-auto">
-        <VueDraggableNext v-model="questions" @end="chandeDragIndex">
+        <VueDraggableNext v-model="questions" @end="chandeDragIndex" :delay="100">
             <transition-group type="transition" name="fade">
-                <div class="px-10 mb-4 relative" v-for="(que, index) in questions" :key="que.defaultIndex">
-                    <div class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
-                        <p class="absolute left-0 text-[32px] font-bold text-primary -translate-x-1/2">{{ que.defaultIndex +
-                            1 }}</p>
+                <div class="md:px-10 px-0 mb-4 relative" v-for="(que, index) in questions"
+                    :key="que.defaultIndex">
+                    <div
+                        class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
+                        <p
+                            class="absolute left-0 top-0 md:text-[32px] text-2xl font-bold text-primary translate-x-4 md:-translate-x-1/4  md:translate-y-1/2 translate-y-1/4 md:block hidden">
+                            {{ que.defaultIndex +
+                                1 }}</p>
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="max-w-6 fill-gray-400 absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 invisible group-hover:visible"
+                            class="max-w-6 fill-gray-400 absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 invisible group-hover:visible md:block hidden"
                             viewBox="0 0 448 512">
                             <path
                                 d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 288zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 160z" />
                         </svg>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <input type="text" class="text-lg font-semibold outline-0" v-model="questions[index].title">
-                                <p class="text-gray-400 text-sm -mt-1">Title</p>
+                        <div class="flex md:flex-row flex-col justify-between md:items-center gap-4">
+                            <div class="flex items-center gap-4" >
+                                <p class="md:text-[32px] text-2xl font-bold text-primary md:hidden">
+                                    {{ que.defaultIndex +
+                                        1 }}</p>
+                                <div>
+                                    <input type="text" class="text-lg font-semibold outline-0 w-full"
+                                        v-model="questions[index].title">
+                                    <p class="text-gray-400 text-sm -mt-1">Title</p>
+                                </div>
                             </div>
                             <!-- v-click-outside="() => isDropIndex = index" -->
-                            <div class="max-w-48 w-full relative select-none">
+                            <div class="md:max-w-48 w-full relative select-none z-10"
+                                v-click-outside="() => dropdownClose(que.defaultIndex)">
                                 <div class="flex justify-between items-center cursor-pointer border py-1.5 px-3 rounded-md"
-                                    @click="dropdownToggle(que.defaultIndex)" v-click-outside="() => dropdownClose(que.defaultIndex)">
+                                    @click="dropdownToggle(que.defaultIndex)">
                                     <h5 class="capitalize">{{ que.type }}</h5>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 fill-gray-400"
                                         viewBox="0 0 320 512">
@@ -117,7 +128,7 @@ const chandeDragIndex = (e) => {
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-5 mt-10">
+                        <div class="grid md:grid-cols-2 md:gap-5 gap-3 md:mt-10 mt-8">
                             <div class="flex items-center justify-between border rounded-md py-3 px-4 group-option"
                                 v-for="(option, ind) in que.option" :key="ind"
                                 :class="option.isCorrect ? 'border-green-400' : ''">
@@ -127,7 +138,7 @@ const chandeDragIndex = (e) => {
                                     <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
                                         v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
                                     <p class="font-semibold text-gray-500" v-else>1.</p>
-                                    <input class="ml-3 outline-0" v-model="questions[index].option[ind].name">
+                                    <input class="ml-3 outline-0 w-full" v-model="questions[index].option[ind].name">
                                 </div>
 
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
@@ -153,7 +164,7 @@ const chandeDragIndex = (e) => {
                             </div>
                         </div>
 
-                        <div class="mt-10 flex items-center justify-end">
+                        <div class="md:mt-10 mt-6 flex items-center justify-end">
                             <div class="flex items-center">
                                 <input type="checkbox" class="h-5 w-5 mr-3" id="require1"
                                     v-model="questions[index].isRequire">
@@ -169,8 +180,8 @@ const chandeDragIndex = (e) => {
                 </div>
             </transition-group>
         </VueDraggableNext>
-        <div class="px-10">
-            <div class="border-4 border-dashed py-10 grid place-items-center cursor-pointer border-primary rounded-md"
+        <div class="md:px-10">
+            <div class="border-4 border-dashed md:py-10 py-4 grid place-items-center cursor-pointer border-primary rounded-md"
                 @click="addQuestion()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="max-w-10 fill-primary" viewBox="0 0 448 512">
                     <path

@@ -1,12 +1,12 @@
 
 <script setup >
 import Donut from '@/components/Donut.vue';
-import Table from '@/components/Table.vue';
+import UserTable from './UserTable.vue';
 </script>
 <template>
-    <div class="grid grid-cols-6 gap-4">
+    <div class="3lg:grid flex flex-col-reverse grid-cols-6 gap-4">
         <div class="col-start-1 col-end-7">
-            <Table :max="10" class="pt-0" />
+            <UserTable :max="10" class="pt-0" />
         </div>
         <div class="col-start-7 col-span-8">
             <div class="border rounded-md min-h-[200px] bg-white p-4 flex justify-between mb-4">
