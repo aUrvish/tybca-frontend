@@ -3,9 +3,19 @@ import { ref ,  computed } from 'vue'
 
 const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
 
-const username = ref('Mandaliya Urvish');
+const username = ref('Admin');
+const isUsernameWordSingle = ref(false)
 
-const nameInit = computed(() => username.value.split(" ")[0].charAt(0).toUpperCase() + username.value.split(" ")[1].charAt(0).toUpperCase())
+const nameInit = computed(() => {
+    let nameArr = username.value.split(" ")
+    console.log(nameArr);
+    if (nameArr.length > 1) {
+        return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
+    }
+
+    isUsernameWordSingle.value = true
+    return username.value.charAt(0).toUpperCase()
+})
 
 const randColorIndex = ref(Math.floor(Math.random() * 19))
 
@@ -23,7 +33,7 @@ const isShowSidebar = ref(false);
                     <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'" alt="close">
                 </button>
                 <RouterLink :to="{ name: 'Login' }">
-                    <img src="@/assets/svgs/logo.svg" class="max-w-[150px] md:max-w-max py-1.5 md:py-0" alt="Logo">
+                    <img src="@/assets/svgs/logo.svg" class="max-w-[120px] md:max-w-max py-1.5 md:py-0" alt="Logo">
                 </RouterLink>
             </div>
             <div class="flex items-center lg:order-2">
@@ -44,7 +54,7 @@ const isShowSidebar = ref(false);
                 <div class="overflow-hidden absolute top-full sm:right-5 right-1 z-50 my-4 max-w-sm text-base list-none bg-white rounded-md border" :class="isShowNotification ? '' : 'hidden'"
                     id="notification-dropdown">
                     <div
-                        class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
+                        class="block py-2 px-4 text-base font-medium text-center text-gray-700 dark:bg-gray-600 dark:text-gray-300">
                         Notifications
                     </div>
                     <div class="border-y">
@@ -66,7 +76,7 @@ const isShowSidebar = ref(false);
                         </a>
                     </div>
                     <a href="#"
-                        class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100">
+                        class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 dark:text-gray-400"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +95,7 @@ const isShowSidebar = ref(false);
                     <!-- <img class="w-9 h-9 rounded-full"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
                         alt="user photo" /> -->
-                    <h1 class="text-white font-bold" >{{ nameInit }}</h1>
+                    <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'" >{{ nameInit }}</h1>
                 </button>
 
                 <!-- Dropdown menu -->

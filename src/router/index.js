@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('@/views/Auth/Login.vue')
     },
     {
+      path: '/signup',
+      name: 'Signup',
+      component: () => import('@/views/Auth/Signup.vue')
+    },
+    {
       path: '/app',
       component: () => import('@/layouts/App.vue'),
       children : [
@@ -28,9 +33,39 @@ const router = createRouter({
           component : () => import('@/views/App/students/index.vue'),
         },
         {
-          path : 'student/add',
-          name : 'StudentAdd',
-          component : () => import('@/views/App/students/Add.vue'),
+          path : 'quiz',
+          name : 'QuizList',
+          component : () => import('@/views/App/quiz/index.vue'),
+        },
+        {
+          path : 'test',
+          name : 'testList',
+          component : () => import('@/views/App/test/index.vue'),
+        },
+        {
+          path : 'certificate',
+          name : 'Certificate',
+          component : () => import('@/views/App/certificate/index.vue'),
+        },
+        {
+          path : 'result',
+          name : 'Result',
+          component : () => import('@/views/App/result/index.vue'),
+        },
+        {
+          path : 'quiz/details',
+          name : 'QuizDetails',
+          component : () => import('@/views/App/quiz/Details.vue'),
+        },
+        {
+          path : 'notice',
+          name : 'noticeList',
+          component : () => import('@/views/App/notice/index.vue'),
+        },
+        {
+          path : 'notice/add',
+          name : 'noticeAdd',
+          component : () => import('@/views/App/notice/Add.vue'),
         },
         {
           path : 'profile',
@@ -39,7 +74,10 @@ const router = createRouter({
         },
       ]
     },
-  ]
+  ],
+  scrollBehavior() {
+    document.getElementById('app').scrollIntoView();
+}
 })
 
 export default router

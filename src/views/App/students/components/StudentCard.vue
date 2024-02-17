@@ -2,15 +2,15 @@
     <RouterLink :to="{ name : 'Profile' }" >
         <div
             class="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto border rounded-md hover:shadow-lg cursor-pointer group bg-white">
-            <div class="rounded-t-lg h-32 overflow-hidden">
+            <div class="rounded-t-md h-32 overflow-hidden">
                 <img class="object-cover object-bottom w-full" src='@/assets/images/back-img4.jpg' alt='Mountain'>
             </div>
-            <div class="mx-auto w-24 h-24 relative -mt-12 border-4 border-white rounded-full overflow-hidden">
+            <div class="mx-auto w-24 h-24 relative -mt-12 border-4 border-white rounded-full overflow-hidden ring-4 ring-success">
                 <img class="object-cover object-center h-24 aspect-square"
                     src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ'
                     alt='Woman looking front'>
             </div>
-            <div class="text-center mt-2">
+            <div class="text-center mt-3">
                 <h2 class="font-semibold group-hover:underline">#12345678</h2>
                 <p class="text-gray-500">Nitesh N Nageshri</p>
             </div>
