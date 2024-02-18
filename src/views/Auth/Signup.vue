@@ -3,38 +3,7 @@ import Auth from '@/layouts/auth.vue'
 import Textbox from '@/components/Textbox.vue'
 import Btn from '@/components/Btn.vue'
 </script>
-<style>
-  .or-text{
-    /* width: 100%;
-    display: flex;
-    flex-direction: row;
-    text-transform: uppercase;
-    border: none;
-    font-size: 15px;
-    font-weight: 300;
-    margin: 0;
-    padding: 24px 0 0; */
-  }
-  .or-text::before{
-    content: "";
-    border-bottom: 1px solid #c2c8d0;
-    flex: 1 0 auto;
-    height: 0.5rem;
-    margin: 0;
-  }
-  .or-text::after{
-    content: "";
-    border-bottom: 1px solid #c2c8d0;
-    flex: 1 0 auto;
-    height: 0.5rem;
-    margin: 0;
-  }
-  .or-text span{
-    text-align: center;
-    flex: 0.2 0 auto;
-    margin: 0;
-  }
-</style>
+
 <template>
   <Auth>
     <div class="rounded-lg border-2 p-6 max-w-[400px] w-full">
@@ -76,8 +45,8 @@ import Btn from '@/components/Btn.vue'
           <Btn type="submit" class="w-full text-white bg-gray-950 font-medium rounded-md text-sm px-5 py-2.5 text-center">
             Sign Up
           </Btn>
-          <div class="or-text w-full flex flex-row uppercase text-[15px] font-light m-0 pt-6 pb-0 px-0 border-[none]">
-            <span>or</span>
+          <div class="w-full flex flex-row uppercase text-[15px] font-light m-0 pt-6 pb-0 px-0 border-[none] before:content-[''] before:flex-[1_0_auto] before:h-2 before:border-b-[#c2c8d0] before:border-b before:border-solid after:content-[''] after:flex-[1_0_auto] after:h-2 after:border-b-[#c2c8d0] after:border-b after:border-solid">
+            <span class="text-center m-0 flex-[0.2_0_auto]">or</span>
           </div>
           <Btn type="signin" class="mt-5 w-full text-gray-950 font-medium rounded-md text-sm sm:px-5 px-2 py-2.5 flex relative justify-center items-center cursor-pointer bg-[#e9eaf2] gap-2 text-left">
            <img src="/src/assets/svgs/google_logo.svg" alt="" srcset="" width="20px" height="20px">
