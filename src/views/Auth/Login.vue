@@ -46,5 +46,11 @@ import Btn from '@/components/Btn.vue'
         </div>
       </form>
     </div>
+
+    <template #navlink>
+      <RouterLink :to="{ name: 'Signup' }" class="underline font-medium sm:text-base text-[13px]">
+        Signup
+      </RouterLink>
+    </template>
   </Auth>
 </template>

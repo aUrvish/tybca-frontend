@@ -12,10 +12,8 @@ import { RouterLink } from 'vue-router';
                 <img src="../assets/svgs/logo.svg" alt="Logo">
             </RouterLink>
 
-            <!-- login as student -->
-            <RouterLink :to="{ name: 'Login' }" class="underline font-medium sm:text-base text-[13px]">
-                Login as student
-            </RouterLink>
+            <!-- redirect slot -->
+            <slot />
         </div>
     </header>
 </template>
