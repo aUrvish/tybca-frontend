@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { watch,ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+
+const emit = defineEmits(['changeQue'])
+
 const isDropDownShow = ref([false]);
 const dropItem = ref(['options', 'dropdown', 'checkboxes'])
 const mediaOnTitle = ref(null)
@@ -71,6 +74,13 @@ const addQuestion = () => {
     isDropDownShow.value.push(false)
 }
 
+const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
+
+watch(questions.value, (newX) => {
+    let findSumofPoint = sum([...questions.value.map((curr , index) => curr.point || 0)])
+    emit('changeQue', findSumofPoint , questions.value.length)
+})
+
 const removeQuestion = (index) => {
     questions.value.splice(index, 1);
 }
@@ -109,7 +119,7 @@ const cleareTitleImage = (index) => {
                     <div class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
                         <p
                             class="absolute left-0 top-0 md:text-[32px] text-2xl font-bold text-primary translate-x-4 md:-translate-x-1/4  md:translate-y-1/2 translate-y-1/4 md:block hidden">
-                            {{ que.defaultIndex +
+                            {{ index +
                                 1 }}</p>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="max-w-6 fill-gray-400 absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 invisible group-hover:visible md:block hidden"
@@ -120,7 +130,7 @@ const cleareTitleImage = (index) => {
                         <div class="flex md:flex-row flex-col justify-between md:items-center gap-4">
                             <div class="flex items-center gap-3 grow">
                                 <p class="md:text-[32px] text-2xl font-bold text-primary md:hidden">
-                                    {{ que.defaultIndex +
+                                    {{ index +
                                         1 }}</p>
                                 <div class="flex justify-between items-center w-full">
                                     <div>
@@ -210,7 +220,7 @@ const cleareTitleImage = (index) => {
 
                         <div class="md:mt-10 mt-6 flex items-center justify-between gap-5">
                             <div class="flex items-center">
-                                <input type="number" maxlength="1" size="1" min="1" max="9"
+                                <input type="number" maxlength="1" size="1" min="0" max="9"
                                     class="h-5 outline-0 border-b w-7 mr-2 md:text-base text-sm" id="require1"
                                     v-model="questions[index].point">
                                 <label for="require1" class="md:text-base text-sm">Points</label>

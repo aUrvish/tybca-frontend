@@ -7,7 +7,7 @@ import AuthFooter from '@/components/AuthFooter.vue'
   <AuthNav>
     <slot name="navlink" />
   </AuthNav>
-  <div class="grow 5xl:py-40 py-20 grid place-items-center px-4">
+  <div class="grow py-20 grid place-items-center px-4">
     <slot />
   </div>
   <AuthFooter />

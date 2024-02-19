@@ -96,3 +96,19 @@ html,
 ::-webkit-scrollbar-thumb:hover {
     background: #aaa;
 }
+
+.animate-x-bounce {
+    animation: xbounce 2s ease-in-out infinite;
+}
+
+@keyframes xbounce {
+    0% {
+        left: -20%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: -20%;
+    }
+}

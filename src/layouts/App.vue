@@ -11,7 +11,7 @@ const isShowSidebar = ref(false);
 <template>
     <div class="antialiased bg-gray-50 dark:bg-gray-900">
         <!-- navbar -->
-        <AppNav @showSidebar="(value) => isShowSidebar = value" />
+        <AppNav class="fixed left-0 right-0 top-0" @showSidebar="(value) => isShowSidebar = value" />
 
         <!-- Sidebar -->
         <AppSidebar :isShow="isShowSidebar" />
