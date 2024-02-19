@@ -1,6 +1,12 @@
 <script setup >
 import { ref ,  computed } from 'vue'
 
+const props = defineProps({
+    noSidebar : {
+        default : true
+    }
+})
+
 const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
 
 const username = ref('Admin');
@@ -25,10 +31,10 @@ const isShowSidebar = ref(false);
 </script>
 
 <template>
-    <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 fixed left-0 right-0 top-0 z-50">
+    <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 z-50">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
-                <button class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100" @click="isShowSidebar =! isShowSidebar , $emit('showSidebar' , isShowSidebar)" v-click-outside="() => isShowSidebar = false , $emit('showSidebar' , isShowSidebar)">
+                <button v-if="noSidebar" class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100" @click="isShowSidebar =! isShowSidebar , $emit('showSidebar' , isShowSidebar)" v-click-outside="() => isShowSidebar = false , $emit('showSidebar' , isShowSidebar)">
                     <img src="@/assets/svgs/menu.svg" class="w-6 h-6" :class="isShowSidebar ? 'hidden' : ''" alt="menu">
                     <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'" alt="close">
                 </button>
