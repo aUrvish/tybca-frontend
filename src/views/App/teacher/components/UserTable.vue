@@ -29,7 +29,7 @@ const hideActionMenu = (index) => {
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">Student</h1>
+                    <h1 class="text-[20px] font-bold">Teacher</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
                         <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
@@ -55,7 +55,7 @@ const hideActionMenu = (index) => {
                             <tr class="[&>*]:whitespace-nowrap">
                                 <th scope="col" class="px-4 py-3">
                                     <div class="cursor-pointer flex gap-1 items-center">
-                                        <p>Student ID</p>
+                                        <p>Teacher ID</p>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
                                             <path
                                                 d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
@@ -64,7 +64,7 @@ const hideActionMenu = (index) => {
                                 </th>
                                 <th scope="col" class="px-4 py-3">
                                     <div class="cursor-pointer flex gap-1 items-center justify-center">
-                                        <p>Student Name</p>
+                                        <p>Teacher Name</p>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
                                             <path
                                                 d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />

@@ -4,6 +4,9 @@ import { ref } from 'vue';
 const props = defineProps({
     max: {
         default: 5,
+    },
+    name : {
+        default : "User"
     }
 })
 const isShowActionMenu = ref(null)
@@ -28,35 +31,20 @@ const hideActionMenu = (index) => {
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">User</h1>
+                    <h1 class="text-[20px] font-bold">{{ name }}</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
-                        <form class="flex items-center">
-                            <label for="simple-search" class="sr-only">Search</label>
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
-                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <input type="text" id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
-                                    placeholder="Search">
-                            </div>
-                        </form>
+                        <slot/>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs border-b uppercase">
                             <tr class="[&>*]:whitespace-nowrap">
-                                <th scope="col" class="px-4 py-3">User ID</th>
-                                <th scope="col" class="px-4 py-3 text-center">User Name</th>
+                                <th scope="col" class="px-4 py-3">{{ name }} ID</th>
+                                <th scope="col" class="px-4 py-3 text-center">{{ name }} Name</th>
                                 <th scope="col" class="px-4 py-3 text-center">E-Mail</th>
                                 <th scope="col" class="px-4 py-3 text-center">Mobile</th>
-                                <th scope="col" class="px-4 py-3 text-center">Join Date</th>
+                                <th scope="col" class="px-4 py-3 text-center">Performance</th>
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
@@ -67,8 +55,12 @@ const hideActionMenu = (index) => {
                                 :key="i">
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
-                                        <div class="border w-8 aspect-square rounded-full overflow-hidden">
-                                            <img src="https://www.shutterstock.com/image-vector/woman-modern-icon-avatar-design-260nw-2358837033.jpg" class="w-full h-full object-cover" alt="avtar">
+                                        <div class="w-8 aspect-square overflow-hidden relative">
+                                            <div
+                                                class="absolute z-10 bg-success w-2.5 right-0 bottom-0 aspect-square rounded-full">
+                                            </div>
+                                            <img src="https://www.shutterstock.com/image-vector/woman-modern-icon-avatar-design-260nw-2358837033.jpg"
+                                                class="w-full h-full object-cover rounded-full border" alt="avtar">
                                         </div>
                                         <p>#0001</p>
                                     </div>
@@ -76,7 +68,17 @@ const hideActionMenu = (index) => {
                                 <td class="px-4 py-3 text-center">Nitesh N Nageshri</td>
                                 <td class="px-4 py-3 text-center">nitesh@gmail.com</td>
                                 <td class="px-4 py-3 text-center">+91 85865 86969</td>
-                                <td class="px-4 py-3 text-center">24 Nov 2021</td>
+                                <td class="px-4 py-3 ">
+                                    <div class="text-center text-success font-semibold flex justify-center items-center">
+
+                                        12%
+                                        <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 10 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
+                                        </svg>
+                                    </div>
+                                </td>
 
                                 <td class="px-4 pl-1 py-3 relative">
                                     <div class="flex items-center justify-end">

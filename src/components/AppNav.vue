@@ -14,7 +14,6 @@ const isUsernameWordSingle = ref(false)
 
 const nameInit = computed(() => {
     let nameArr = username.value.split(" ")
-    console.log(nameArr);
     if (nameArr.length > 1) {
         return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
     }
