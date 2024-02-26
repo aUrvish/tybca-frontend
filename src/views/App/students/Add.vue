@@ -3,6 +3,49 @@ import { ref } from 'vue'
 import Textbox from '@/components/Textbox.vue';
 import Btn from '@/components/Btn.vue';
 
+const courseList = ref(
+    [
+        {
+            name: 'Data Science',
+            primary_color: '#BD39FC'
+        },
+        {
+            name: 'Artificial Intelligence',
+            primary_color: '#BD39FC'
+        },
+        {
+            name: 'Big Data',
+            primary_color: '#1F75F7'
+        },
+        {
+            name: 'Cloud Computing',
+            primary_color: '#11CD0E'
+        },
+        {
+            name: 'Project Management',
+            primary_color: '#00BFFB'
+        },
+        {
+            name: 'Networking',
+            primary_color: '#0AE1A1'
+        },
+        {
+            name: 'Software Development',
+            primary_color: '#FF9432'
+        },
+    ]
+)
+
+const selectCourse = ref([]);
+
+const addCourse = (obj) => {
+    if(selectCourse.value.includes(obj)){
+        selectCourse.value = selectCourse.value.filter((curr, index) => curr != obj)
+        return null;
+    }
+    selectCourse.value.push(obj);
+}
+
 const profileImage = ref(null);
 </script>
 <template>
@@ -66,30 +109,17 @@ const profileImage = ref(null);
                 <div class="p-4 border rounded-sm bg-white">
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <p
-                            class="px-3 py-1.5 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC]">
-                            Data Science</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#FD3C3C1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FD3C3C]">
-                            Artificial Intelligence</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#1F75F71A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#1F75F7]">
-                            Big Data</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#11CD0E1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#11CD0E]">
-                            Cloud Computing</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#00BFFB1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#00BFFB]">
-                            Project Management</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#0AE1A11A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#0AE1A1]">
-                            Networking</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#FF94321A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FF9432]">
-                            Software Development</p>
+                        <p class="px-3 py-1.5 flex items-center gap-2 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC] cursor-pointer" @click="addCourse(course)"
+                            v-for="(course, index) in courseList" :key="index"
+                            :style="{ color: course.primary_color, backgroundColor: `${course.primary_color}1A` }">
+                            <svg xmlns="http://www.w3.org/2000/svg" v-if="selectCourse.includes(course)" class="w-full max-w-3 fill-current" viewBox="0 0 448 512">
+                                <path
+                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                            {{ course.name }}
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+    </div>
+</form></template>
