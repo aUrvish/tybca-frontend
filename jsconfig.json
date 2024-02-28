@@ -2,7 +2,10 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "vue3-toastify/global"
+    ]
   },
   "exclude": ["node_modules", "dist"]
 }

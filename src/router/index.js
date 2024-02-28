@@ -7,10 +7,11 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: () => import('@/views/Auth/Login.vue'),
-      meta: {
-        requiresAuth: false,
-        role_id: [0, 1, 2]
-      },
+    },
+    {
+      path: '/request-reset-password',
+      name: 'RequestPassword',
+      component: () => import('@/views/Auth/RequestPassword.vue'),
     },
     {
       path: '/test',
@@ -146,18 +147,6 @@ const router = createRouter({
   scrollBehavior() {
     document.getElementById('app').scrollIntoView();
   },
-})
-
-router.beforeEach(async (to, from) => {
-  const currentUserRoleID = 2
-
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-
-  if (requiresAuth && to.meta.role_id.includes(currentUserRoleID)) {
-      return null;
-  }
-  
-  router.push({name : from.name})
 })
 
 export default router
