@@ -12,7 +12,7 @@ router.beforeEach(async (to, from, next) => {
   const currentUserRoleID = await auth.value?.user.role_id
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   const { path, name, params } = to
-  if (auth.value && requiresAuth && ["Login", "RequestPassword"].includes(name)) {
+  if (auth.value && !requiresAuth && ["Login", "RequestPassword", "ResetPassword"].includes(name)) {
     return next("/")
   }else if (requiresAuth && auth.value && !to.meta.role_id.includes(currentUserRoleID)) {
     return next(from.path)

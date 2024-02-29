@@ -1,5 +1,11 @@
 <script setup >
 import { ref, computed } from 'vue'
+import { useAuthStore } from '@/store/auth'
+import { useLoadStore } from '@/store/loading'
+import { toast } from "vue3-toastify";
+
+const { logoutAction, authNull } = useAuthStore();
+const { changeStatusLoading } = useLoadStore();
 
 const props = defineProps({
     noSidebar: {
@@ -27,6 +33,30 @@ const randColorIndex = ref(Math.floor(Math.random() * 19))
 const isShowNotification = ref(false);
 const isShowUserMenu = ref(false);
 const isShowSidebar = ref(false);
+
+const logout = () => {
+    changeStatusLoading(true)
+    logoutAction()
+        .then(
+            (res) => {
+                toast(res.data.messages, {
+                    "type": res.data.status ? "success" : "error",
+                    "dangerouslyHTMLString": true
+                })
+                authNull();
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                toast(e.message, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        )
+}
 </script>
 
 <template>
@@ -115,15 +145,16 @@ const isShowSidebar = ref(false);
                     </div>
                     <ul class="py-1 text-gray-700" aria-labelledby="dropdown">
                         <li>
-                            <RouterLink :to="{ name : 'Profile' }" class="block py-2 px-4 text-sm hover:bg-gray-100">My profile</RouterLink>
+                            <RouterLink :to="{ name: 'Profile' }" class="block py-2 px-4 text-sm hover:bg-gray-100">My
+                                profile</RouterLink>
                         </li>
                         <li>
-                            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">Change Password</a>
+                            <RouterLink :to="{name : 'ChangePassword'}" class="block py-2 px-4 text-sm hover:bg-gray-100">Change Password</RouterLink>
                         </li>
                     </ul>
                     <ul class="py-1 text-gray-700" aria-labelledby="dropdown">
                         <li>
-                            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">Sign out</a>
+                            <p @click="logout" class="block py-2 px-4 text-sm hover:bg-gray-100 cursor-pointer">Sign out</p>
                         </li>
                     </ul>
                 </div>

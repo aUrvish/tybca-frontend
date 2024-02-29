@@ -8,11 +8,9 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
-import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 const { loginAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
-const { isLoading } = storeToRefs(useLoadStore());
 const router = useRouter()
 
 const user = ref(

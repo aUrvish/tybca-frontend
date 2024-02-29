@@ -14,6 +14,20 @@ const router = createRouter({
       component: () => import('@/views/Auth/RequestPassword.vue'),
     },
     {
+      path: '/reset-password/:token',
+      name: 'ResetPassword',
+      component: () => import('@/views/Auth/ResetPassword.vue'),
+    },
+    {
+      path: '/change-password',
+      name: 'ChangePassword',
+      component: () => import('@/views/Auth/ChangePassword.vue'),
+      meta: {
+        requiresAuth: true,
+        role_id: [0, 1, 2]
+      },
+    },
+    {
       path: '/test',
       name: 'ExamHall',
       component: () => import('@/views/Hall/index.vue'),
