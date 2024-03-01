@@ -56,7 +56,7 @@ const submitForLogin = () => {
         )
         .catch(
             (e) => {
-                toast(e.message, {
+                toast(e.response.data.messages, {
                     "type": "error",
                     "dangerouslyHTMLString": true
                 })

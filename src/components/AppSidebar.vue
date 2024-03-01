@@ -1,4 +1,8 @@
 <script setup>
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+
+const { auth } = storeToRefs(useAuthStore());
 
 const props = defineProps(
     {
@@ -7,6 +11,12 @@ const props = defineProps(
         }
     }
 )
+
+const roleId = auth.value?.user.role_id;
+
+const availableRoute = (arr) => {
+    return arr.includes(roleId)
+}
 </script>
 
 <template>
@@ -54,7 +64,7 @@ const props = defineProps(
                 </li>
 
             </ul>
-            <ul class="space-y-2 mt-2 border-t pt-2">
+            <ul class="space-y-2 mt-2 border-t pt-2" v-if="availableRoute([2])">
                 <li>
                     <RouterLink :to="{ name: 'testList' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
@@ -142,7 +152,7 @@ const props = defineProps(
                         <span class="ml-3.5 group-hover:text-gray">Quiz</span>
                     </RouterLink>
                 </li>
-                <li>
+                <li v-if="availableRoute([0])">
                     <RouterLink :to="{ name: 'Payment' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
