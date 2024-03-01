@@ -13,7 +13,7 @@ const props = defineProps(
 )
 
 const roleId = auth.value?.user.role_id;
-
+console.log(roleId);
 const availableRoute = (arr) => {
     return arr.includes(roleId)
 }
@@ -114,7 +114,7 @@ const availableRoute = (arr) => {
                     </RouterLink>
                 </li>
             </ul>
-            <ul class="space-y-2 mt-2 border-t pt-2">
+            <ul class="space-y-2 mt-2 border-t pt-2" v-if="availableRoute([0,1])">
                 <li>
                     <RouterLink :to="{ name: 'StudentList' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
@@ -128,7 +128,7 @@ const availableRoute = (arr) => {
                         <span class="ml-3.5 group-hover:text-gray">Students</span>
                     </RouterLink>
                 </li>
-                <li>
+                <li v-if="availableRoute([0])">
                     <RouterLink :to="{ name: 'TeacherList' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
 
