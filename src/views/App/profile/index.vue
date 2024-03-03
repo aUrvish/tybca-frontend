@@ -1,6 +1,75 @@
 <script setup>
 import Donut from '@/components/Donut.vue';
 import Btn from '@/components/Btn.vue';
+
+import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { minidenticon } from 'minidenticons'
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+import { useLoadStore } from '@/store/loading'
+import {useRoute, useRouter} from 'vue-router'
+import { toast } from "vue3-toastify";
+
+const { getAuthProfileAction } = useAuthStore();
+const { changeStatusLoading } = useLoadStore();
+const { auth } = storeToRefs(useAuthStore());
+const { isLoading } = storeToRefs(useLoadStore());
+
+const user = reactive(
+    {
+        name :null,
+        id : null,
+        profileImg : null,
+        mobile: null,
+        gender : null,
+        email: null,
+        city:null,
+        country : null,
+        join : null,
+        course : [],
+        miniAvatar : null
+    }
+)
+
+onMounted(
+    () => {
+        // changeStatusLoading(true)
+
+        getAuthProfileAction()
+            .then(
+                (res) => {
+                    let response = res.data.data;
+                    console.log(response);
+                    if (response) {   
+                        user.id = response.id
+                        user.name = response.name
+                        user.email = response.email
+                        user.profileImg = response.avatar
+                        user.gender = response.gender
+                        user.mobile = response.mobile
+                        user.city = response.city
+                        user.country = response.country
+                        user.join = response.created_at
+                        user.course = response.course
+
+                        if (!response.avatar) {
+                            user.miniAvatar = minidenticon(response.name)
+                        }
+                    }else {
+                        router.push({name : '404'})
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.message, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
+            )
+    }
+)
 </script>
 
 <template>
@@ -9,12 +78,12 @@ import Btn from '@/components/Btn.vue';
             <div class="flex items-center">
 
                 <div class="w-20 border-[3px] rounded-full overflow-hidden border-white aspect-square">
-                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt="avtar">
+                    <img :src="user.profileImg" v-if="profileImg" alt="avtar">
+                    <div v-html="user.miniAvatar" v-else class="w-full bg-white"></div>
                 </div>
                 <div class="ml-6">
-                    <h1 class="text-white font-bold text-2xl">Nitesh N Nageshri</h1>
-                    <p class="text-white font-normal text-lg underline">#12345678</p>
+                    <h1 class="text-white font-bold text-2xl">{{ user.name }}</h1>
+                    <p class="text-white font-normal text-lg underline">#{{ user.id }}</p>
                 </div>
             </div>
             <div class="md:flex hidden items-center gap-x-5">
@@ -74,51 +143,39 @@ import Btn from '@/components/Btn.vue';
                     <div>
                         <div class="grid grid-cols-3 gap-4">
                             <p class="font-semibold">Full Name :</p>
-                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">Nitesh N Nageshri</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ user.name }}</p>
                         </div>
                         <div class="grid grid-cols-3 gap-4 my-2">
                             <p class="font-semibold">Mobile :</p>
-                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">+91 85865 86969</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ user.mobile }}</p>
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             <p class="font-semibold">E-mail :</p>
-                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">nitesh@gmail.com</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ user.email }}</p>
                         </div>
                         <div class="grid grid-cols-3 gap-4 my-2">
-                            <p class="font-semibold">Location :</p>
-                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">Mumbai, India</p>
+                            <p class="font-semibold">Gender :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ user.gender }}</p>
                         </div>
                         <div class="grid grid-cols-3 gap-4">
+                            <p class="font-semibold">Location :</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ user.city }}, {{ user.country }}</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 my-2">
                             <p class="font-semibold">Join :</p>
                             <p class="col-start-2 col-end-4 text-gray-400 font-medium">24 Nov 2021</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 border rounded-sm my-4 bg-white">
+                <div class="p-4 border rounded-sm my-4 bg-white" v-if="user.course.length">
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <p
-                        class="px-3 py-1.5 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC]">
-                        Data Science</p>
-                        <p
-                        class="px-3 py-1.5 bg-[#FD3C3C1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FD3C3C]">
-                        Artificial Intelligence</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#1F75F71A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#1F75F7]">
-                            Big Data</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#11CD0E1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#11CD0E]">
-                            Cloud Computing</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#00BFFB1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#00BFFB]">
-                            Project Management</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#0AE1A11A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#0AE1A1]">
-                            Networking</p>
-                        <p
-                            class="px-3 py-1.5 bg-[#FF94321A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#FF9432]">
-                            Software Development</p>
+                        <p class="px-3 py-1.5 flex items-center gap-2 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC] cursor-pointer"
+                             v-for="({subscribe}, index) in user.course" :key="index"
+                            :style="{ color: subscribe.primary_color, backgroundColor: `${subscribe.primary_color}1A` }">
+                            {{ subscribe.name }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -224,18 +281,7 @@ import Btn from '@/components/Btn.vue';
                                 components and interactive elements built on top of Tailwind CSS.</p>
                         </li>
                     </ol>
-
-
                 </div>
-
-                <Btn
-                    class="text-white bg-red-400 font-medium rounded-md text-base mt-5 flex items-center px-4 py-1.5 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" height="16" class="fill-white" width="14" viewBox="0 0 448 512">
-                    <path
-                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                </svg>
-                <p class="ml-2"> Remove </p>
-            </Btn>
         </div>
     </div>
 </div></template>

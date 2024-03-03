@@ -37,6 +37,11 @@ const router = createRouter({
       },
     },
     {
+      path: '/:pathMatch(.*)*',
+      name: '404',
+      component: () => import('@/404.vue'),
+    },
+    {
       path: '/',
       component: () => import('@/layouts/App.vue'),
       meta: {
@@ -153,6 +158,22 @@ const router = createRouter({
           component: () => import('@/views/App/profile/index.vue'),
           meta: {
             role_id: [0, 1, 2]
+          },
+        },
+        {
+          path: 'profile/edit',
+          name: 'ProfileEdit',
+          component: () => import('@/views/App/profile/ProfileEdit.vue'),
+          meta: {
+            role_id: [0, 1]
+          },
+        },
+        {
+          path: 'profile/edit/:id',
+          name: 'AuthProfilesEdit',
+          component: () => import('@/views/App/profile/ProfilesEdit.vue'),
+          meta: {
+            role_id: [0]
           },
         },
       ]

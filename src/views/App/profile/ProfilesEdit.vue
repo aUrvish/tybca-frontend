@@ -10,8 +10,9 @@ import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
 import { useCourseStore } from '@/store/course'
+import {useRoute, useRouter} from 'vue-router'
 
-const { registerAction } = useAuthStore();
+const { profilesEditAction, getProfilesAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
 const { isLoading } = storeToRefs(useLoadStore());
@@ -19,12 +20,12 @@ const { course } = storeToRefs(useCourseStore());
 const { getCourse, mutationSetCourse } = useCourseStore();
 
 const user = reactive({
-    name: "ronak",
-    email: "ronak@gmail.com",
-    gender: 1,
-    mobile: 9797979797,
-    city: "mumbai",
-    country: "india",
+    name: null,
+    email: null,
+    gender: 'Female',
+    mobile: null,
+    city: null,
+    country: null,
 })
 
 const rules = computed(() => {
@@ -42,6 +43,8 @@ const v$ = useVuelidate(rules, user)
 const userMiniprofile = ref(null)
 const form = ref(null)
 const avatarImg = ref(null)
+const route = useRoute();
+const router = useRouter();
 
 const changeImg = (value) => {
     avatarImg.value = URL.createObjectURL(value.files[0]);
@@ -64,6 +67,35 @@ onMounted(
                         "dangerouslyHTMLString": true
                     })
                     changeStatusLoading(false)
+                }
+            )
+
+        getProfilesAction(route.params.id)
+            .then(
+                (res) => {
+                    let response = res.data.data;
+
+                    if (response) {   
+                    user.name = response.name
+                    user.email = response.email
+                    user.gender = response.gender
+                    user.mobile = response.mobile
+                    user.city = response.city
+                    user.country = response.country
+
+                    selectCourse.value = response.course.map((curr) => curr.course_id)
+                    }else {
+                        router.push({name : '404'})
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.message, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    // router.push({name : '404'})
                 }
             )
     }
@@ -98,8 +130,9 @@ const addUser = () => {
     changeStatusLoading(true)
 
     let formData = new FormData(form.value);
+    formData.append('id', route.params.id)
 
-    registerAction(formData)
+    profilesEditAction(formData)
         .then(
             (res) => {
                 toast(res.data.messages, {
@@ -181,11 +214,11 @@ const addUser = () => {
                                 <div class="flex items-center gap-4 mt-4">
                                     <div class="flex items-center">
                                         <label for="male" class="text-sm font-medium text-gray-900">Male</label>
-                                        <input type="radio" name="gender" value="Male" id="male" class="mx-2" checked>
+                                        <input type="radio" name="gender" v-model="user.gender" value="Male" id="male" class="mx-2">
                                     </div>
                                     <div class="flex items-center">
                                         <label for="female" class="text-sm font-medium text-gray-900">Female</label>
-                                        <input type="radio" id="female" value="Female" name="gender" class="mx-2">
+                                        <input type="radio" id="female" value="Female" v-model="user.gender" name="gender" class="mx-2">
                                     </div>
                                 </div>
                             </div>

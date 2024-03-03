@@ -44,7 +44,50 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
-        return {auth, loginAction, requestResetAction, logoutAction, authNull, resetPassword, changePassword}
+        const registerAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/add', payload);
+            return res
+        }
+
+        const profilesEditAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/profiles-edit', payload);
+            return res
+        }
+
+        const authProfilesEditAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth-profiles-edit', payload);
+            return res
+        }
+
+        const getProfilesAction = async(id) => {
+            let res = null;
+            res = axios.get(`/api/profile/${id}`);
+            return res
+        }
+
+        const getAuthProfileAction = async() => {
+            let res = null;
+            res = axios.get('/api/profile');
+            return res
+        }
+
+        return {
+            auth, 
+            loginAction, 
+            requestResetAction, 
+            logoutAction, 
+            authNull, 
+            resetPassword, 
+            changePassword, 
+            registerAction, 
+            profilesEditAction,
+            getProfilesAction,
+            getAuthProfileAction,
+            authProfilesEditAction
+        }
     },
     {
         persist : true

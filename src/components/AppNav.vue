@@ -1,11 +1,16 @@
 <script setup >
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
+import { storeToRefs } from 'pinia';
 import { toast } from "vue3-toastify";
+import { minidenticon } from 'minidenticons'
+
+const userMiniprofile = ref(null)
 
 const { logoutAction, authNull } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
+const { auth } = storeToRefs(useAuthStore());
 
 const props = defineProps({
     noSidebar: {
@@ -13,22 +18,28 @@ const props = defineProps({
     }
 })
 
-const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
-
-const username = ref('Admin');
-const isUsernameWordSingle = ref(false)
-
-const nameInit = computed(() => {
-    let nameArr = username.value.split(" ")
-    if (nameArr.length > 1) {
-        return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
+onMounted(
+    () => {
+        userMiniprofile.value = minidenticon(auth.value?.user?.name)
     }
+)
 
-    isUsernameWordSingle.value = true
-    return username.value.charAt(0).toUpperCase()
-})
+// const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
 
-const randColorIndex = ref(Math.floor(Math.random() * 19))
+// const username = ref('Admin');
+// const isUsernameWordSingle = ref(false)
+
+// const nameInit = computed(() => {
+//     let nameArr = username.value.split(" ")
+//     if (nameArr.length > 1) {
+//         return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
+//     }
+
+//     isUsernameWordSingle.value = true
+//     return username.value.charAt(0).toUpperCase()
+// })
+
+// const randColorIndex = ref(Math.floor(Math.random() * 19))
 
 const isShowNotification = ref(false);
 const isShowUserMenu = ref(false);
@@ -126,14 +137,18 @@ const logout = () => {
                 </div>
 
                 <!-- user menu -->
-                <button type="button" class="flex mx-2 text-sm rounded-full md:mr-0 w-9 h-9 justify-center items-center"
+                <!-- <button type="button" class="flex mx-2 text-sm rounded-full md:mr-0 w-9 h-9 justify-center items-center"
                     :style="{ backgroundColor: colours[randColorIndex] }" v-click-outside="() => isShowUserMenu = false"
                     @click="isShowUserMenu = !isShowUserMenu">
-                    <!-- <img class="w-9 h-9 rounded-full"
-                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
-                        alt="user photo" /> -->
                     <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1>
+                </button> -->
+                <button type="button" class="flex mx-2 text-sm rounded-full border md:mr-0 w-9 h-9 justify-center items-center"
+                    v-click-outside="() => isShowUserMenu = false"
+                    @click="isShowUserMenu = !isShowUserMenu">
+                    <!-- <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
+                    }}</h1> -->
+                    <div class="w-full" v-html="userMiniprofile" ></div>
                 </button>
 
                 <!-- Dropdown menu -->
