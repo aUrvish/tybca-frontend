@@ -1,12 +1,22 @@
 <script setup>
-import Btn from '@/components/Btn.vue';
-import { ref } from 'vue';
+import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { minidenticon } from 'minidenticons'
+import { toast } from "vue3-toastify";
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+import { useLoadStore } from '@/store/loading'
+
+const { getStudentsAction } = useAuthStore();
+const { changeStatusLoading } = useLoadStore();
+const { isLoading } = storeToRefs(useLoadStore());
+
 const props = defineProps({
     max: {
         default: 5,
     }
 })
 const isShowActionMenu = ref(null)
+const studentList = ref([])
 const showActionMenu = (index) => {
     if (isShowActionMenu.value == index) {
         isShowActionMenu.value = null
@@ -20,6 +30,33 @@ const hideActionMenu = (index) => {
         isShowActionMenu.value = null
     }
 }
+
+const miniavtar = (name) => {
+    return minidenticon(name)
+}
+
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        getStudentsAction(1)
+            .then(
+                (res) => {
+                    studentList.value = res.data.data;
+                    console.log(studentList.value);
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }
+)
 
 </script>
 
@@ -56,7 +93,8 @@ const hideActionMenu = (index) => {
                                 <th scope="col" class="px-4 py-3">
                                     <div class="cursor-pointer flex gap-1 items-center">
                                         <p>Student ID</p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500"
+                                            viewBox="0 0 320 512">
                                             <path
                                                 d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
                                         </svg>
@@ -65,7 +103,8 @@ const hideActionMenu = (index) => {
                                 <th scope="col" class="px-4 py-3">
                                     <div class="cursor-pointer flex gap-1 items-center justify-center">
                                         <p>Student Name</p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500"
+                                            viewBox="0 0 320 512">
                                             <path
                                                 d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
                                         </svg>
@@ -76,7 +115,8 @@ const hideActionMenu = (index) => {
                                 <th scope="col" class="px-4 py-3">
                                     <div class="cursor-pointer flex gap-1 items-center justify-center">
                                         <p>Join Date</p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500"
+                                            viewBox="0 0 320 512">
                                             <path
                                                 d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
                                         </svg>
@@ -96,25 +136,25 @@ const hideActionMenu = (index) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="i in max" :key="i">
+                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="(std, index) in studentList.data"
+                                :key="index">
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-8 aspect-square overflow-hidden relative">
-                                            <div
-                                                class="absolute z-10 bg-success w-2.5 right-0 bottom-0 aspect-square rounded-full">
-                                            </div>
-                                            <img src="https://www.shutterstock.com/image-vector/woman-modern-icon-avatar-design-260nw-2358837033.jpg"
-                                                class="w-full h-full object-cover rounded-full border" alt="avtar">
+                                        <div class="w-8 aspect-square overflow-hidden border rounded-full">
+                                            <img :src="std.avatar" v-if="std.avatar" alt="avtar">
+                                            <div v-html="miniavtar(std.name)" v-else class="w-full bg-white"></div>
                                         </div>
-                                        <p>#0001</p>
+                                        <p>#{{ std.id }}</p>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-center">Nitesh N Nageshri</td>
-                                <td class="px-4 py-3 text-center">nitesh@gmail.com</td>
-                                <td class="px-4 py-3 text-center">+91 85865 86969</td>
-                                <td class="px-4 py-3 text-center">24 Nov 2021</td>
+                                <td class="px-4 py-3 text-center">{{ std.name }}</td>
+                                <td class="px-4 py-3 text-center">{{ std.email }}</td>
+                                <td class="px-4 py-3 text-center">{{ std.mobile }}</td>
+                                <td class="px-4 py-3 text-center">{{ new
+                                Date(std.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 ">
-                                    <div class="text-center text-success font-semibold flex justify-center items-center">
+                                    <div
+                                        class="text-center text-success font-semibold flex justify-center items-center">
 
                                         12%
                                         <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -131,58 +171,48 @@ const hideActionMenu = (index) => {
                                         class="text-[12px] border text-success rounded-md border-success py-1 px-2">Active</span>
                                 </td>
 
-                                <td class="px-4 pl-1 py-3 relative">
-                                    <div class="flex items-center justify-end gap-4">
+                                <td class="px-4 py-3">
+                                    <div class="flex justify-between items-center gap-2">
+
                                         <label class="inline-flex items-center cursor-pointer">
                                             <input type="checkbox" class="sr-only peer">
                                             <div
                                                 class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue">
                                             </div>
                                         </label>
-                                        <button
-                                            class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg"
-                                            @click="showActionMenu(i)" v-click-outside="() => hideActionMenu(i)"
-                                            type="button">
-                                            <svg class="w-5 h-5 rotate-90" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div class="absolute z-10 w-44 bg-white border rounded-md divide-y divide-gray-100"
-                                            v-show="isShowActionMenu == i" :class="10 - 3 < i ? 'bottom-full' : 'top-full'">
-                                            <ul class="py-1 text-sm text-gray-700">
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a>
-                                                </li>
-                                            </ul>
-                                            <div class="py-1">
-                                                <a href="#"
-                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
 
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-blue cursor-pointer w-4"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
+                                        </svg>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-success cursor-pointer w-4"
+                                            viewBox="0 0 512 512">
+                                            <path
+                                                d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                        </svg>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-red-400 cursor-pointer w-4"
+                                            viewBox="0 0 448 512">
+                                            <path
+                                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                        </svg>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex justify-between items-center space-y-0 p-4"
-                    aria-label="Table navigation">
+                <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">
-                        Showing
-                        <span class="font-semibold text-gray-900">1-10</span>
-                        of
-                        <span class="font-semibold text-gray-900">1000</span>
+                        Result
+                        <span class="font-semibold text-gray-900">{{ studentList.total }}</span>
                     </span>
                     <ul class="inline-flex items-stretch -space-x-px">
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button :class="studentList.prev_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 ">
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -190,11 +220,12 @@ const hideActionMenu = (index) => {
                                         clip-rule="evenodd" />
                                 </svg>
                                 <span>Prev</span>
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button      
+                                :class="studentList.next_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 ">
                                 <span>Next</span>
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -202,10 +233,11 @@ const hideActionMenu = (index) => {
                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                         clip-rule="evenodd" />
                                 </svg>
-                            </a>
+                            </button>
                         </li>
                     </ul>
                 </nav>
             </div>
-    </div>
-</section></template>
+        </div>
+    </section>
+</template>

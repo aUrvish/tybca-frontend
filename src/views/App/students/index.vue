@@ -9,7 +9,7 @@ import FilterCource from './components/FilterCource.vue';
             <div class="border rounded-md bg-white p-4 flex items-center justify-between">
                 <h1 class="text-[24px] font-semibold">Students</h1>
                 <div>
-                    <RouterLink :to="{ name : 'QuizDetails'}" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
+                    <RouterLink :to="{ name : 'StudentAdd'}" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
                         Add Student
                     </RouterLink>
                 </div>

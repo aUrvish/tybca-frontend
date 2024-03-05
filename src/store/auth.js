@@ -74,6 +74,18 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
+        const getStudentsAction = async(page = 1) => {
+            let res = null;
+            res = axios.get(`/api/auth/students/get/?page=${page}`);
+            return res
+        }
+
+        const getTeachersAction = async() => {
+            let res = null;
+            res = axios.get('/api/auth/teachers/get');
+            return res
+        }
+
         return {
             auth, 
             loginAction, 
@@ -86,7 +98,9 @@ export const useAuthStore = defineStore('auth',
             profilesEditAction,
             getProfilesAction,
             getAuthProfileAction,
-            authProfilesEditAction
+            authProfilesEditAction,
+            getStudentsAction,
+            getTeachersAction
         }
     },
     {

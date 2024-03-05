@@ -241,7 +241,7 @@ const addUser = () => {
                 <div class="p-4 border rounded-sm bg-white" v-if="course">
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <p class="px-3 py-1.5 flex items-center gap-2 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC] cursor-pointer"
+                        <p class="px-3 py-1.5 flex items-center gap-2 rounded-[8px] font-medium lg:text-base text-[15px] cursor-pointer"
                             @click="addCourse(course)" v-for="(course, index) in course" :key="index"
                             :style="{ color: course.primary_color, backgroundColor: `${course.primary_color}1A` }">
                             <svg xmlns="http://www.w3.org/2000/svg" v-if="selectCourse.includes(course.id)"

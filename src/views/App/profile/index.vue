@@ -163,7 +163,7 @@ onMounted(
                         </div>
                         <div class="grid grid-cols-3 gap-4 my-2">
                             <p class="font-semibold">Join :</p>
-                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">24 Nov 2021</p>
+                            <p class="col-start-2 col-end-4 text-gray-400 font-medium">{{ new Date(user.join).toLocaleDateString().replaceAll("/", "-") }}</p>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@ onMounted(
                 <div class="p-4 border rounded-sm my-4 bg-white" v-if="user.course.length">
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <p class="px-3 py-1.5 flex items-center gap-2 bg-[#BD39FC1A] rounded-[8px] font-medium lg:text-base text-[15px] text-[#BD39FC] cursor-pointer"
+                        <p class="px-3 py-1.5 flex items-center gap-2 rounded-[8px] font-medium lg:text-base text-[15px] cursor-pointer"
                              v-for="({subscribe}, index) in user.course" :key="index"
                             :style="{ color: subscribe.primary_color, backgroundColor: `${subscribe.primary_color}1A` }">
                             {{ subscribe.name }}
