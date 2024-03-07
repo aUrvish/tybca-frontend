@@ -152,7 +152,7 @@ const availableRoute = (arr) => {
                         <span class="ml-3.5 group-hover:text-gray">Quiz</span>
                     </RouterLink>
                 </li>
-                <li v-if="availableRoute([0])">
+                <!-- <li v-if="availableRoute([0])">
                     <RouterLink :to="{ name: 'Payment' }"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +163,7 @@ const availableRoute = (arr) => {
                         </svg>
                         <span class="ml-3.5 group-hover:text-gray">payment</span>
                     </RouterLink>
-                </li>
+                </li> -->
             </ul>
 
         </div>

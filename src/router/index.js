@@ -56,14 +56,14 @@ const router = createRouter({
             role_id: [0, 1, 2]
           },
         },
-        {
-          path: 'payment',
-          name: 'Payment',
-          component: () => import('@/views/App/payment/index.vue'),
-          meta: {
-            role_id: [0]
-          },
-        },
+        // {
+        //   path: 'payment',
+        //   name: 'Payment',
+        //   component: () => import('@/views/App/payment/index.vue'),
+        //   meta: {
+        //     role_id: [0]
+        //   },
+        // },
         {
           path: 'student',
           name: 'StudentList',
@@ -76,6 +76,14 @@ const router = createRouter({
           path: 'student/add',
           name: 'StudentAdd',
           component: () => import('@/views/App/students/Add.vue'),
+          meta: {
+            role_id: [0]
+          },
+        },
+        {
+          path: 'teacher/add',
+          name: 'TeacherAdd',
+          component: () => import('@/views/App/teacher/Add.vue'),
           meta: {
             role_id: [0]
           },
@@ -158,6 +166,14 @@ const router = createRouter({
           component: () => import('@/views/App/profile/index.vue'),
           meta: {
             role_id: [0, 1, 2]
+          },
+        },
+        {
+          path: 'profile/:id',
+          name: 'UserProfile',
+          component: () => import('@/views/App/profile/UserProfile.vue'),
+          meta: {
+            role_id: [0, 1]
           },
         },
         {

@@ -155,8 +155,8 @@ const logout = () => {
                 <div class="absolute top-full right-5 z-50 my-4 w-56 text-base list-none bg-white divide-y border rounded-md"
                     :class="isShowUserMenu ? '' : 'hidden'" id="dropdown">
                     <div class="py-3 px-4">
-                        <span class="block text-sm font-semibold text-gray-900">Neil Sims</span>
-                        <span class="block text-sm text-gray-900 truncate">name@flowbite.com</span>
+                        <p class="block text-sm font-semibold text-gray-900">{{ auth.user.name }}</p>
+                        <p class="block text-sm text-gray-900 truncate">{{ auth.user.email }}</p>
                     </div>
                     <ul class="py-1 text-gray-700" aria-labelledby="dropdown">
                         <li>

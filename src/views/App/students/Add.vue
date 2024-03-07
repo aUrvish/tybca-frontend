@@ -19,12 +19,12 @@ const { course } = storeToRefs(useCourseStore());
 const { getCourse, mutationSetCourse } = useCourseStore();
 
 const user = reactive({
-    name: "ronak",
-    email: "ronak@gmail.com",
+    name: null,
+    email: null,
     gender: 1,
-    mobile: 9797979797,
-    city: "mumbai",
-    country: "india",
+    mobile: null,
+    city: null,
+    country: null,
 })
 
 const rules = computed(() => {

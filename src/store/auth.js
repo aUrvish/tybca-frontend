@@ -86,6 +86,30 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
+        const removeAction = async(id) => {
+            let res = null;
+            res = axios.get(`/api/auth/remove/${id}`);
+            return res
+        }
+
+        const disableAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/disable', payload);
+            return res
+        }
+
+        const getTeachersSeacherAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/teachers/search', payload);
+            return res
+        }
+
+        const getStudentsSeacherAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/students/search', payload);
+            return res
+        }
+
         return {
             auth, 
             loginAction, 
@@ -100,7 +124,11 @@ export const useAuthStore = defineStore('auth',
             getAuthProfileAction,
             authProfilesEditAction,
             getStudentsAction,
-            getTeachersAction
+            getTeachersAction,
+            getTeachersSeacherAction,
+            getStudentsSeacherAction,
+            removeAction,
+            disableAction
         }
     },
     {
