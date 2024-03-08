@@ -110,6 +110,24 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
+        const getOverviewAction = async() => {
+            let res = null;
+            res = axios.get('/api/overview/get');
+            return res
+        }
+
+        const getOverviewStudentsAction = async() => {
+            let res = null;
+            res = axios.get('/api/overview/students');
+            return res
+        }
+
+        const getOverviewTeachersAction = async() => {
+            let res = null;
+            res = axios.get('/api/overview/teachers');
+            return res
+        }
+
         return {
             auth, 
             loginAction, 
@@ -128,7 +146,10 @@ export const useAuthStore = defineStore('auth',
             getTeachersSeacherAction,
             getStudentsSeacherAction,
             removeAction,
-            disableAction
+            disableAction,
+            getOverviewAction,
+            getOverviewStudentsAction,
+            getOverviewTeachersAction
         }
     },
     {

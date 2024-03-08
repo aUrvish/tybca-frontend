@@ -12,6 +12,7 @@ const { getTeachersAction, getTeachersSeacherAction, removeAction, disableAction
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { auth } = storeToRefs(useAuthStore());
+const getStorage = "http://127.0.0.1:8000/storage/";
 
 const props = defineProps({
     max: {
@@ -140,7 +141,7 @@ const changeStatus = (status, id) => {
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">Student {{ filterCourse }}</h1>
+                    <h1 class="text-[20px] font-bold">Teachers</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
                         <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
@@ -182,7 +183,7 @@ const changeStatus = (status, id) => {
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
-                                            <img :src="teacher.avatar" v-if="teacher.avatar" alt="avtar">
+                                            <img :src="getStorage + teacher.avatar" class="object-cover w-full h-full" v-if="teacher.avatar" alt="avtar">
                                             <div v-html="miniavtar(teacher.name)" v-else class="w-full bg-white"></div>
                                         </div>
                                         <p>#{{ teacher.id }}</p>

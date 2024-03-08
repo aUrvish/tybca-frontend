@@ -11,6 +11,7 @@ import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
 import { useCourseStore } from '@/store/course'
 import {useRoute, useRouter} from 'vue-router'
+const getStorage = "http://127.0.0.1:8000/storage/";
 
 const { profilesEditAction, getProfilesAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
@@ -82,6 +83,10 @@ onMounted(
                     user.mobile = response.mobile
                     user.city = response.city
                     user.country = response.country
+
+                    if (response.avatar) {
+                        avatarImg.value = getStorage + response.avatar
+                    }
 
                     selectCourse.value = response.course.map((curr) => curr.course_id)
                     }else {

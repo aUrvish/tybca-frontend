@@ -54,6 +54,7 @@ onMounted(
 
 const search = ref(null)
 const filterCourse = computed(() => props.filter)
+const getStorage = "http://127.0.0.1:8000/storage/";
 
 watch(search,
     (newVal) => {
@@ -181,7 +182,7 @@ const changeStatus = (status, id) => {
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
-                                            <img :src="std.avatar" v-if="std.avatar" alt="avtar">
+                                            <img :src="getStorage + std.avatar" class="object-cover w-full h-full" v-if="std.avatar" alt="avtar">
                                             <div v-html="miniavtar(std.name)" v-else class="w-full bg-white"></div>
                                         </div>
                                         <p>#{{ std.id }}</p>

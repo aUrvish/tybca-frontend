@@ -11,6 +11,7 @@ const userMiniprofile = ref(null)
 const { logoutAction, authNull } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
+const getStorage = "http://127.0.0.1:8000/storage/";
 
 const props = defineProps({
     noSidebar: {
@@ -143,11 +144,12 @@ const logout = () => {
                     <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1>
                 </button> -->
-                <button type="button" class="flex mx-2 text-sm rounded-full border md:mr-0 w-9 h-9 justify-center items-center"
+                <button type="button" class="flex mx-2 text-sm rounded-full border md:mr-0 w-9 h-9 justify-center items-center overflow-hidden"
                     v-click-outside="() => isShowUserMenu = false"
                     @click="isShowUserMenu = !isShowUserMenu">
                     <!-- <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1> -->
+                    <img :src="getStorage +auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user.avatar" alt="avtar">
                     <div class="w-full" v-html="userMiniprofile" ></div>
                 </button>
 
