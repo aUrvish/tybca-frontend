@@ -1,7 +1,10 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
-
+import { useLoadStore } from '@/store/loading'
+const { changeStatusLoading } = useLoadStore();
+const { logoutAction, authNull } = useAuthStore();
+import { toast } from "vue3-toastify";
 const { auth } = storeToRefs(useAuthStore());
 
 const props = defineProps(
@@ -16,6 +19,30 @@ const roleId = auth.value?.user.role_id;
 console.log(roleId);
 const availableRoute = (arr) => {
     return arr.includes(roleId)
+}
+
+const logout = () => {
+    changeStatusLoading(true)
+    logoutAction()
+        .then(
+            (res) => {
+                toast(res.data.messages, {
+                    "type": res.data.status ? "success" : "error",
+                    "dangerouslyHTMLString": true
+                })
+                authNull();
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                toast(e.response.data.messages, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        )
 }
 </script>
 
@@ -170,7 +197,7 @@ const availableRoute = (arr) => {
         <div class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex hidden bg-white z-20">
             <ul class="w-full">
                 <li>
-                    <a href="#"
+                    <a href="#" @click="logout"
                         class="py-2 px-4 text-base font-medium text-gray-900 rounded-lg transition duration-75 group flex justify-between items-center bg-red-100">
                         <span class="text-red-600">Logout</span>
                         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" class="fill-red-600"

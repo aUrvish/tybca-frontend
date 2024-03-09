@@ -86,6 +86,12 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
+        const getStaffAction = async() => {
+            let res = null;
+            res = axios.get('/api/auth/staff/get');
+            return res
+        }
+
         const removeAction = async(id) => {
             let res = null;
             res = axios.get(`/api/auth/remove/${id}`);
@@ -101,6 +107,12 @@ export const useAuthStore = defineStore('auth',
         const getTeachersSeacherAction = async(payload) => {
             let res = null;
             res = axios.post('/api/auth/teachers/search', payload);
+            return res
+        }
+
+        const getStaffSeacherAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/staff/search', payload);
             return res
         }
 
@@ -149,7 +161,9 @@ export const useAuthStore = defineStore('auth',
             disableAction,
             getOverviewAction,
             getOverviewStudentsAction,
-            getOverviewTeachersAction
+            getOverviewTeachersAction,
+            getStaffAction,
+            getStaffSeacherAction
         }
     },
     {

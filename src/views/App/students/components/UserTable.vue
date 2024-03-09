@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { useRouter } from 'vue-router';
 import DeleteConfirm from '@/components/DeleteConfirm.vue';
+import debounce from 'lodash.debounce'
 
 const { getStudentsAction, getStudentsSeacherAction, removeAction, disableAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
@@ -54,10 +55,12 @@ onMounted(
 
 const search = ref(null)
 const filterCourse = computed(() => props.filter)
-const getStorage = "http://127.0.0.1:8000/storage/";
+import services from '@/plugins/service'
+const getStorage = services.storageBaseUrl;
+
 
 watch(search,
-    (newVal) => {
+    debounce((newVal) => {
 
         changeStatusLoading(true)
         getStudentsSeacherAction({ search: newVal })
@@ -77,7 +80,7 @@ watch(search,
                 }
             )
 
-    }
+    } , 800)
 )
 
 const removeUserFunc = (id) => {
@@ -140,7 +143,7 @@ const changeStatus = (status, id) => {
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">Student {{ filterCourse }}</h1>
+                    <h1 class="text-[20px] font-bold">Student</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
                         <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>

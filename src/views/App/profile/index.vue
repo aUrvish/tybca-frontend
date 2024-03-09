@@ -9,12 +9,13 @@ import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import {useRoute, useRouter} from 'vue-router'
 import { toast } from "vue3-toastify";
+import services from '@/plugins/service'
 
 const { getAuthProfileAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
 const { isLoading } = storeToRefs(useLoadStore());
-const getStorage = "http://127.0.0.1:8000/storage/";
+const getStorage = services.storageBaseUrl;
 const router = useRouter()
 
 const user = reactive(

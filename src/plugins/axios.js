@@ -2,10 +2,11 @@ import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
 import { useRoute } from 'vue-router'
+import service from './service'
 
 
 const customAxios = axios.create({
-    baseURL: "http://127.0.0.1:8000",
+    baseURL: service.apiBaseUrl,
     headers : {
         'Accept': 'application/json'
     }

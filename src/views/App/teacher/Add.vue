@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
 import { useCourseStore } from '@/store/course'
+import { useRouter } from 'vue-router';
 
 const { registerAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
@@ -42,6 +43,7 @@ const v$ = useVuelidate(rules, user)
 const userMiniprofile = ref(null)
 const form = ref(null)
 const avatarImg = ref(null)
+const router = useRouter();
 
 const changeImg = (value) => {
     avatarImg.value = URL.createObjectURL(value.files[0]);
@@ -106,6 +108,8 @@ const addUser = () => {
                     "type": res.data.status ? "success" : "error",
                     "dangerouslyHTMLString": true
                 })
+
+                router.push( {name : 'TeacherList' })
                 changeStatusLoading(false)
             }
         )
@@ -127,7 +131,7 @@ const addUser = () => {
         <div class="flex gap-4 items-start flex-col 3lg:flex-row max-w-screen-xl mx-auto">
             <div class="grow w-full">
                 <div class="border rounded-md bg-white p-4 mb-4">
-                    <h1 class="text-[24px] font-semibold">Student</h1>
+                    <h1 class="text-[24px] font-semibold">Teacher</h1>
                 </div>
                 <div class="border rounded-md bg-white sm:p-6 p-4">
                     <div

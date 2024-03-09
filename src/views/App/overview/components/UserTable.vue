@@ -2,6 +2,7 @@
 import { minidenticon } from 'minidenticons'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import services from '@/plugins/service'
 const props = defineProps({
     max: {
         default: 5,
@@ -13,7 +14,7 @@ const props = defineProps({
         default: []
     }
 })
-const getStorage = "http://127.0.0.1:8000/storage/";
+const getStorage = services.storageBaseUrl;
 const isShowActionMenu = ref(null)
 const showActionMenu = (index) => {
     if (isShowActionMenu.value == index) {

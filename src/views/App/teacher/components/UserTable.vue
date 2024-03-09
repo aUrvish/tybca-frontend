@@ -7,12 +7,14 @@ import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { useRouter } from 'vue-router';
 import DeleteConfirm from '@/components/DeleteConfirm.vue';
+import debounce from 'lodash.debounce'
+import services from '@/plugins/service'
 
 const { getTeachersAction, getTeachersSeacherAction, removeAction, disableAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { auth } = storeToRefs(useAuthStore());
-const getStorage = "http://127.0.0.1:8000/storage/";
+const getStorage = services.storageBaseUrl;
 
 const props = defineProps({
     max: {
@@ -57,7 +59,7 @@ const search = ref(null)
 const filterCourse = computed(() => props.filter)
 
 watch(search,
-    (newVal) => {
+    debounce((newVal) => {
 
         changeStatusLoading(true)
         getTeachersSeacherAction({ search: newVal })
@@ -77,7 +79,7 @@ watch(search,
                 }
             )
 
-    }
+    }, 800)
 )
 
 const removeUserFunc = (id) => {
@@ -165,8 +167,8 @@ const changeStatus = (status, id) => {
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs border-b uppercase">
                             <tr class="[&>*]:whitespace-nowrap">
-                                <th scope="col" class="px-4 py-3">Student ID</th>
-                                <th scope="col" class="px-4 py-3 text-center">Student Name</th>
+                                <th scope="col" class="px-4 py-3">Teacher ID</th>
+                                <th scope="col" class="px-4 py-3 text-center">Teacher Name</th>
                                 <th scope="col" class="px-4 py-3 text-center">E-Mail</th>
                                 <th scope="col" class="px-4 py-3 text-center">Mobile</th>
                                 <th scope="col" class="px-4 py-3 text-center">Join Date</th>

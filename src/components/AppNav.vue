@@ -5,13 +5,14 @@ import { useLoadStore } from '@/store/loading'
 import { storeToRefs } from 'pinia';
 import { toast } from "vue3-toastify";
 import { minidenticon } from 'minidenticons'
+import services from '@/plugins/service'
 
 const userMiniprofile = ref(null)
 
 const { logoutAction, authNull } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
-const getStorage = "http://127.0.0.1:8000/storage/";
+const getStorage = services.storageBaseUrl;
 
 const props = defineProps({
     noSidebar: {

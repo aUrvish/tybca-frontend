@@ -1,26 +1,103 @@
 <script setup>
-import Btn from '@/components/Btn.vue';
-import { ref } from 'vue';
-const props = defineProps({
-    max: {
-        default: 5,
-    }
-})
-const isShowActionMenu = ref(null)
-const showActionMenu = (index) => {
-    if (isShowActionMenu.value == index) {
-        isShowActionMenu.value = null
-        return null
-    }
-    isShowActionMenu.value = index
+import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { minidenticon } from 'minidenticons'
+import { toast } from "vue3-toastify";
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+import { useNoticeStore } from '@/store/notice'
+import { useLoadStore } from '@/store/loading'
+import { useRouter } from 'vue-router';
+import DeleteConfirm from '@/components/DeleteConfirm.vue';
+import debounce from 'lodash.debounce'
+import services from '@/plugins/service'
+
+const { noticeGetAllAction, noticeRemoveAction, noticeChangeStatusAction, getNoticeSeacherAction } = useNoticeStore();
+const { changeStatusLoading } = useLoadStore();
+const { isLoading } = storeToRefs(useLoadStore());
+const { auth } = storeToRefs(useAuthStore());
+
+const noticeList = ref([])
+const pagination = ref(1)
+const router = useRouter()
+const miniavtar = (name) => {
+    return minidenticon(name)
 }
 
-const hideActionMenu = (index) => {
-    if (isShowActionMenu.value == index) {
-        isShowActionMenu.value = null
-    }
-}
+const selectedId = ref(null)
 
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        noticeGetAllAction(pagination.value)
+            .then(
+                (res) => {
+                    noticeList.value = res.data.data;
+                    console.log(noticeList.value.data);
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }
+)
+
+const search = ref(null)
+const getStorage = services.storageBaseUrl;
+
+
+watch(search,
+    debounce((newVal) => {
+
+        changeStatusLoading(true)
+        getNoticeSeacherAction({ search: newVal })
+            .then(
+                (res) => {
+                    noticeList.value = res.data.data;
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+    } , 800)
+)
+
+const removeUserFunc = (id) => {
+    changeStatusLoading(true)
+    noticeRemoveAction(id)
+        .then(
+            (res) => {
+                noticeList.value.data = noticeList.value.data.filter((curr) => curr.id != id);
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                console.log(e);
+                toast(e.response.data.messages, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        ).finally(
+            () => selectedId.value = false
+        )
+}
 </script>
 
 <template>
@@ -65,73 +142,66 @@ const hideActionMenu = (index) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="i in max"
-                                :key="i">
+                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="(notice , index) in noticeList.data"
+                                :key="index">
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
-                                        <div class="border w-8 aspect-square rounded-full overflow-hidden">
-                                            <img src="https://www.shutterstock.com/image-vector/woman-modern-icon-avatar-design-260nw-2358837033.jpg"
-                                                class="w-full h-full object-cover" alt="avtar">
+                                        <div class="w-8 aspect-square overflow-hidden border rounded-full">
+                                            <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full" v-if="notice.user.avatar" alt="avtar">
+                                            <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-white"></div>
                                         </div>
-                                        <p>#0001</p>
+                                        <p>#{{ notice.user.id }}</p>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3">Exam 2024-25 timetable</td>
-                                <td class="px-4 py-3">Exam 2024-25 timetable Notice</td>
-                                <td class="px-4 py-3 text-center">24 Nov 2021</td>
-                                <td class="px-4 py-3 text-center">24 Nov 2021</td>
+                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.title }}</td>
+                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.caption }}</td>
+                                <td class="px-4 py-3 text-center">{{ new
+                        Date(notice.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                <td class="px-4 py-3 text-center">{{ new
+                        Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">
-                                    <!-- <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2" >Draft</span> -->
                                     <span
-                                        class="text-[12px] border text-primary rounded-md border-primary py-1 px-2">Publish</span>
+                                    class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-if="notice.status">Publish</span>
+                                    <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2" v-else >Draft</span>
                                 </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex justify-between items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-blue cursor-pointer w-4"
+                                            viewBox="0 0 512 512" @click="router.push('/notice/' + notice.uri)">
+                                            <path
+                                                d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
+                                        </svg>
 
-                                <td class="px-4 pl-1 py-3 relative">
-                                    <div class="flex items-center justify-end">
-                                        <button
-                                            class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg"
-                                            @click="showActionMenu(i)" v-click-outside="() => hideActionMenu(i)"
-                                            type="button">
-                                            <svg class="w-5 h-5 rotate-90" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div class="absolute z-10 w-44 bg-white border rounded-md divide-y divide-gray-100"
-                                            v-show="isShowActionMenu == i" :class="10 - 3 < i ? 'bottom-full' : 'top-full'">
-                                            <ul class="py-1 text-sm text-gray-700">
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a>
-                                                </li>
-                                            </ul>
-                                            <div class="py-1">
-                                                <a href="#"
-                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                                            </div>
-                                        </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-success cursor-pointer w-4"
+                                            viewBox="0 0 512 512" @click="router.push(`/notice/edit/${notice.id}`)"
+                                            v-if="notice.user.id == auth.user.id || auth.user.role_id == 0">
+                                            <path
+                                                d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                        </svg>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-red-400 cursor-pointer w-4"
+                                            viewBox="0 0 448 512" @click="selectedId = notice.id" 
+                                            v-if="notice.user.id == auth.user.id || auth.user.role_id == 0">
+                                            <path
+                                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                        </svg>
                                     </div>
-
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex justify-between items-center space-y-0 p-4"
-                    aria-label="Table navigation">
+                <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">
-                        Showing
-                        <span class="font-semibold text-gray-900">1-10</span>
-                        of
-                        <span class="font-semibold text-gray-900">1000</span>
+                        Result
+                        <span class="font-semibold text-gray-900">{{ noticeList.total }}</span>
                     </span>
                     <ul class="inline-flex items-stretch -space-x-px">
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button
+                                :class="noticeList.prev_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                @click="noticeList.prev_page_url ? pagination-- : ''"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 ">
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -139,11 +209,13 @@ const hideActionMenu = (index) => {
                                         clip-rule="evenodd" />
                                 </svg>
                                 <span>Prev</span>
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button
+                                :class="noticeList.next_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                @click="noticeList.next_page_url ? pagination++ : ''"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 ">
                                 <span>Next</span>
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -151,11 +223,12 @@ const hideActionMenu = (index) => {
                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                         clip-rule="evenodd" />
                                 </svg>
-                            </a>
+                            </button>
                         </li>
                     </ul>
                 </nav>
             </div>
         </div>
+        <DeleteConfirm v-if="selectedId" @delete="removeUserFunc(selectedId)" @close="selectedId = null" />
     </section>
 </template>

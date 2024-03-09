@@ -37,6 +37,15 @@ const router = createRouter({
       },
     },
     {
+      path: '/notice/:uri',
+      name: 'noticeView',
+      component: () => import('@/views/App/notice/View.vue'),
+      meta: {
+        requiresAuth: true,
+        role_id: [0, 1, 2]
+      },
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: '404',
       component: () => import('@/404.vue'),
@@ -153,8 +162,8 @@ const router = createRouter({
           },
         },
         {
-          path: 'notice/add',
-          name: 'noticeAdd',
+          path: 'notice/edit/:id',
+          name: 'noticeEdit',
           component: () => import('@/views/App/notice/Add.vue'),
           meta: {
             role_id: [0, 1]

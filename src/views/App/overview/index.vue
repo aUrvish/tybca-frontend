@@ -11,6 +11,7 @@ import debounce from 'lodash.debounce'
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
+import Staff from './components/Staff.vue';
 const { auth } = storeToRefs(useAuthStore());
 const { changeStatusLoading } = useLoadStore();
 const { getOverviewStudentsAction, getOverviewTeachersAction, getStudentsSeacherAction, getTeachersSeacherAction } = useAuthStore();
@@ -215,6 +216,8 @@ watch(
                         </div>
                     </form>
                 </UserTable>
+
+                <Staff v-if="auth.user.role_id == 2" />
             </div>
             <div class="max-w-sm w-full 3lg:block hidden grow">
                 <Notice />
