@@ -6,6 +6,7 @@ import { useNoticeStore } from '@/store/notice'
 const { changeStatusLoading } = useLoadStore();
 const { logoutAction, authNull } = useAuthStore();
 import { toast } from "vue3-toastify";
+import { useRoute } from 'vue-router';
 const { auth } = storeToRefs(useAuthStore());
 
 const props = defineProps(
@@ -17,7 +18,7 @@ const props = defineProps(
 )
 
 const { latestNotice } = storeToRefs(useNoticeStore());
-
+const route = useRoute()
 
 const roleId = auth.value?.user.role_id;
 console.log(roleId);
@@ -69,7 +70,7 @@ const logout = () => {
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="{ name: 'Profile' }"
+                    <RouterLink :to="{ name: 'Profile' }" :class="['ProfileEdit'].includes(route.name) ? 'router-link-exact-active' : ''"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
                             class="w-6 text-gray-500 group-hover:text-gray transition duration-75" fill="currentColor">
@@ -80,7 +81,7 @@ const logout = () => {
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="{ name: 'noticeList' }"
+                    <RouterLink :to="{ name: 'noticeList' }" :class="['noticeEdit'].includes(route.name) ? 'router-link-exact-active' : ''"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
 
                         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
@@ -97,7 +98,7 @@ const logout = () => {
             </ul>
             <ul class="space-y-2 mt-2 border-t pt-2" v-if="availableRoute([2])">
                 <li>
-                    <RouterLink :to="{ name: 'testList' }"
+                    <RouterLink :to="{ name: 'testList' }" 
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 text-gray-500 group-hover:text-gray transition duration-75"
@@ -134,7 +135,7 @@ const logout = () => {
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="{ name: 'UserTeacherList' }"
+                    <RouterLink :to="{ name: 'UserTeacherList' }" :class="['TeacherAdd'].includes(route.name) ? 'router-link-exact-active' : ''"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
 
                         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20"
@@ -149,7 +150,7 @@ const logout = () => {
             </ul>
             <ul class="space-y-2 mt-2 border-t pt-2" v-if="availableRoute([0, 1])">
                 <li>
-                    <RouterLink :to="{ name: 'StudentList' }"
+                    <RouterLink :to="{ name: 'StudentList' }" :class="['StudentAdd'].includes(route.name) ? 'router-link-exact-active' : ''"
                         class="flex items-center p-2 text-base font-medium text-gray-900 rounded-md hover:bg-gray-100 group">
 
                         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20"

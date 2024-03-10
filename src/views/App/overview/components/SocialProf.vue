@@ -25,6 +25,7 @@ onMounted(
                         let data = res.data.data;
                         social.value.students = data.students;
                         social.value.teachers = data.teachers;
+                        social.value.course = data.course;
                     }
                 }
             )
@@ -42,7 +43,7 @@ onMounted(
 </script>
 <template>
     <div>
-        <div class="p-4 bg-[#e7e6fb] rounded-md">
+        <div class="p-4 bg-[#e7e6fb] rounded-md" v-if="auth.user.role_id != 2">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#6151fb]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" class="h-8 w-8 fill-white"
                     viewBox="0 0 640 512">
@@ -75,7 +76,7 @@ onMounted(
             <h4 class="mt-1 text-center font-bold font-sans sm:text-[20px] text-[18px]">Total Courses</h4>
             <p class="text-center font-bold font-sans sm:text-[30px] text-[24px]">{{ social.course }}</p>
         </div>
-        <!-- <div class="p-4 bg-[#fbedd9] rounded-md">
+        <div class="p-4 bg-[#fbedd9] rounded-md" v-if="auth.user.role_id == 2">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#ffa426]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" class="h-8 w-8 fill-white"
                     viewBox="0 0 512 512">
@@ -84,7 +85,7 @@ onMounted(
                 </svg>
             </div>
             <h4 class="mt-1 text-center font-bold font-sans text-[20px]">Active Exam</h4>
-            <p class="text-center font-bold font-sans text-[26px]">6</p>
-        </div> -->
+            <p class="text-center font-bold font-sans text-[26px]">0</p>
+        </div>
     </div>
 </template>

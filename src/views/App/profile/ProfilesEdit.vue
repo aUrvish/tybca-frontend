@@ -147,6 +147,7 @@ const addUser = () => {
                     "dangerouslyHTMLString": true
                 })
                 changeStatusLoading(false)
+                router.back(1)
             }
         )
         .catch(

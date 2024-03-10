@@ -108,6 +108,7 @@ const publishNotice = () => {
                     "dangerouslyHTMLString": true
                 })
                 changeStatusLoading(false)
+                router.push('/notice')
             }
         )
         .catch(

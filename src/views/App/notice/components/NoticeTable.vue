@@ -166,7 +166,7 @@ const goTourl = (uri) => {
                         Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">
                                     <span
-                                    class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-if="notice.status">Publish</span>
+                                    class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-if="notice.status">Published</span>
                                     <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2" v-else >Draft</span>
                                 </td>
                                 <td class="px-4 py-3">

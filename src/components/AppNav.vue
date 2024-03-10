@@ -157,11 +157,11 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                         Notifications
                     </div>
                     <div class="border-y">
-                        <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="(notice , index) in latestNotice" :key="index">
+                        <a :href="`/notice/${notice.uri}`" class="flex py-3 px-4 hover:bg-gray-100" v-for="(notice , index) in latestNotice.filter((curr, i) => i < 3)" :key="index">
                             <div class="flex-shrink-0">
                                     <div class="w-11 h-11 rounded-full overflow-hidden" >
                                         <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full" v-if="notice.user.avatar" alt="avtar">
-                                        <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-white"></div>
+                                        <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-gray-100"></div>
                                     </div>
                             </div>
                             <div class="pl-3 w-full">

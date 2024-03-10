@@ -9,12 +9,13 @@ import { toast } from "vue3-toastify";
 import { storeToRefs } from 'pinia';
 import { useLoadStore } from '@/store/loading'
 import { useNoticeStore } from '@/store/notice'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const { noticeGetAction } = useNoticeStore();
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const route = useRoute()
+const router = useRouter()
 
 
 const download = () => {
@@ -27,9 +28,8 @@ const download = () => {
 
 const notice = reactive(
     {
-        id: route.params.id,
-        title: 'Notice title',
-        caption: 'Caption...',
+        title: null,
+        caption: null,
         textarea: null,
         uri: null,
         user: null,
@@ -64,13 +64,14 @@ onMounted(
                         "dangerouslyHTMLString": true
                     })
                     changeStatusLoading(false)
+                    router.push({ name : '404'})
                 }
             )
     }
 )
 </script>
 <template>
-    <Notice>
+    <Notice v-if="notice.title" >
         <template #bar>
             <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-2 z-50">
                 <div class="flex justify-between flex-wrap items-center">
