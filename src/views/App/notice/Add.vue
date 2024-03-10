@@ -2,7 +2,7 @@
 import Editor from '@tinymce/tinymce-vue'
 import Btn from '@/components/Btn.vue';
 import { onMounted, reactive, ref, watch } from 'vue'
-
+import service from '@/plugins/service';
 import { toast } from "vue3-toastify";
 import { storeToRefs } from 'pinia';
 import { useLoadStore } from '@/store/loading'
@@ -20,6 +20,7 @@ const editorInit = ref(
         toolbar_mode: 'sliding',
         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+        images_upload_url : `${service.apiBaseUrl}/api/image-upload`,
         tinycomments_mode: 'embedded',
         tinycomments_author: 'Author name',
         mergetags_list: [
@@ -129,7 +130,7 @@ const copyUrl = () => {
 }
 
 const goTourl = () => {
-    router.push('/notice/' + notice.uri)
+    window.open('/notice/' + notice.uri, '_blank');
 }
 </script>
 

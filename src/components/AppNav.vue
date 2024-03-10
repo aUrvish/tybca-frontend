@@ -1,17 +1,22 @@
-<script setup >
+<script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
+import { minidenticon } from 'minidenticons'
 import { storeToRefs } from 'pinia';
 import { toast } from "vue3-toastify";
-import { minidenticon } from 'minidenticons'
+
+import { useNoticeStore } from '@/store/notice'
 import services from '@/plugins/service'
+
+const { noticeGetAllPublishAction,  setLatestNotice, setLastCheckout, setClearLatestNotice } = useNoticeStore();
 
 const userMiniprofile = ref(null)
 
 const { logoutAction, authNull } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
+const { lastCheckout, latestNotice } = storeToRefs(useNoticeStore());
 const getStorage = services.storageBaseUrl;
 
 const props = defineProps({
@@ -23,29 +28,14 @@ const props = defineProps({
 onMounted(
     () => {
         userMiniprofile.value = minidenticon(auth.value?.user?.name)
+        fetchLetast()
     }
 )
-
-// const colours = ref(["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"]);
-
-// const username = ref('Admin');
-// const isUsernameWordSingle = ref(false)
-
-// const nameInit = computed(() => {
-//     let nameArr = username.value.split(" ")
-//     if (nameArr.length > 1) {
-//         return nameArr[0].charAt(0).toUpperCase() + nameArr[1]?.charAt(0).toUpperCase()
-//     }
-
-//     isUsernameWordSingle.value = true
-//     return username.value.charAt(0).toUpperCase()
-// })
-
-// const randColorIndex = ref(Math.floor(Math.random() * 19))
 
 const isShowNotification = ref(false);
 const isShowUserMenu = ref(false);
 const isShowSidebar = ref(false);
+const router = useRouter()
 
 const logout = () => {
     changeStatusLoading(true)
@@ -70,6 +60,63 @@ const logout = () => {
             }
         )
 }
+
+// notice brodcast event
+
+import Echo from 'laravel-echo';
+
+import Pusher from 'pusher-js';
+import { useRouter } from 'vue-router';
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'ABCDEFG',
+    cluster: 'mt1',
+    wsHost: '127.0.0.1',
+    wsPort: 6001,
+    wssPort: 6001,
+    forceTLS: false,
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+});
+
+const miniavtar = (name) => {
+    return minidenticon(name)
+}
+
+const fetchLetast = () => {
+    changeStatusLoading(true)
+    noticeGetAllPublishAction()
+        .then(
+            (res) => {
+                if (res.data.data) {
+                    let data = res.data.data
+                    if (lastCheckout.value) {
+                        let latastData = data.filter((curr) => 
+                        new Date(curr.updated_at) > new Date(lastCheckout.value) && curr.user.role_id != auth.value.user.role_id)
+                        setLatestNotice(latastData)
+                    }else{
+                        setLastCheckout(data[0].updated_at)
+                        setLatestNotice(data)
+                    }
+                }
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                console.log(e);
+                toast(e.response.data.messages, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        )
+}
+
+window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast());
 </script>
 
 <template>
@@ -80,7 +127,8 @@ const logout = () => {
                     @click="isShowSidebar = !isShowSidebar, $emit('showSidebar', isShowSidebar)"
                     v-click-outside="() => isShowSidebar = false, $emit('showSidebar', isShowSidebar)">
                     <img src="@/assets/svgs/menu.svg" class="w-6 h-6" :class="isShowSidebar ? 'hidden' : ''" alt="menu">
-                    <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'" alt="close">
+                    <img src="@/assets/svgs/close.svg" class="w-6 h-6" :class="isShowSidebar ? '' : 'hidden'"
+                        alt="close">
                 </button>
                 <RouterLink :to="{ name: 'Login' }">
                     <img src="@/assets/svgs/logo.svg" class="max-w-[120px] md:max-w-max py-1.5 md:py-0" alt="Logo">
@@ -88,16 +136,18 @@ const logout = () => {
             </div>
             <div class="flex items-center lg:order-2">
                 <!-- github -->
-                <a href="https://github.com/aUrvish/tybca-frontend" class="p-2 mr-1 rounded-full border hover:bg-gray-100">
+                <a href="https://github.com/aUrvish/tybca-frontend"
+                    class="p-2 mr-1 rounded-full border hover:bg-gray-100">
                     <img src="@/assets/svgs/github.svg" class="w-5 h-5" alt="github">
                 </a>
 
                 <!-- Notifications -->
                 <button type="button" class="p-2 mx-1 rounded-full border hover:bg-gray-100 relative"
-                    @click="isShowNotification = !isShowNotification" v-click-outside="() => isShowNotification = false">
+                    @click="latestNotice.length ? isShowNotification = !isShowNotification : router.push('/notice')"
+                    v-click-outside="() => isShowNotification = false">
                     <!-- Bell icon -->
                     <img src="../assets/svgs/bell.svg" class="w-5 h-5" alt="bell">
-                    <div class="w-2 aspect-square rounded-full bg-red-500 absolute right-0"></div>
+                    <div class="w-2 aspect-square rounded-full bg-red-500 absolute right-0" v-if="latestNotice.length"></div>
                 </button>
 
                 <!-- Dropdown menu -->
@@ -107,24 +157,24 @@ const logout = () => {
                         Notifications
                     </div>
                     <div class="border-y">
-                        <a href="#" class="flex py-3 px-4 hover:bg-gray-100">
+                        <a href="#" class="flex py-3 px-4 hover:bg-gray-100" v-for="(notice , index) in latestNotice" :key="index">
                             <div class="flex-shrink-0">
-                                <img class="w-11 h-11 rounded-full"
-                                    src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                                    alt="Bonnie Green avatar" />
+                                    <div class="w-11 h-11 rounded-full overflow-hidden" >
+                                        <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full" v-if="notice.user.avatar" alt="avtar">
+                                        <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-white"></div>
+                                    </div>
                             </div>
                             <div class="pl-3 w-full">
                                 <div class="text-gray-500 font-normal text-sm mb-1.5">
-                                    New message from Bonnie Green "Hey,
-                                    what's up? All set for the presentation?"
+                                    New message from {{ notice.user.name }} "{{ notice.title }}"
                                 </div>
                                 <div class="text-xs font-medium">
-                                    a few moments ago
+                                    {{ new Date(notice.updated_at).toLocaleString() }}
                                 </div>
                             </div>
                         </a>
                     </div>
-                    <a href="#" class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
+                    <a href="#" @click="router.push('/notice')" class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500" fill="currentColor"
                                 viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -145,13 +195,14 @@ const logout = () => {
                     <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1>
                 </button> -->
-                <button type="button" class="flex mx-2 text-sm rounded-full border md:mr-0 w-9 h-9 justify-center items-center overflow-hidden"
-                    v-click-outside="() => isShowUserMenu = false"
-                    @click="isShowUserMenu = !isShowUserMenu">
+                <button type="button"
+                    class="flex mx-2 text-sm rounded-full border md:mr-0 w-9 h-9 justify-center items-center overflow-hidden"
+                    v-click-outside="() => isShowUserMenu = false" @click="isShowUserMenu = !isShowUserMenu">
                     <!-- <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1> -->
-                    <img :src="getStorage +auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user.avatar" alt="avtar">
-                    <div class="w-full" v-html="userMiniprofile" ></div>
+                    <img :src="getStorage + auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user.avatar"
+                        alt="avtar">
+                    <div class="w-full" v-html="userMiniprofile"></div>
                 </button>
 
                 <!-- Dropdown menu -->
@@ -167,12 +218,14 @@ const logout = () => {
                                 profile</RouterLink>
                         </li>
                         <li>
-                            <RouterLink :to="{name : 'ChangePassword'}" class="block py-2 px-4 text-sm hover:bg-gray-100">Change Password</RouterLink>
+                            <RouterLink :to="{ name: 'ChangePassword' }"
+                                class="block py-2 px-4 text-sm hover:bg-gray-100">Change Password</RouterLink>
                         </li>
                     </ul>
                     <ul class="py-1 text-gray-700" aria-labelledby="dropdown">
                         <li>
-                            <p @click="logout" class="block py-2 px-4 text-sm hover:bg-gray-100 cursor-pointer">Sign out</p>
+                            <p @click="logout" class="block py-2 px-4 text-sm hover:bg-gray-100 cursor-pointer">Sign out
+                            </p>
                         </li>
                     </ul>
                 </div>
