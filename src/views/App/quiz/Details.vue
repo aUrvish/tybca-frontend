@@ -19,7 +19,7 @@ const activeTabIndex = ref(0)
                 <div class="flex justify-between items-center">
 
                     <div>
-                        <h2 class="md:text-[20px] text-lg font-semibold">Quiz title</h2>
+                        <input type="text" class="text-[20px] font-semibold outline-none w-full" value="Quiz title">
                         <p class="text-gray-400 md:text-sm text-[12px]">Created at <span class="font-semibold">22 Jan
                                 2024</span> </p>
                     </div>
