@@ -113,7 +113,7 @@ const cleareTitleImage = (index) => {
 
 <template>
     <div class="max-w-screen-lg mx-auto">
-        <VueDraggableNext v-model="questions" @end="chandeDragIndex" :delay="50">
+        <VueDraggableNext v-model="questions" @end="chandeDragIndex" :delay="100">
             <transition-group type="transition" name="fade">
                 <div class="md:px-10 px-0 mb-4 relative select-none" v-for="(que, index) in questions" :key="que.defaultIndex">
                     <div class="p-5 border border-l-[5px] border-l-primary bg-white rounded-lg  cursor-move group">
