@@ -146,7 +146,7 @@ const router = createRouter({
           },
         },
         {
-          path: 'quiz/details',
+          path: 'quiz/details/:id',
           name: 'QuizDetails',
           component: () => import('@/views/App/quiz/Details.vue'),
           meta: {

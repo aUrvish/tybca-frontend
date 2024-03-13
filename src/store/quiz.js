@@ -41,6 +41,12 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
-        return {}
+        const getAction = async (id) => {
+            let res = null;
+            res = axios.get(`/api/quiz/get/${id}`);
+            return res
+        }
+
+        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction}
     }
 )

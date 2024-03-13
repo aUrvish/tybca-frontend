@@ -2,12 +2,64 @@
 import Questions from './components/Questions.vue'
 import Responses from './components/Responses.vue'
 import Settings from './components/Settings.vue'
-import { ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
+import { toast } from "vue3-toastify";
+import { storeToRefs } from 'pinia';
+import { useLoadStore } from '@/store/loading'
+import { useQuizStore } from '@/store/quiz'
+import { useRoute, useRouter } from 'vue-router';
+import debounce from 'lodash.debounce';
+
+const { changeStatusLoading } = useLoadStore();
+const { getAction } = useQuizStore();
+const { isLoading } = storeToRefs(useLoadStore());
 
 const totolePoint = ref(1)
 const totoleQue = ref(1)
+const router = useRouter()
 
 const activeTabIndex = ref(0)
+const route = useRoute()
+
+const quiz = ref({})
+
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        getAction(route.params.id)
+            .then(
+                (res) => {
+                    if (res.data.data) {
+                        let data = res.data.data;
+                        quiz.value = data
+                    }
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                    router.back(1)
+                }
+            )
+    }
+)
+
+const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.origin + '/test/' + quiz.value.uri);
+    toast("URL Copied Successfully", {
+        "type": "success",
+        "dangerouslyHTMLString": true
+    })
+}
+
+const goTourl = () => {
+    window.open('/test/' + quiz.value.uri, '_blank');
+}
 </script>
 
 <template>
@@ -19,18 +71,19 @@ const activeTabIndex = ref(0)
                 <div class="flex justify-between items-center">
 
                     <div>
-                        <input type="text" class="text-[20px] font-semibold outline-none w-full" value="Quiz title">
-                        <p class="text-gray-400 md:text-sm text-[12px]">Created at <span class="font-semibold">22 Jan
-                                2024</span> </p>
+                        <input type="text" class="text-[20px] font-semibold outline-none w-full" v-model="quiz.title">
+                        <p class="text-gray-400 md:text-sm text-[12px]" v-if="quiz.created_at">Created at <span class="font-semibold">
+                            {{ new Date(quiz.created_at).toLocaleDateString().replaceAll("/", "-") }}
+                        </span> </p>
                     </div>
                     <div class="flex gap-6 items-center">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 w-full cursor-pointer" viewBox="0 0 448 512">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 w-full cursor-pointer" viewBox="0 0 448 512" @click="copyUrl">
                             <path
                                 d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z" />
                         </svg>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 w-full cursor-pointer" viewBox="0 0 512 512">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-4 w-full cursor-pointer" viewBox="0 0 512 512" @click="goTourl">
                             <path
                                 d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
                         </svg>
@@ -39,9 +92,10 @@ const activeTabIndex = ref(0)
                 </div>
 
                 <div class="mt-6 flex justify-between items-center flex-wrap gap-2">
-                    <p
-                        class="px-2 py-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium lg:text-sm text-[12px] text-[#FF9432]">
-                        Software Development</p>
+                        <p class="px-2 py-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium lg:text-sm text-[12px] text-[#FF9432] cursor-pointer" v-if="quiz.course"
+                            :style="{ color: quiz.course.primary_color, backgroundColor: `${quiz.course.primary_color}1A` }">
+                            {{ quiz.course.name }}
+                        </p>
 
                     <div class="flex items-center gap-2 w-fit">
                         <p
@@ -62,10 +116,11 @@ const activeTabIndex = ref(0)
                     @click="activeTabIndex = 2">Settings</li>
             </ul>
         </div>
-        <div class="mt-5">
-            <Questions @changeQue="(point , que) => {totolePoint = point , totoleQue = que}" v-if="activeTabIndex == 0" />
+        <div class="mt-5" >
+            <Questions @changeQue="(point , que) => {totolePoint = point , totoleQue = que}" :quiz="quiz" :data="quiz.questions"
+             v-if="activeTabIndex == 0 && quiz && quiz.questions" />
             <Responses v-else-if="activeTabIndex == 1" />
-            <Settings v-else />
+            <Settings v-else-if="activeTabIndex == 2" />
         </div>
     </div>
 </template>

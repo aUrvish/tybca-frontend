@@ -8,12 +8,46 @@ import { computed, onMounted, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { toast } from "vue3-toastify";
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/store/auth'
+import { useQuizStore } from '@/store/quiz'
 import DeleteConfirm from '@/components/DeleteConfirm.vue';
 
 const { course } = storeToRefs(useCourseStore());
 const { addCourse, removeCourse, getCourse, mutationRemoveCourse, mutationSetCourse } = useCourseStore();
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
+const { addQuizAction } = useQuizStore();
+const { auth } = storeToRefs(useAuthStore());
+
+const router = useRouter()
+
+const createQuiz = () => {
+
+    let payload = {
+        title : "Quiz title",
+    }
+
+    changeStatusLoading(true)
+    addQuizAction(payload)
+        .then(
+            (res) => {
+                if (res.data.data) {   
+                    router.push(`quiz/details/${res.data.data.id}`)
+                }
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                toast(e.response.data.messages, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        )
+}
 
 const courseInput = ref(
     {
@@ -147,10 +181,14 @@ const updateCourse = (change_course) => {
             <div class="border rounded-md bg-white p-4 flex items-center justify-between">
                 <h1 class="text-[24px] font-semibold">Quiz</h1>
                 <div>
-                    <RouterLink :to="{ name: 'QuizDetails' }"
+                    <!-- <RouterLink :to="{ name: 'QuizDetails' }" 
                         class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
                         Create Quiz
-                    </RouterLink>
+                    </RouterLink> -->
+
+                    <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center"  @click="createQuiz">
+                        Create Quiz
+                    </Btn>
                 </div>
             </div>
 
