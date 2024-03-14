@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia';
 import { useLoadStore } from '@/store/loading'
 import { useQuizStore } from '@/store/quiz'
 import debounce from 'lodash.debounce';
+import services from '@/plugins/service'
 
 const { changeStatusLoading } = useLoadStore();
 const { addQuestionAction, addQuestionInputAction, removeQuestionAction, removeQuestionInputAction } = useQuizStore();
@@ -21,12 +22,13 @@ const props = defineProps({
     }
 })
 
+const getStorage = services.storageBaseUrl;
 const isDropDownShow = ref([false]);
 const dropItem = ref(['options', 'dropdown', 'checkboxes'])
 const mediaOnTitle = ref(null)
 
 const questions = ref(
-    [...props.data],
+    [...props.data]
 );
 
 const dropdownToggle = (index) => {
@@ -139,21 +141,19 @@ watch(questions.value,
 
         newX.map(
             (ques, index) => {
-                console.log(ques);
 
+                let formData = new FormData();
+                formData.append('id' , ques.id)
+                formData.append('quiz_id' , props.quiz.id)
+                formData.append('title' , ques.title)
+                formData.append('type' , ques.type)
+                formData.append('stand_index' , ques.stand_index)
+                formData.append('point' , ques.point)
+                formData.append('is_required' , ques.is_required)
+                formData.append('img' , ques.img)
                 // change question
                 changeStatusLoading(true)
-                let payload = {
-                    id: ques.id,
-                    quiz_id: props.quiz.id,
-                    title: ques.title,
-                    type: ques.type,
-                    stand_index: ques.stand_index,
-                    point: ques.point,
-                    is_required: ques.is_required,
-                    img: ques.img
-                }
-                addQuestionAction(payload)
+                addQuestionAction(formData)
                     .then(
                         (res) => {
                             changeStatusLoading(false)
@@ -239,10 +239,9 @@ const clickOnTitleMedia = (index) => {
 }
 
 const uploadTitleImage = (index, value) => {
-    questions.value[index].titleImg = value.files[0]
-
     let url = URL.createObjectURL(value.files[0])
-    questions.value[index].img = url
+    questions.value[index].titleImg = url
+    questions.value[index].img = value.files[0]
 }
 
 const cleareTitleImage = (index) => {
@@ -252,7 +251,8 @@ const cleareTitleImage = (index) => {
 
 onMounted(
     () => {
-        console.log(props.data);
+        let findSumofPoint = sum([...questions.value.map((curr, index) => curr.point || 0)])
+        emit('changeQue', findSumofPoint, questions.value.length)
     }
 )
 </script>
@@ -320,7 +320,7 @@ onMounted(
                             </div>
                         </div>
 
-                        <div class="mt-4 relative" v-if="que && que.img">
+                        <div class="mt-4 relative" v-if="que && (que.img || que.titleImg)">
                             <div class="py-1 px-1.5 bg-red-400 aspect-square absolute rounded-full cursor-pointer translate-x-1/2 -translate-y-1/2 right-0"
                                 @click="cleareTitleImage(index)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 w-full fill-gray-200"
@@ -329,7 +329,7 @@ onMounted(
                                         d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
                                 </svg>
                             </div>
-                            <img :src="que.img" class="w-full rounded-md border" alt="blob image">
+                            <img :src="que.titleImg ? que.titleImg : que.img ? getStorage + que.img : ''" class="w-full rounded-md border" alt="blob image">
                         </div>
 
                         <div class="grid md:grid-cols-2 md:gap-5 gap-3 mt-6">

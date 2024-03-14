@@ -120,7 +120,7 @@ const goTourl = () => {
             <Questions @changeQue="(point , que) => {totolePoint = point , totoleQue = que}" :quiz="quiz" :data="quiz.questions"
              v-if="activeTabIndex == 0 && quiz && quiz.questions" />
             <Responses v-else-if="activeTabIndex == 1" />
-            <Settings v-else-if="activeTabIndex == 2" />
+            <Settings v-else-if="activeTabIndex == 2" :quiz="quiz" @changeCourse="(value) => quiz.course = value" />
         </div>
     </div>
 </template>
