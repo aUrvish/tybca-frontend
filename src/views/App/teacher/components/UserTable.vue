@@ -90,7 +90,7 @@ watch(
         getTeachersAction(newVal)
             .then(
                 (res) => {
-                    studentList.value = res.data.data;
+                    teacherList.value = res.data.data;
                     changeStatusLoading(false)
                 }
             )
