@@ -80,9 +80,9 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
-        const getTeachersAction = async() => {
+        const getTeachersAction = async(page = 1) => {
             let res = null;
-            res = axios.get('/api/auth/teachers/get');
+            res = axios.get(`/api/auth/teachers/get/?page=${page}`);
             return res
         }
 

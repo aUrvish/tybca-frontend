@@ -45,9 +45,9 @@ export const useNoticeStore = defineStore('notice',
             return res
         }
 
-        const noticeGetAllAction = async () => {
+        const noticeGetAllAction = async (paginate) => {
             let res = null;
-            res = axios.get('/api/notice/all');
+            res = axios.get(`/api/notice/all?page=${paginate}`);
             return res
         }
 

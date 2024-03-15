@@ -33,7 +33,6 @@ onMounted(
             .then(
                 (res) => {
                     noticeList.value = res.data.data;
-                    console.log(noticeList.value.data);
                     changeStatusLoading(false)
                 }
             )
@@ -52,6 +51,30 @@ onMounted(
 const search = ref(null)
 const getStorage = services.storageBaseUrl;
 
+watch(
+    pagination,
+    debounce((newVal) => {
+        console.log(newVal);
+        changeStatusLoading(true)
+        noticeGetAllAction(newVal)
+            .then(
+                (res) => {
+                    noticeList.value = res.data.data;
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+    }, 800)
+)
 
 watch(search,
     debounce((newVal) => {
@@ -74,7 +97,7 @@ watch(search,
                 }
             )
 
-    } , 800)
+    }, 800)
 )
 
 const removeUserFunc = (id) => {
@@ -147,27 +170,33 @@ const goTourl = (uri) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="(notice , index) in noticeList.data"
+                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="(notice, index) in noticeList.data"
                                 :key="index">
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
-                                            <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full" v-if="notice.user.avatar" alt="avtar">
-                                            <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-white"></div>
+                                            <img :src="getStorage + notice.user.avatar"
+                                                class="object-cover w-full h-full" v-if="notice.user.avatar"
+                                                alt="avtar">
+                                            <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-white">
+                                            </div>
                                         </div>
                                         <p>#{{ notice.user.id }}</p>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.title }}</td>
-                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.caption }}</td>
+                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.title }}
+                                </td>
+                                <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.caption }}
+                                </td>
                                 <td class="px-4 py-3 text-center">{{ new
-                        Date(notice.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                Date(notice.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">{{ new
-                        Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">
-                                    <span
-                                    class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-if="notice.status">Published</span>
-                                    <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2" v-else >Draft</span>
+                                    <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2"
+                                        v-if="notice.status">Published</span>
+                                    <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2"
+                                        v-else>Draft</span>
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex justify-between items-center gap-2">
@@ -185,7 +214,7 @@ const goTourl = (uri) => {
                                         </svg>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="fill-red-400 cursor-pointer w-4"
-                                            viewBox="0 0 448 512" @click="selectedId = notice.id" 
+                                            viewBox="0 0 448 512" @click="selectedId = notice.id"
                                             v-if="notice.user.id == auth.user.id || auth.user.role_id == 0">
                                             <path
                                                 d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />

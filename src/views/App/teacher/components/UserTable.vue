@@ -82,6 +82,31 @@ watch(search,
     }, 800)
 )
 
+watch(
+    pagination,
+    debounce((newVal) => {
+        console.log(newVal);
+        changeStatusLoading(true)
+        getTeachersAction(newVal)
+            .then(
+                (res) => {
+                    studentList.value = res.data.data;
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+    }, 800)
+)
+
 const removeUserFunc = (id) => {
     changeStatusLoading(true)
     removeAction(id)
