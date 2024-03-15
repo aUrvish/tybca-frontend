@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router';
 
 <template>
     <header>
-        <div class="px-4 py-2 flex fixed top-0 left-0 right-0 items-center justify-between">
+        <div class="px-4 py-2 flex fixed top-0 left-0 right-0 items-center justify-start">
 
             <!-- logo -->
             <!-- <RouterLink :to="{ name: 'Login' }">

@@ -74,7 +74,7 @@ const submitForLogin = () => {
 
 <template>
   <Auth>
-    <div class="rounded-lg border-2 p-6 max-w-[400px] w-full">
+    <div class="rounded-lg border-2 p-6 max-w-[400px] shadow-md w-full">
       <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
         Sign in to your account
       </h1>

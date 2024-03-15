@@ -6,8 +6,11 @@ import AuthNav from '@/components/AuthNav.vue'
   <AuthNav>
     <slot name="navlink" />
   </AuthNav>
-  <div class="grid lg:grid-cols-2 h-full -mt-1" >
-    <div class="web-info bg-center flex items-center flex-col justify-center">
+  <div class="flex lg:flex-row flex-col h-full -mt-1" >
+    <div class="grow w-full py-20 grid place-items-center px-4">
+        <slot />
+    </div> 
+    <div class="web-info bg-center w-full flex items-center flex-col justify-center grow">
       <div class="py-40 px-4" >
         <img src="../assets/svgs/logo-light.svg" alt="Logo">
         <h1 class="text-white font-semibold md:text-[42px] text-[28px] my-1" >Welcome to Ventures</h1>
@@ -15,9 +18,6 @@ import AuthNav from '@/components/AuthNav.vue'
           Please sign in to system to explore your personal details, Operations management and Many more!!!</p>
       </div>
     </div>
-    <div class="grow py-20 grid place-items-center px-4">
-        <slot />
-    </div> 
   </div>
 </template>
 
