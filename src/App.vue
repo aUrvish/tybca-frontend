@@ -26,8 +26,8 @@ router.beforeEach(async (to, from, next) => {
 
 <template>
   <div class="z-[100] sticky top-0" :class="isLoading ? '' : 'invisible'">
-    <div class='h-1 w-full bg-gray-200 overflow-hidden'>
-      <div class='progress w-full h-full bg-gray-600 left-right'></div>
+    <div class='h-1 w-full bg-[#38445e] overflow-hidden'>
+      <div class='progress w-full h-full bg-white left-right'></div>
     </div>
   </div>
   <RouterView />

@@ -120,7 +120,7 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
 </script>
 
 <template>
-    <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 z-50">
+    <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-1 lg:z-40 z-50">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
                 <button v-if="noSidebar" class="p-2 mr-2 rounded-full cursor-pointer lg:hidden hover:bg-gray-100"

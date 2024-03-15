@@ -7,6 +7,7 @@ import Notice from './components/Notice.vue';
 import { toast } from "vue3-toastify";
 import { ref, onMounted, watch } from 'vue';
 import debounce from 'lodash.debounce'
+import Course from './components/Course.vue'
 
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
@@ -21,6 +22,7 @@ const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
 const getPropertyArr = (arr, property) => arr.map((curr, index) => curr[property])
 const students = ref([])
 const teachers = ref([])
+const isOpenCourseModel = ref(false)
 
 const PerformanceData = ref([
     {
@@ -177,7 +179,7 @@ watch(
     <div class="3lg:max-w-screen-xl max-w-screen-lg mx-auto">
         <div class="3lg:flex gap-4">
             <div class="grow 2mac:max-w-screen-lg 3lg:max-w-screen-md">
-                <SocialProf class="grid sm:grid-cols-3 grid-cols-1 gap-4 " />
+                <SocialProf class="grid sm:grid-cols-3 grid-cols-1 gap-4 " @courseOpen="() => isOpenCourseModel = true" />
                 <QuizTable :max="5" />
                 <UserTable :max="5" :data="students" name="Student"
                     v-if="auth.user.role_id == 0 || auth.user.role_id == 1">
@@ -226,6 +228,7 @@ watch(
                 </Donut>
             </div>
         </div>
+        <Course v-if="isOpenCourseModel" @close="() => isOpenCourseModel = false" />
     </div>
 
 </template>
