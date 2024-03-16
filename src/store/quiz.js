@@ -47,6 +47,24 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
-        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction}
+        const getFetchAction = async (uri) => {
+            let res = null;
+            res = axios.get(`/api/quiz/fetch/${uri}`);
+            return res
+        }
+
+        const getAllAction = async (page = 1) => {
+            let res = null;
+            res = axios.get(`/api/quiz/get?page=${page}`);
+            return res
+        }
+
+        const getAllSeacherAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/quiz/search', payload);
+            return res
+        }
+
+        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction, getAllAction, getAllSeacherAction, getFetchAction}
     }
 )

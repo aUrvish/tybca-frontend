@@ -28,7 +28,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/test',
+      path: '/test/:uri',
       name: 'ExamHall',
       component: () => import('@/views/Hall/index.vue'),
       meta: {

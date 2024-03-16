@@ -6,6 +6,43 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
 const pad = (n) => {
     return (n < 10) ? ("0" + n) : n;
 }
+
+import { storeToRefs } from 'pinia';
+import { useLoadStore } from '@/store/loading'
+import { computed, onMounted, ref } from 'vue';
+import { toast } from "vue3-toastify";
+import { useRouter, useRoute } from 'vue-router';
+import { useAuthStore } from '@/store/auth'
+import { useQuizStore } from '@/store/quiz'
+
+const { changeStatusLoading } = useLoadStore();
+const { isLoading } = storeToRefs(useLoadStore());
+const { getFetchAction } = useQuizStore();
+const { auth } = storeToRefs(useAuthStore());
+
+const router = useRouter()
+const route = useRoute()
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        getFetchAction(route.params.uri)
+            .then(
+                (res) => {
+                    console.log(res);
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }
+)
 </script>
 <template>
     <Hall>
