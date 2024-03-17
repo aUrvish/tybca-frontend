@@ -140,9 +140,9 @@ onMounted(
     <div class="md:px-6 -mt-10">
         <div class="grid 5xl:grid-cols-4 3lg:grid-cols-3 lg:grid-cols-1 2md:grid-cols-2 grid-cols-1 gap-4">
             <div>
-                <Donut class="rounded-sm" />
+                <Donut class="rounded-sm" v-if="auth.user.role_id == 2" />
 
-                <div class="p-4 border rounded-sm my-4 bg-white">
+                <div class="p-4 border rounded-sm bg-white" :class="user.role_id == 2 ? 'my-4' : ''">
                     <h5 class="text-lg font-semibold mb-4">Info</h5>
                     <div>
                         <div class="grid grid-cols-3 gap-4">

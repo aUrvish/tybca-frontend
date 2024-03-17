@@ -132,7 +132,7 @@ watch(
             getStudentsSeacherAction({ search: studentSearch.value })
                 .then(
                     (res) => {
-                        students.value = res.data.data.data;
+                        students.value = res.data.data.data.filter((curr, index) => index < 5);
                         changeStatusLoading(false)
                     }
                 )
@@ -158,7 +158,7 @@ watch(
             getTeachersSeacherAction({ search: teacherSearch.value })
                 .then(
                     (res) => {
-                        teachers.value = res.data.data.data;
+                        teachers.value = res.data.data.data.filter((curr, index) => index < 5);
                         changeStatusLoading(false)
                     }
                 )
@@ -223,7 +223,7 @@ watch(
             </div>
             <div class="max-w-sm w-full 3lg:block hidden grow">
                 <Notice />
-                <Donut :data="PerformanceData" pattern="%" title="Performance" class="mt-4">
+                <Donut :data="PerformanceData" pattern="%" title="Performance" class="mt-4" v-if="auth.user.role_id == 2">
                     {{ average(getPropertyArr(PerformanceData, 'data')).toFixed(2) }}%
                 </Donut>
             </div>

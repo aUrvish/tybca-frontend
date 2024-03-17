@@ -1,9 +1,93 @@
-<script setup >
+<script setup>
 import VueCountdown from '@chenfengyuan/vue-countdown';
 
 const pad = (n) => {
     return (n < 10) ? ("0" + n) : n;
 }
+
+import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { toast } from "vue3-toastify";
+import { storeToRefs } from 'pinia';
+import { useQuizStore } from '@/store/quiz'
+import { useLoadStore } from '@/store/loading'
+import { useAuthStore } from '@/store/auth'
+
+const { getAllTestAction } = useQuizStore();
+const { changeStatusLoading } = useLoadStore();
+const { isLoading } = storeToRefs(useLoadStore());
+const { auth } = storeToRefs(useAuthStore());
+
+const props = defineProps({
+    max: {
+        default: 5,
+    },
+    filter: {
+        default: 0
+    }
+})
+const QuizList = ref([])
+const pendingQuiz = ref([])
+const ActiveQuiz = ref([])
+
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        getAllTestAction()
+            .then(
+                (res) => {
+
+                    if (res.data.data) {
+                        QuizList.value = res.data.data;
+                        changeStatusLoading(false)
+
+                        pendingQuiz.value = QuizList.value.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 2)
+                        ActiveQuiz.value = QuizList.value.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 1)
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }
+)
+
+const getStatus = (start, duration) => {
+    if (start) {
+        let startAt = new Date(start);
+        let endAt = new Date(new Date(start).getTime() + Number(duration) * 60000);
+        let now = new Date()
+
+        if (endAt.valueOf() < now.valueOf()) {
+            return 3
+        }
+
+        if (now.valueOf() < startAt.valueOf()) {
+            return 2
+        }
+
+        if (now.valueOf() >= startAt.valueOf() && now.valueOf() <= endAt.valueOf()) {
+            return 1
+        }
+    } else {
+        return 1
+    }
+}
+
+const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
+const getPointSum = (arr) => {
+    let point = arr.map(
+        (curr) => curr.point
+    )
+
+    return sum(point);
+}
+
 </script>
 
 <template>
@@ -13,20 +97,21 @@ const pad = (n) => {
         <div class="mt-10">
             <h2 class="text-[20px] font-semibold">Active Test</h2>
             <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
-                <div class="group: overflow-hidden group cursor-pointer relative">
-                    <router-link to="#">
+                <div v-for="(test, index) in ActiveQuiz" :key="index" class="group: overflow-hidden group cursor-pointer relative">
+                    <router-link :to="`test/${test.uri}`">
                         <div class="w-full bg-white border rounded-lg aspect-[5/3] px-4 py-2 flex flex-col">
                             <div class="w-2 animate-ping aspect-square absolute top-2 right-3 bg-success rounded-full">
                             </div>
-                            <p class="text-gray-300 text-sm group-hover:underline font-semibold">#0020</p>
-                            <p class="line-clamp-2 text-lg font-semibold mt-3 text-gray-500">Examination 2023-24</p>
+                            <p class="text-gray-300 text-sm group-hover:underline font-semibold">#{{ test.id }}</p>
+                            <p class="line-clamp-2 text-lg font-semibold mt-3 text-gray-500">{{ test.title }}</p>
                             <div class="mt-auto mb-1">
-                                <p
-                                    class="px-2 py-1 mb-3 line-clamp-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium text-sm text-[#FF9432]">
-                                    Software Development</p>
+                                <p class="px-2 py-1 mb-3 line-clamp-1 w-fit rounded-[8px] font-medium text-sm"
+                                    :style="{ color: test.course.primary_color, backgroundColor: `${test.course.primary_color}1A` }">
+                                    {{ test.course.name }}
+                                </p>
                                 <div class="flex justify-between items-center">
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : 30</p>
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : 30</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{ test.questions.length }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{ getPointSum(test.questions) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -38,28 +123,34 @@ const pad = (n) => {
         <div class="mt-8">
             <h2 class="text-[20px] font-semibold">Pending Test</h2>
             <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
-                <div v-for="i in 4" class="group: overflow-hidden group cursor-pointer relative">
-                    <router-link to="#">
+                <div v-for="(test, index) in pendingQuiz" :key="index"
+                    class="group: overflow-hidden group cursor-pointer relative">
+                    <router-link :to="`test/${test.uri}`">
                         <div class="w-full bg-white rounded-lg aspect-[5/3] px-4 py-2 flex flex-col border">
                             <div class="flex justify-between items-center">
-                                <p class="text-gray-300 text-sm group-hover:underline font-semibold">#0020</p>
+                                <p class="text-gray-300 text-sm group-hover:underline font-semibold">#{{ test.id }}</p>
 
 
-                                <VueCountdown :time="24 * 24 * 60 * 60 * 1000" v-slot="{ days, hours, minutes, seconds }" class="font-semibold text-gray-400 text-[12px] text-left flex items-center gap-1">
+                                <VueCountdown :time="(new Date(test.start_at).valueOf() - new Date().valueOf()) + 60000"
+                                    v-slot="{ days, hours, minutes, seconds }"
+                                    class="font-semibold text-gray-400 text-[12px] text-left flex items-center gap-1">
                                     <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(days) }} </div>
                                     <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(hours) }} </div>
-                                    <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(minutes) }} </div>
-                                    <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(seconds) }} </div>
+                                    <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(minutes) }}
+                                    </div>
+                                    <div class="border rounded-[5px] min-w-6 px-1 text-center"> {{ pad(seconds) }}
+                                    </div>
                                 </VueCountdown>
                             </div>
-                            <p class="line-clamp-2 text-lg font-semibold mt-3 text-gray-500">Examination 2023-24</p>
+                            <p class="line-clamp-2 text-lg font-semibold mt-3 text-gray-500">{{ test.title }}</p>
                             <div class="mt-auto mb-1">
-                                <p
-                                    class="px-2 py-1 mb-3 line-clamp-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium text-sm text-[#FF9432]">
-                                    Software Development</p>
+                                <p class="px-2 py-1 mb-3 line-clamp-1 w-fit rounded-[8px] font-medium text-sm"
+                                    :style="{ color: test.course.primary_color, backgroundColor: `${test.course.primary_color}1A` }">
+                                    {{ test.course.name }}
+                                </p>
                                 <div class="flex justify-between items-center">
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : 30</p>
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : 30</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{ test.questions.length }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{ getPointSum(test.questions) }}</p>
                                 </div>
                             </div>
                         </div>

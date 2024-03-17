@@ -139,6 +139,12 @@ export const useAuthStore = defineStore('auth',
             res = axios.get('/api/overview/teachers');
             return res
         }
+        
+        const getOverviewQuizAction = async() => {
+            let res = null;
+            res = axios.get('/api/overview/quiz');
+            return res
+        }
 
         return {
             auth, 
@@ -163,7 +169,8 @@ export const useAuthStore = defineStore('auth',
             getOverviewStudentsAction,
             getOverviewTeachersAction,
             getStaffAction,
-            getStaffSeacherAction
+            getStaffSeacherAction,
+            getOverviewQuizAction
         }
     },
     {

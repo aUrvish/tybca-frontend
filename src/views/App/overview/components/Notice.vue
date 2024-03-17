@@ -4,6 +4,9 @@ import { useLoadStore } from '@/store/loading'
 import { minidenticon } from 'minidenticons'
 import { toast } from "vue3-toastify";
 import services from '@/plugins/service'
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+const { auth } = storeToRefs(useAuthStore());
 
 import { useNoticeStore } from '@/store/notice'
 
@@ -52,7 +55,7 @@ const miniavtar = (name) => {
         </div>
         <div class="border-t">
             <a :href="`/notice/${notice.uri}`" target="_blank" class="flex py-3 px-4 hover:bg-gray-100"
-                v-for="(notice, index) in noticeList.filter((curr, i) => i < 7 )" :key="index">
+                v-for="(notice, index) in noticeList.filter((curr, i) => i < (auth.user.role_id == 2 ? 7 : 10) )" :key="index">
                 <div class="flex-shrink-0">
                     <div class="w-11 h-11 rounded-full overflow-hidden">
                         <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full"

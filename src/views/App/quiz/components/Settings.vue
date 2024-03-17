@@ -64,7 +64,7 @@ watch(
         formData.append('is_notify' , quizObj.is_notify)
         formData.append('is_random' , quizObj.is_random)
         formData.append('nagative_point' , quizObj.nagative_point)
-        formData.append('start_at' , quizObj.start_at)
+        formData.append('start_at' , quizObj.start_at ? quizObj.start_at : null)
         formData.append('title' , quizObj.title)
 
         changeStatusLoading(true)
