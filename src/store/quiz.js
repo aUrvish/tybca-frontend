@@ -59,6 +59,24 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
+        const getAllResponceAction = async (quiz_id,page = 1) => {
+            let res = null;
+            res = axios.get(`/api/quiz/responce/all/${quiz_id}?page=${page}`);
+            return res
+        }
+
+        const getSingleResponceAction = async (id) => {
+            let res = null;
+            res = axios.get(`/api/quiz/responce/get/${id}`);
+            return res
+        }
+
+        const removeResponceAction = async (id) => {
+            let res = null;
+            res = axios.get(`/api/quiz/responce/remove/${id}`);
+            return res
+        }
+
         const getAllTestAction = async () => {
             let res = null;
             res = axios.get(`/api/quiz/test`);
@@ -77,6 +95,6 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
-        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction, getAllAction, getAllSeacherAction, getFetchAction, setResponceAction, getAllTestAction}
+        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction, getAllAction, getAllSeacherAction, getFetchAction, setResponceAction, getAllTestAction, getAllResponceAction, getSingleResponceAction, removeResponceAction}
     }
 )

@@ -52,11 +52,10 @@ onMounted(
     }
 )
 
-let formData = new FormData()
 watch(
     quizObj,
     debounce((newX) => {
-        console.log(newX);
+        let formData = new FormData()
         formData.append('id' , props.quiz.id)
         formData.append('certi_signature' , quizObj.certi_signature)
         formData.append('course_id' , quizObj.course_id)

@@ -1,35 +1,149 @@
 <script setup>
-import Btn from '@/components/Btn.vue';
-import { ref } from 'vue';
+import { ref, reactive, watch, computed, onMounted } from 'vue'
+const emit = defineEmits(['countTotalResponce'])
+import { minidenticon } from 'minidenticons'
+import { toast } from "vue3-toastify";
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+import { useLoadStore } from '@/store/loading'
+import { useRouter, useRoute } from 'vue-router';
+import DeleteConfirm from '@/components/DeleteConfirm.vue';
+import debounce from 'lodash.debounce'
+
+const { getStudentsAction, getStudentsSeacherAction, removeAction, disableAction } = useAuthStore();
+const { changeStatusLoading } = useLoadStore();
+const { isLoading } = storeToRefs(useLoadStore());
+const { auth } = storeToRefs(useAuthStore());
+import { useQuizStore } from '@/store/quiz'
+const { getAllResponceAction, getSingleResponceAction, removeResponceAction } = useQuizStore();
+
 const props = defineProps({
     max: {
         default: 5,
+    },
+    filter: {
+        default: 0
     }
 })
-const isShowActionMenu = ref(null)
-const showActionMenu = (index) => {
-    if (isShowActionMenu.value == index) {
-        isShowActionMenu.value = null
-        return null
-    }
-    isShowActionMenu.value = index
+const responceList = ref([])
+const pagination = ref(1)
+const router = useRouter()
+const route = useRoute()
+const miniavtar = (name) => {
+    return minidenticon(name)
 }
 
-const hideActionMenu = (index) => {
-    if (isShowActionMenu.value == index) {
-        isShowActionMenu.value = null
-    }
-}
+const selectedId = ref(null)
 
+onMounted(
+    () => {
+        changeStatusLoading(true)
+        getAllResponceAction(route.params.id ,pagination.value)
+            .then(
+                (res) => {
+                    console.log(res.data.data);
+                    responceList.value = res.data.data;
+                    emit('countTotalResponce', responceList.value.total)
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }
+)
+
+const search = ref(null)
+import services from '@/plugins/service'
+const getStorage = services.storageBaseUrl;
+
+
+watch(search,
+    debounce((newVal) => {
+
+        changeStatusLoading(true)
+        getStudentsSeacherAction({ search: newVal })
+            .then(
+                (res) => {
+                    responceList.value = res.data.data;
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+    }, 800)
+)
+
+watch(
+    pagination,
+    debounce((newVal) => {
+        console.log(newVal);
+        changeStatusLoading(true)
+        getStudentsAction(newVal)
+            .then(
+                (res) => {
+                    responceList.value = res.data.data;
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+    }, 800)
+)
+
+const removeUserFunc = (id) => {
+    changeStatusLoading(true)
+    removeResponceAction(id)
+        .then(
+            (res) => {
+                responceList.value.data = responceList.value.data.filter((curr) => curr.id != id);
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                console.log(e);
+                toast(e.response.data.messages, {
+                    "type": "error",
+                    "dangerouslyHTMLString": true
+                })
+                changeStatusLoading(false)
+            }
+        ).finally(
+            () => selectedId.value = false
+        )
+}
 </script>
 
 <template>
-    <section class="bg-gray-50">
+    <section class="bg-gray-50 pt-4">
         <div>
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">User</h1>
+                    <h1 class="text-[20px] font-bold">Responce</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
                         <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
@@ -44,7 +158,7 @@ const hideActionMenu = (index) => {
                                 </div>
                                 <input type="text" id="simple-search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
-                                    placeholder="Search">
+                                    placeholder="Search" v-model="search">
                             </div>
                         </form>
                     </div>
@@ -53,114 +167,65 @@ const hideActionMenu = (index) => {
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs border-b uppercase">
                             <tr class="[&>*]:whitespace-nowrap">
-                                <th scope="col" class="px-4 py-3">
-                                    <div class="cursor-pointer flex gap-1 items-center">
-                                        <p>User ID</p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
-                                            <path
-                                                d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="px-4 py-3">
-                                    <div class="cursor-pointer flex gap-1 items-center justify-center">
-                                        <p>User Name</p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="max-w-1.5 fill-gray-500" viewBox="0 0 320 512">
-                                            <path
-                                                d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" />
-                                        </svg>
-                                    </div>
-                                </th>
+                                <th scope="col" class="px-4 py-3">Student ID</th>
+                                <th scope="col" class="px-4 py-3 text-center">Student Name</th>
                                 <th scope="col" class="px-4 py-3 text-center">E-Mail</th>
                                 <th scope="col" class="px-4 py-3 text-center">Mobile</th>
-                                <th scope="col" class="px-4 py-3 text-center">Performance</th>
-                                <th scope="col" class="px-4 py-3 text-center">Status</th>
+                                <th scope="col" class="px-4 py-3 text-center">Responce at</th>
                                 <th scope="col" class="px-4 py-3 flex justify-center">
                                     <span class="sr-only">Actions</span>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="i in max" :key="i">
+                            <tr class="[&>*]:whitespace-nowrap border-b" v-for="(res, index) in responceList.data"
+                                :key="index">
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-8 aspect-square overflow-hidden relative">
-                                            <div
-                                                class="absolute z-10 bg-success w-2.5 right-0 bottom-0 aspect-square rounded-full">
-                                            </div>
-                                            <img src="https://www.shutterstock.com/image-vector/woman-modern-icon-avatar-design-260nw-2358837033.jpg"
-                                                class="w-full h-full object-cover rounded-full border" alt="avtar">
+                                        <div class="w-8 aspect-square overflow-hidden border rounded-full">
+                                            <img :src="getStorage + res.user.avatar" class="object-cover w-full h-full"
+                                                v-if="res.user && res.user.avatar" alt="avtar">
+                                            <div v-html="miniavtar(res.user.name)" v-else class="w-full bg-white"></div>
                                         </div>
-                                        <p>#0001</p>
+                                        <p>#{{ res.user.id }}</p>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-center">Nitesh N Nageshri</td>
-                                <td class="px-4 py-3 text-center">nitesh@gmail.com</td>
-                                <td class="px-4 py-3 text-center">+91 85865 86969</td>
-                                <td class="px-4 py-3 ">
-                                    <div class="text-center text-success font-semibold flex justify-center items-center">
+                                <td class="px-4 py-3 text-center">{{ res.user.name }}</td>
+                                <td class="px-4 py-3 text-center">{{ res.user.email }}</td>
+                                <td class="px-4 py-3 text-center">{{ res.user.mobile }}</td>
+                                <td class="px-4 py-3 text-center">{{ new
+                                        Date(res.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
 
-                                        12%
-                                        <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 10 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
+                                <td class="px-4 py-3">
+                                    <div class="flex justify-between items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-blue cursor-pointer w-4" viewBox="0 0 576 512" @click="$emit('showSingleResponse' , res.id)">
+                                            <path
+                                                d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
+                                        </svg>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-red-400 cursor-pointer w-4"
+                                            viewBox="0 0 448 512" v-if="auth.user.role_id == 0"
+                                            @click="selectedId = res.id">
+                                            <path
+                                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
                                         </svg>
                                     </div>
-                                </td>
-                                <td class="px-4 py-3 text-center">
-                                    <!-- <span class="text-[12px] border text-blue rounded-md border-blue py-1 px-2" >Complete</span> -->
-                                    <!-- <span class="text-[12px] border text-warning rounded-md border-warning py-1 px-2" >Pending</span> -->
-                                    <span
-                                        class="text-[12px] border text-success rounded-md border-success py-1 px-2">Active</span>
-                                </td>
-
-                                <td class="px-4 pl-1 py-3 relative">
-                                    <div class="flex items-center justify-end gap-4">
-                                        <button
-                                            class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg"
-                                            @click="showActionMenu(i)" v-click-outside="() => hideActionMenu(i)"
-                                            type="button">
-                                            <svg class="w-5 h-5 rotate-90" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div class="absolute z-10 w-44 bg-white border rounded-md divide-y divide-gray-100"
-                                            v-show="isShowActionMenu == i" :class="10 - 3 < i ? 'bottom-full' : 'top-full'">
-                                            <ul class="py-1 text-sm text-gray-700">
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a>
-                                                </li>
-                                            </ul>
-                                            <div class="py-1">
-                                                <a href="#"
-                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex justify-between items-center space-y-0 p-4"
-                    aria-label="Table navigation">
+                <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">
-                        Showing
-                        <span class="font-semibold text-gray-900">1-10</span>
-                        of
-                        <span class="font-semibold text-gray-900">1000</span>
+                        Result
+                        <span class="font-semibold text-gray-900">{{ responceList.total }}</span>
                     </span>
                     <ul class="inline-flex items-stretch -space-x-px">
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button
+                                :class="responceList.prev_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                @click="responceList.prev_page_url ? pagination-- : ''"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 ">
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -168,11 +233,13 @@ const hideActionMenu = (index) => {
                                         clip-rule="evenodd" />
                                 </svg>
                                 <span>Prev</span>
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <button
+                                :class="responceList.next_page_url ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-700' : 'bg-slate-100 cursor-auto'"
+                                @click="responceList.next_page_url ? pagination++ : ''"
+                                class="flex items-center justify-center gap-1 h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 ">
                                 <span>Next</span>
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -180,10 +247,12 @@ const hideActionMenu = (index) => {
                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                         clip-rule="evenodd" />
                                 </svg>
-                            </a>
+                            </button>
                         </li>
                     </ul>
                 </nav>
             </div>
-    </div>
-</section></template>
+        </div>
+        <DeleteConfirm v-if="selectedId" @delete="removeUserFunc(selectedId)" @close="selectedId = null" />
+    </section>
+</template>
