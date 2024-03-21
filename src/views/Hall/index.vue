@@ -27,6 +27,7 @@ const que = ref({})
 const page = ref(1)
 const responceArr = ref([])
 const status = ref(200);
+const result = ref({});
 
 onMounted(
     () => {
@@ -98,6 +99,11 @@ const saveResponse = () => {
                     "dangerouslyHTMLString": true
                 })
                 changeStatusLoading(false)
+
+                if (res.data.data) {
+                    let data = res.data.data
+                    result.value = data
+                }
             }
         )
         .catch(
@@ -123,7 +129,7 @@ const saveResponse = () => {
         <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 201" >
             <p class="text-center md:text-lg text-base font-normal text-gray-500" >This Exam is no longer accepting responses</p>
         </div>
-        <div class="min-h-[90%] max-w-screen-xl mx-auto flex flex-col px-4 pb-4" v-if="status == 200 && que.questions">
+        <div class="min-h-[90%] max-w-screen-xl mx-auto flex flex-col px-4 pb-4" v-if="status == 200 && que.questions && !Object.keys(result).length">
             <div class="grow py-28 flex-col flex justify-around relative">
                 <div class="absolute top-0 w-full translate-y-1/2 mt-1">
                     <div class="flex justify-between items-start">
@@ -203,6 +209,17 @@ const saveResponse = () => {
                     </Btn>
                 </div>
             </div>
+        </div>
+        <div class="min-h-[90%] py-12 justify-center flex items-center flex-col" v-if="Object.keys(result).length" >
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-green-600" v-if="result.percentage > 34" viewBox="0 0 512 512">
+                <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-red-400" v-else viewBox="0 0 512 512">
+                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+            </svg>
+
+            <p class="mt-6 md:text-[28px] text-[22px] text-center font-medium" >{{ result.percentage < 34 ? 'Oops...' : 'Congratulations' }}! {{ result.user?.name }} you got {{result.percentage}}% marks <br> in {{ result.course }}</p>
+            <p class="md:text-[22px] text-lg text-center font-medium text-gray-500" >You are {{ result.percentage < 34 ? 'fail' : 'pass' }}!</p>
         </div>
     </Hall>
 </template>
