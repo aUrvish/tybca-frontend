@@ -11,11 +11,11 @@ const isShowSingleResult = ref(null)
         <h1 class="text-[24px] font-semibold">Results</h1>
 
         <div class="mt-5 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-4" >
-            <div v-for="i in 4" class="rounded-lg overflow-hidden group cursor-pointer" >
+            <div v-for="i in 4" class="rounded-lg overflow-hidden group cursor-pointer"  @click="isShowSingleResult = 1" >
                 <div>
                     <IFrame/>
                     <div class="px-2 py-2" >
-                        <p class="text-sm line-clamp-2 font-medium underline" @click="isShowSingleResult = 1">Exam 2024-25 result</p>
+                        <p class="text-sm line-clamp-2 font-medium group-hover:underline">Exam 2024-25 result</p>
                     </div>
                 </div>
             </div>
