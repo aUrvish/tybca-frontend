@@ -3,8 +3,16 @@ import { toPng } from 'html-to-image';
 import { ref, onMounted } from 'vue'
 const resultEle = ref(null);
 const downloadUrl = ref(null)
+
+const props = defineProps({
+    responce : {
+        default : {},
+    }
+})
+
 onMounted(
     () => {
+        console.log(props.responce);
         toPng(resultEle.value)
             .then(
                 (dataUrl) => {
@@ -38,12 +46,16 @@ onMounted(
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 md:p-5 space-y-4" ref="resultEle">
+                <div class="overflow-auto md:max-h-full max-h-96">
+
+                <div class="p-4 md:p-5 space-y-4 md:min-w-0 min-w-[700px]" ref="resultEle">
 
 
-                    <div class="h-full container mx-auto grid place-items-center max-w-screen-sm"> <!-- certificate --> <div class="border relative max-w-screen-lg w-full aspect-[5/3.5] bg-[length:100%_100%] bg-no-repeat" style="background-image: url('./src/assets/images/certi1.png');"> <p style='font-family: Lato' class="uppercase text-[36px] font-medium text-center absolute w-full top-[16%]"> Certificate</p> <p style='font-family: Lato' class="text-[22px] text-center absolute w-full top-[26%]"> Of Appreciation</p> <p style='font-family: Lato' class="text-[16px] text-center absolute w-full top-[34%]"> This certificate is presented to</p> <p style='font-family: Great vibes ' class="text-[36px] text-center absolute w-full top-[42%] capitalize"> Benjamin Shah</p> <p style='font-family: Lato' class="text-[14px] text-center absolute w-full top-[54%]"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br> tempor incididunt ut labore et dolore magna aliqua.</p> <div class="container"> <div class="grid grid-cols-3 absolute w-full top-[68%] mx-5"> <div class="max-w-sm overflow-hidden ms-5 text-center"> </div> <div class=""> <img src="@/assets/images/stamp1.webp" class="aspect-squre w-14 mx-auto" alt="stamp"> </div> <div class="max-w-sm overflow-hidden ms-5 text-center"> <img src="@/assets/images/sign2.png" class="aspect-squre mx-auto w-16" style="margin-left: 20%;" alt="sign"> <p class="font-medium text-[12px] text-center mt-1 me-20 ">Tom cruise</p> <p class=" text-[12px] text-center me-20 uppercase">REPRESENTATIVES</p> </div> </div> </div> </div> </div>
+                    <div class="h-full container mx-auto grid place-items-center"> <!-- certificate --> <div class="border relative max-w-screen-md w-full aspect-[5/3.5] bg-[length:100%_100%] bg-no-repeat" style="background-image: url('./src/assets/images/certi1.png');"> <p style='font-family: Lato' class="uppercase text-[36px] font-medium text-center absolute w-full top-[16%]"> Certificate</p> <p style='font-family: Lato' class="text-[22px] text-center absolute w-full top-[26%]"> Of Appreciation</p> <p style='font-family: Lato' class="text-[16px] text-center absolute w-full top-[34%]"> This certificate is presented to</p> <p class="text-[36px] text-center absolute w-full top-[42%] capitalize">{{ responce.user.name }}</p> <p style='font-family: Lato' class="text-[14px] text-center absolute w-full top-[54%] max-w-md left-1/2 -translate-x-1/2"> This certificate is given to {{ responce.user.name }} for his achievement in the field of education and proves that he is great success in <span class="uppercase" > {{ responce.course.name }} </span>.</p> <div class="container"> <div class="grid grid-cols-3 absolute w-full top-[68%] mx-5"> <div class="max-w-sm overflow-hidden ms-5 text-center"> </div> <div> <div class="aspect-squre w-14 mx-auto bg-[length:100%_100%] aspect-square bg-no-repeat" style="background-image: url('./src/assets/images/stamp1.webp');"></div> </div> <div class="max-w-sm overflow-hidden ms-5 text-center"> <div class="w-[100px] aspect-video ml-8 mx-auto bg-[length:100%_100%] bg-no-repeat" :style="{backgroundImage: `url('${responce.quiz.certi_signature}')` }"> </div> <p class="font-medium text-[12px] text-center mt-1 me-20 ">{{ responce.quiz.user.name }}</p> <p class=" text-[12px] text-center me-20 uppercase">REPRESENTATIVES</p> </div> </div> </div> </div> </div>
 
                 </div>
+            </div>
+
                 <!-- Modal footer -->
                 <div class="flex items-center justify-between p-4 md:p-4 border-t border-gray-200 rounded-b ">
                     <button @click="$emit('close')" type="button"

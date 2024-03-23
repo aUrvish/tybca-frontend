@@ -1,5 +1,9 @@
 <script setup>
 import UserTable from './components/UserTable.vue';
+
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+const { auth } = storeToRefs(useAuthStore());
 </script>
 
 <template>
@@ -8,7 +12,7 @@ import UserTable from './components/UserTable.vue';
             <div class="border rounded-md bg-white p-4 flex items-center justify-between">
                 <h1 class="text-[24px] font-semibold">Students</h1>
                 <div>
-                    <RouterLink :to="{ name : 'StudentAdd'}" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
+                    <RouterLink :to="{ name : 'StudentAdd'}" v-if="auth.user.role_id == 0" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
                         Add Student
                     </RouterLink>
                 </div>

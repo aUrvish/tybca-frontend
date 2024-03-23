@@ -83,6 +83,12 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
+        const getResult = async () => {
+            let res = null;
+            res = axios.get(`/api/quiz/result/get`);
+            return res
+        }
+
         const getAllSeacherAction = async(payload) => {
             let res = null;
             res = axios.post('/api/quiz/search', payload);
@@ -95,6 +101,6 @@ export const useQuizStore = defineStore('quiz',
             return res
         }
 
-        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction, getAllAction, getAllSeacherAction, getFetchAction, setResponceAction, getAllTestAction, getAllResponceAction, getSingleResponceAction, removeResponceAction}
+        return {addQuizAction, addQuestionAction, addQuestionInputAction, removeQuizAction, removeQuestionAction, removeQuestionInputAction, getAction, getAllAction, getAllSeacherAction, getFetchAction, setResponceAction, getAllTestAction, getAllResponceAction, getSingleResponceAction, removeResponceAction, getResult}
     }
 )

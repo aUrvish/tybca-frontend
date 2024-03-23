@@ -165,7 +165,7 @@ const getStatus = (start, duration) => {
                                     <span
                                     class="text-[12px] border text-success rounded-md border-success py-1 px-2" v-if="getStatus(std.start_at, std.duration) == 1">Active</span>
                                     <span class="text-[12px] border text-warning rounded-md border-warning py-1 px-2" v-else-if="getStatus(std.start_at, std.duration) == 2" >Pending</span>
-                                    <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-else >Dead</span>
+                                    <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-else >Ended</span>
 
                                 </td>
 

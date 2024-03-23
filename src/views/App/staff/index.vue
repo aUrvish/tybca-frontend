@@ -30,13 +30,16 @@ onMounted(
             .then(
                 (res) => {
                     if (res.data.data) {
-                        teacherList.value = res.data.data;
+                        teacherList.value = res.data.data.filter(
+                            (curr) => curr.id != auth.value.user.id 
+                        );
                     }
                     changeStatusLoading(false)
                 }
             )
             .catch(
                 (e) => {
+                    console.log(e);
                     toast(e.response.data.messages, {
                         "type": "error",
                         "dangerouslyHTMLString": true
@@ -116,14 +119,6 @@ watch(search,
                         <div class="grow">
                             <p class="text-gray-400 font-semibold">{{ teacher.name }}</p>
                             <p class="text-sm text-gray-400 font-semibold group-hover:underline">#{{ teacher.id }}</p>
-                        </div>
-                        <div class="text-center text-success text-sm font-semibold flex justify-center items-center">
-                            12%
-                            <svg class="w-2.5 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 10 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
-                            </svg>
                         </div>
                     </div>
                 </div>

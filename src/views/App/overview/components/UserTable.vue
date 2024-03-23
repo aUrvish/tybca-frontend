@@ -55,7 +55,6 @@ const miniavtar = (name) => {
                                 <th scope="col" class="px-4 py-3 text-center">{{ name }} Name</th>
                                 <th scope="col" class="px-4 py-3 text-center">E-Mail</th>
                                 <th scope="col" class="px-4 py-3 text-center">Mobile</th>
-                                <th scope="col" class="px-4 py-3 text-center">Performance</th>
                                 <th scope="col" class="px-4 py-3 text-center">Status</th>
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
@@ -77,18 +76,6 @@ const miniavtar = (name) => {
                                 <td class="px-4 py-3 text-center">{{ user.name }}</td>
                                 <td class="px-4 py-3 text-center">{{ user.email }}</td>
                                 <td class="px-4 py-3 text-center">{{ user.mobile }}</td>
-                                <td class="px-4 py-3 ">
-                                    <div
-                                        class="text-center text-success font-semibold flex justify-center items-center">
-
-                                        12%
-                                        <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 10 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
-                                        </svg>
-                                    </div>
-                                </td>
                                 <td class="px-4 py-3 text-center">
                                     <span class="text-[12px] border text-success rounded-md border-success py-1 px-2"
                                         v-if="user.status">Active</span>

@@ -8,12 +8,38 @@ const { getOverviewAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
 const { isLoading } = storeToRefs(useLoadStore());
+import { useQuizStore } from '@/store/quiz'
+const { getAllTestAction } = useQuizStore();
 
+const ActiveQuiz = ref([])
 const social = ref({
     students : 0,
     teachers : 0,
     course : 0
 })
+
+const getStatus = (start, duration) => {
+    if (start) {
+        let startAt = new Date(start);
+        let endAt = new Date(new Date(start).getTime() + Number(duration) * 60000);
+        let now = new Date()
+
+        if (endAt.valueOf() < now.valueOf()) {
+            return 3
+        }
+
+        if (now.valueOf() < startAt.valueOf()) {
+            return 2
+        }
+
+        if (now.valueOf() >= startAt.valueOf() && now.valueOf() <= endAt.valueOf()) {
+            return 1
+        }
+    } else {
+        return 1
+    }
+}
+
 onMounted(
     () => {
         changeStatusLoading(true)
@@ -26,6 +52,27 @@ onMounted(
                         social.value.students = data.students;
                         social.value.teachers = data.teachers;
                         social.value.course = data.course;
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+
+        changeStatusLoading(true)
+        getAllTestAction()
+            .then(
+                (res) => {
+
+                    if (res.data.data) {
+                        changeStatusLoading(false)
+                        ActiveQuiz.value = res.data.data.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 1)
                     }
                 }
             )
@@ -54,7 +101,7 @@ onMounted(
             <h4 class="mt-1 text-center font-bold font-sans sm:text-[20px] text-[18px]">Total Students</h4>
             <p class="text-center font-bold font-sans sm:text-[30px] text-[24px]">{{ social.students }}</p>
         </RouterLink>
-        <RouterLink :to="{name : 'TeacherList'}"  class="p-4 bg-[#f9e5ea] rounded-md">
+        <RouterLink :to="auth.user.role_id == 0 ? {name : 'TeacherList'} : {name : 'UserTeacherList'}"  class="p-4 bg-[#f9e5ea] rounded-md">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#ef2b58]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" class="h-8 w-8 fill-white"
                     viewBox="0 0 640 512">
@@ -85,7 +132,7 @@ onMounted(
                 </svg>
             </div>
             <h4 class="mt-1 text-center font-bold font-sans text-[20px]">Active Exam</h4>
-            <p class="text-center font-bold font-sans text-[26px]">0</p>
+            <p class="text-center font-bold font-sans text-[26px]">{{ ActiveQuiz.length || 0 }}</p>
         </RouterLink>
     </div>
 </template>

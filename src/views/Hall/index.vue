@@ -51,11 +51,12 @@ onMounted(
             )
             .catch(
                 (e) => {
+                    changeStatusLoading(false)
+                    router.push({name : '404'})
                     toast(e.response.data.messages, {
                         "type": "error",
                         "dangerouslyHTMLString": true
                     })
-                    changeStatusLoading(false)
                 }
             )
     }
