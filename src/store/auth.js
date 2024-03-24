@@ -74,6 +74,18 @@ export const useAuthStore = defineStore('auth',
             return res
         }
 
+        const getProfilesActivityAction = async(id) => {
+            let res = null;
+            res = axios.get(`/api/profile/activity/${id}`);
+            return res
+        }
+
+        const getAuthProfileActivityAction = async() => {
+            let res = null;
+            res = axios.get('/api/profile/activity/all/get');
+            return res
+        }
+
         const getStudentsAction = async(page = 1) => {
             let res = null;
             res = axios.get(`/api/auth/students/get/?page=${page}`);
@@ -107,6 +119,18 @@ export const useAuthStore = defineStore('auth',
         const getTeachersSeacherAction = async(payload) => {
             let res = null;
             res = axios.post('/api/auth/teachers/search', payload);
+            return res
+        }
+
+        const getTeachersFilterAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/teachers/filter', payload);
+            return res
+        }
+
+        const getStudentsFilterAction = async(payload) => {
+            let res = null;
+            res = axios.post('/api/auth/students/filter', payload);
             return res
         }
 
@@ -170,7 +194,11 @@ export const useAuthStore = defineStore('auth',
             getOverviewTeachersAction,
             getStaffAction,
             getStaffSeacherAction,
-            getOverviewQuizAction
+            getOverviewQuizAction,
+            getTeachersFilterAction,
+            getStudentsFilterAction,
+            getProfilesActivityAction,
+            getAuthProfileActivityAction
         }
     },
     {

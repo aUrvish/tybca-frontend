@@ -181,6 +181,7 @@ const getStatus = (start, duration) => {
                             </tr>
                         </tbody>
                     </table>
+                    <p v-if="QuizList?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
                 </div>
             </div>
         </div>

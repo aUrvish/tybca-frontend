@@ -123,7 +123,7 @@ onMounted(
             </div>
             <div class="flex items-center px-2.5 py-0.5 sm:text-base text-[13px] font-semibold  text-center"
             :class="performance < 0 ? 'text-red-400' : 'text-green-500'">
-                {{ isPrefix ? pattern + Math.abs(performance).toFixed(2) || 0 :  Math.abs(performance).toFixed(2) + pattern || 0 }}
+                {{ isPrefix ? pattern + Math.abs(performance).toFixed(Math.abs(performance) == 100 ? 0 : 2) || 0 :  Math.abs(performance).toFixed(Math.abs(performance) == 100 ? 0 : 2) + pattern || 0 }}
                 <svg class="w-3 h-3 ms-1" :class="performance == 0 ? 'hidden' : performance < 0 ? 'rotate-180' : ''" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

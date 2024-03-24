@@ -5,14 +5,18 @@ import { toast } from "vue3-toastify";
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
+import { useCourseStore } from '@/store/course'
 import { useRouter } from 'vue-router';
 import DeleteConfirm from '@/components/DeleteConfirm.vue';
 import debounce from 'lodash.debounce'
 
-const { getStudentsAction, getStudentsSeacherAction, removeAction, disableAction } = useAuthStore();
+const { getStudentsAction, getStudentsSeacherAction, removeAction, disableAction, getStudentsFilterAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { auth } = storeToRefs(useAuthStore());
+
+const { course } = storeToRefs(useCourseStore());
+const { getCourse, mutationSetCourse } = useCourseStore();
 
 const props = defineProps({
     max: {
@@ -50,11 +54,29 @@ onMounted(
                     changeStatusLoading(false)
                 }
             )
+
+        changeStatusLoading(true)
+        getCourse()
+            .then(
+                (res) => {
+                    mutationSetCourse(res.data.data)
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
     }
 )
 
 const search = ref(null)
-const filterCourse = computed(() => props.filter)
+const filterCourse = ref(null)
 import services from '@/plugins/service'
 const getStorage = services.storageBaseUrl;
 
@@ -80,7 +102,7 @@ watch(search,
                 }
             )
 
-    } , 800)
+    }, 800)
 )
 
 watch(
@@ -104,6 +126,53 @@ watch(
                     changeStatusLoading(false)
                 }
             )
+
+    }, 800)
+)
+
+watch(
+    filterCourse,
+    debounce((newVal) => {
+
+        if (newVal) {
+            changeStatusLoading(true)
+            getStudentsFilterAction({ course_id: newVal })
+                .then(
+                    (res) => {
+                        if (res.data.data) {
+                            studentList.value = res.data.data;
+                        }
+                        changeStatusLoading(false)
+                    }
+                )
+                .catch(
+                    (e) => {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                        changeStatusLoading(false)
+                    }
+                )
+        } else {
+            changeStatusLoading(true)
+            getStudentsAction(pagination.value)
+                .then(
+                    (res) => {
+                        studentList.value = res.data.data;
+                        changeStatusLoading(false)
+                    }
+                )
+                .catch(
+                    (e) => {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                        changeStatusLoading(false)
+                    }
+                )
+        }
 
     }, 800)
 )
@@ -167,25 +236,34 @@ const changeStatus = (status, id) => {
         <div>
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
-                <div class="flex items-center justify-between p-4 border-b">
+                <div class="flex items-center gap-2 justify-between p-4 border-b">
                     <h1 class="text-[20px] font-bold">Student</h1>
-                    <div class="w-full sm:max-w-[200px] max-w-[150px]">
-                        <form class="flex items-center">
-                            <label for="simple-search" class="sr-only">Search</label>
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
-                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd" />
-                                    </svg>
+                    <div class="flex md:gap-4 gap-2 items-center">
+                        <div class="w-full sm:max-w-[200px] max-w-[150px]">
+                            <select v-model="filterCourse"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-1.5">
+                                <option selected :value="null">Select Course</option>
+                                <option :value="co.id" v-for="(co, ind) in course" :key="ind">{{ co.name }}</option>
+                            </select>
+                        </div>
+                        <div class="w-full sm:max-w-[200px] max-w-[150px] ">
+                            <form class="flex items-center">
+                                <label for="simple-search" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
+                                            viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="simple-search"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
+                                        placeholder="Search" v-model="search">
                                 </div>
-                                <input type="text" id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
-                                    placeholder="Search" v-model="search">
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -209,7 +287,8 @@ const changeStatus = (status, id) => {
                                 <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
-                                            <img :src="getStorage + std.avatar" class="object-cover w-full h-full" v-if="std.avatar" alt="avtar">
+                                            <img :src="getStorage + std.avatar" class="object-cover w-full h-full"
+                                                v-if="std.avatar" alt="avtar">
                                             <div v-html="miniavtar(std.name)" v-else class="w-full bg-white"></div>
                                         </div>
                                         <p>#{{ std.id }}</p>
@@ -219,17 +298,19 @@ const changeStatus = (status, id) => {
                                 <td class="px-4 py-3 text-center">{{ std.email }}</td>
                                 <td class="px-4 py-3 text-center">{{ std.mobile }}</td>
                                 <td class="px-4 py-3 text-center">{{ new
-                        Date(std.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                Date(std.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">
-                                    <span
-                                    class="text-[12px] border text-success rounded-md border-success py-1 px-2" v-if="std.status">Active</span>
-                                    <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2" v-else >Logout</span>
+                                    <span class="text-[12px] border text-success rounded-md border-success py-1 px-2"
+                                        v-if="std.status">Active</span>
+                                    <span class="text-[12px] border text-red-400 rounded-md border-red-400 py-1 px-2"
+                                        v-else>Logout</span>
                                 </td>
 
                                 <td class="px-4 py-3">
                                     <div class="flex justify-between items-center gap-2">
 
-                                        <label class="inline-flex items-center cursor-pointer" v-if="auth.user.role_id == 0">
+                                        <label class="inline-flex items-center cursor-pointer"
+                                            v-if="auth.user.role_id == 0">
                                             <input type="checkbox" class="sr-only peer" :checked="std.disable"
                                                 @change="changeStatus($event.target.checked, std.id)">
                                             <div
@@ -244,13 +325,15 @@ const changeStatus = (status, id) => {
                                         </svg>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="fill-success cursor-pointer w-4"
-                                            viewBox="0 0 512 512" v-if="auth.user.role_id == 0" @click="router.push(`/profile/edit/${std.id}`)">
+                                            viewBox="0 0 512 512" v-if="auth.user.role_id == 0"
+                                            @click="router.push(`/profile/edit/${std.id}`)">
                                             <path
                                                 d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
                                         </svg>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="fill-red-400 cursor-pointer w-4"
-                                            viewBox="0 0 448 512" v-if="auth.user.role_id == 0" @click="selectedId = std.id">
+                                            viewBox="0 0 448 512" v-if="auth.user.role_id == 0"
+                                            @click="selectedId = std.id">
                                             <path
                                                 d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
                                         </svg>
@@ -259,6 +342,7 @@ const changeStatus = (status, id) => {
                             </tr>
                         </tbody>
                     </table>
+                    <p v-if="studentList.data?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
                 </div>
                 <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">

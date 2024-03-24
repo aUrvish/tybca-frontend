@@ -254,6 +254,7 @@ const getStatus = (start, duration) => {
                             </tr>
                         </tbody>
                     </table>
+                    <p v-if="QuizList.data?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
                 </div>
                 <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">
