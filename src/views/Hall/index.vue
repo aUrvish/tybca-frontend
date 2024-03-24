@@ -15,17 +15,20 @@ import { toast } from "vue3-toastify";
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/store/auth'
 import { useQuizStore } from '@/store/quiz'
+import services from '@/plugins/service'
 
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { getFetchAction, setResponceAction } = useQuizStore();
 const { auth } = storeToRefs(useAuthStore());
+const getStorage = services.storageBaseUrl;
 
 const router = useRouter()
 const route = useRoute()
 const que = ref({})
 const page = ref(1)
 const responceArr = ref([])
+const isInvalid = ref(false);
 const status = ref(200);
 const result = ref({});
 
@@ -86,6 +89,24 @@ const pushResponce = (option_id, que_id, type) => {
 
 const saveResponse = () => {
 
+    isInvalid.value = false
+
+    // check required
+    let allRequiredQuestion = que.value.questions.filter(curr => curr.is_required == 1)
+    let allResponceQuestion = responceArr.value.map(curr => curr.que_id)
+    allRequiredQuestion.map(
+        (curr , index) => {
+            if (!allResponceQuestion.includes(curr.id)) {
+                isInvalid.value = true
+                return
+            }
+        }
+    )
+
+    if (isInvalid.value) {
+        return
+    }
+
     let payload = {
         quiz_id: que.value.id,
         responce: [...responceArr.value]
@@ -100,6 +121,7 @@ const saveResponse = () => {
                     "dangerouslyHTMLString": true
                 })
                 changeStatusLoading(false)
+                page.value++
 
                 if (res.data.data) {
                     let data = res.data.data
@@ -120,7 +142,7 @@ const saveResponse = () => {
 
 </script>
 <template>
-    <Hall :quiz="que">
+    <Hall :quiz="que" :pagelength="que.questions?.length ? (((page - 1) * 100) / que.questions.length) : 0">
         <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 202" >
             <p class="text-center md:text-lg text-base font-normal text-gray-500" >The Exam is Currently close and will begin accepting responce on <b>{{ new Date(que.start_at).toLocaleString() }}</b></p>
         </div>
@@ -134,7 +156,7 @@ const saveResponse = () => {
             <div class="grow py-28 flex-col flex justify-around relative">
                 <div class="absolute top-0 w-full translate-y-1/2 mt-1">
                     <div class="flex justify-between items-start">
-                        <div>
+                        <div :class="auth.user.role_id == 2 ? 'visible' : 'invisible'">
                             <VueCountdown :time="(new Date(que.start_at).valueOf() - new Date().valueOf()) + 60000 * Number(que.duration)"
                                 v-slot="{ days, hours, minutes, seconds }"
                                 class="font-semibold text-gray-400 text-lg text-left flex items-center gap-1">
@@ -161,11 +183,14 @@ const saveResponse = () => {
                         </div>
                     </div>
                 </div>
-                <div class="font-bold md:text-[24px] text-lg flex items-start gap-4 text-gray-500 mb-8">
-                    <span> Q.{{ page }} </span>
-                    <h1 v-if="que.questions">
-                        {{ que.questions[page - 1].title }}
-                    </h1>
+                <div class="mb-8" >
+                    <div class="font-bold md:text-[24px] text-lg flex items-start gap-4 text-gray-500">
+                        <span> Q.{{ page }} </span>
+                        <h1 v-if="que.questions">
+                            {{ que.questions[page - 1].title }}
+                        </h1>
+                    </div>
+                    <img :src="getStorage + que.questions[page - 1].img" v-if="que.questions[page - 1].img" class="mt-8 max-w-xl" alt="image">
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-4 w-full">
@@ -175,7 +200,7 @@ const saveResponse = () => {
                         :class="selected.includes(input.id) ? 'border-blue' : ''"
                         @click.prevent="pushResponce(input.id, que.questions[page - 1].id, que.questions[page - 1].type)">
                         <div class="grow items-center gap-4 flex">
-                            <p v-if="que.questions[page - 1].type == 'dropdown'">{{ index + 1 }}.</p>
+                            <p v-if="que.questions[page - 1].type == 'numeric'">{{ index + 1 }}.</p>
                             <input type="checkbox" :id="`opt${index}`" class="w-4 h-4"
                                 :checked="selected.includes(input.id)"
                                 v-else-if="que.questions[page - 1].type == 'checkboxes'">
@@ -191,23 +216,27 @@ const saveResponse = () => {
                 <p
                     class="px-2 py-1 w-fit border border-gray-300 rounded-[8px] font-medium lg:text-sm text-[12px] text-gray-400">
                     27 complated</p>
-                <div class="flex items-center gap-4">
-                    <Pagination v-if="que.questions" :totle="que.questions.length"
-                        @changePagination="(val) => page = val" />
-                    <Btn v-if="que.questions?.length == page" @click="saveResponse"
-                        class="flex justify-center items-center gap-3 text-white font-medium rounded-lg text-sm px-3 py-1.5 text-center"
-                        :class="isLoading ? 'bg-primary-200' : 'bg-primary'" :disabled="isLoading">
-                        Submit
-                        <svg aria-hidden="true" v-if="isLoading" class="w-5 h-5 text-white animate-spin fill-primary"
-                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                fill="currentColor" />
-                            <path
-                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                fill="currentFill" />
-                        </svg>
-                    </Btn>
+
+                <div class="flex items-end flex-col">
+                    <p class="text-red-400 mb-1 text-sm font-medium text-right" v-if="isInvalid" ><span class="font-bold text-base">!</span> Please responce all required questions</p>
+                    <div class="flex items-center gap-4">
+                        <Pagination v-if="que.questions" :totle="que.questions.length"
+                            @changePagination="(val) => page = val" />
+                        <Btn v-if="que.questions?.length == page" @click="saveResponse"
+                            class="flex justify-center items-center gap-3 text-white font-medium rounded-lg text-sm px-3 py-1.5 text-center"
+                            :class="isLoading ? 'bg-primary-200' : 'bg-primary'" :disabled="isLoading">
+                            Submit
+                            <svg aria-hidden="true" v-if="isLoading" class="w-5 h-5 text-white animate-spin fill-primary"
+                                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="currentColor" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentFill" />
+                            </svg>
+                        </Btn>
+                    </div>
                 </div>
             </div>
         </div>

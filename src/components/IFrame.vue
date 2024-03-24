@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { toPng } from 'html-to-image';
+import services from '@/plugins/service'
+const getStorage = services.storageBaseUrl;
 
 const frame = ref(null)
 
@@ -85,7 +87,7 @@ const setGrade = (per) => {
                         <div class="max-w-sm overflow-hidden ms-5 text-center"> </div>
                         <div> <div class="aspect-squre w-14 mx-auto bg-[length:100%_100%] aspect-square bg-no-repeat" style="background-image: url('./src/assets/images/stamp1.webp');"></div> </div>
                         <div class="max-w-sm overflow-hidden ms-5 text-center"> 
-                            <div class="w-[80px] aspect-video ml-8 mx-auto bg-[length:100%_100%] bg-no-repeat" :style="{backgroundImage: `url('${data.quiz.certi_signature}'` }"> </div>
+                            <div class="w-[80px] aspect-video ml-8 mx-auto bg-[length:100%_100%] bg-no-repeat" :style="{backgroundImage: `url('${getStorage + data.quiz.certi_signature}'` }"> </div>
                             <p class="font-medium text-[12px] text-center mt-1 me-20 ">Tom cruise</p>
                             <p class=" text-[12px] text-center me-20 uppercase">REPRESENTATIVES</p>
                         </div>

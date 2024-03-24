@@ -2,6 +2,9 @@
 const props = defineProps({
     quiz: {
         require: true
+    },
+    pagelength : {
+        default : 0,
     }
 })
 
@@ -43,7 +46,7 @@ const getPointSum = (arr) => {
     </nav>
     <div class="z-[100] sticky top-0">
         <div class='h-[3px] w-full bg-transparent overflow-hidden'>
-            <div class='w-1/4 h-full bg-primary left-right'></div>
+            <div class='h-full bg-primary left-right' :style="{width : `${pagelength}%`}"></div>
         </div>
     </div>
 </template>

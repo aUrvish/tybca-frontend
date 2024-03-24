@@ -13,6 +13,7 @@ import debounce from 'lodash.debounce';
 const { changeStatusLoading } = useLoadStore();
 const { getAction } = useQuizStore();
 const { isLoading } = storeToRefs(useLoadStore());
+const { addQuizAction } = useQuizStore();
 
 const totolePoint = ref(1)
 const totoleQue = ref(1)
@@ -25,7 +26,12 @@ const quiz = ref({})
 
 onMounted(
     () => {
-        changeStatusLoading(true)
+        getQuiz()
+    }
+)
+
+const getQuiz = () => {
+    changeStatusLoading(true)
         getAction(route.params.id)
             .then(
                 (res) => {
@@ -46,7 +52,37 @@ onMounted(
                     router.back(1)
                 }
             )
-    }
+}
+
+watch(
+    () => quiz.value.title,
+    debounce((newX) => {
+        getQuiz()
+        let payload = {
+            ...quiz.value , title : newX
+        }
+
+        changeStatusLoading(true)
+        addQuizAction(payload)
+            .then(
+                (res) => {
+                    if (res.data.data) {
+                        let data = res.data.data
+                        quiz.value.title = data.title 
+                    }
+                    changeStatusLoading(false)
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                    changeStatusLoading(false)
+                }
+            )
+    }, 1500)
 )
 
 const copyUrl = () => {

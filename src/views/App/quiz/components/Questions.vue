@@ -24,7 +24,7 @@ const props = defineProps({
 
 const getStorage = services.storageBaseUrl;
 const isDropDownShow = ref([false]);
-const dropItem = ref(['options', 'dropdown', 'checkboxes'])
+const dropItem = ref(['options', 'numeric', 'checkboxes'])
 const mediaOnTitle = ref(null)
 
 const questions = ref(
@@ -341,7 +341,7 @@ onMounted(
                                         v-if="que.type == 'options'" :checked="ind == 0" disabled>
                                     <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
                                         v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
-                                    <p class="font-semibold text-gray-500" v-else>1.</p>
+                                    <p class="font-semibold text-gray-500" v-else>{{ ind +1 }}.</p>
                                     <input class="ml-3 outline-0 w-full" v-model="option.name">
                                 </div>
 

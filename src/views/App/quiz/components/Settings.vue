@@ -31,7 +31,8 @@ onMounted(
         addCourse(quizObj.course);
         switchs.value.schedule = quizObj.start_at;
         switchs.value.nagative = quizObj.nagative_point;
-        switchs.value.certificate = quizObj.certi_signature != null;
+        switchs.value.certificate = (quizObj.certi_signature != null && quizObj.certi_signature != 'null');
+        console.log(quizObj.certi_signature);
         changeStatusLoading(true)
         getCourse()
             .then(
@@ -132,8 +133,7 @@ const cleareTitleImage = () => {
                     </label>
                 </div>
                 <hr class="my-5">
-                <p class="text-gray-400 italic font-normal text-sm mb-4">Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Commodi aut explicabo harum corporis tenetur libero sequi vitae </p>
+                <p class="text-gray-400 italic font-normal text-sm mb-4">Enter the opening date and time for the quiz. This is when students will be able to start attempting the quiz. <br> Set the duration for the quiz. Once a student starts the quiz, they will have [X amount of time] to complete it before it automatically closes. </p>
 
                 <div v-if="switchs.schedule">
                     <div>
@@ -185,8 +185,7 @@ const cleareTitleImage = () => {
                     </label>
                 </div>
                 <hr class="my-5">
-                <p class="text-gray-400 italic font-normal text-sm mb-4">Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Commodi aut explicabo harum corporis tenetur libero sequi vitae </p>
+                <p class="text-gray-400 italic font-normal text-sm mb-4">In this quiz, question numbers are randomly generated rather than following a sequential order. This means that each question may have a unique number assigned to it. </p>
             </div>
             <div class="border bg-white p-4 rounded-md mt-4">
                 <div class="flex justify-between items-center">
@@ -200,10 +199,9 @@ const cleareTitleImage = () => {
                     </label>
                 </div>
                 <hr class="my-5">
-                <p class="text-gray-400 italic font-normal text-sm mb-4">Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Commodi aut explicabo harum corporis tenetur libero sequi vitae </p>
+                <p class="text-gray-400 italic font-normal text-sm mb-4">toggle the switch to 'On' to enable notifications for students. When this option is turned on, students will receive a notification informing them that a new quiz has been created for them to participate in.</p>
             </div>
-            <div class="border bg-white p-4 rounded-md mt-4">
+            <!-- <div class="border bg-white p-4 rounded-md mt-4">
                 <div class="flex justify-between items-center">
                     <p class="text-lg text-gray-600 font-semibold">Nagetive Point</p>
                     <label class="inline-flex items-center cursor-pointer">
@@ -224,7 +222,7 @@ const cleareTitleImage = () => {
                         class="bg-gray-50 border max-w-[150px] border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         v-model="quizObj.nagative_point" placeholder="1" />
                 </div>
-            </div>
+            </div> -->
             <div class="border bg-white p-4 rounded-md mt-4">
                 <div class="flex justify-between items-center">
                     <p class="text-lg text-gray-600 font-semibold">Render Certificate</p>
@@ -238,10 +236,12 @@ const cleareTitleImage = () => {
                     </label>
                 </div>
                 <hr class="my-5">
-                <p class="text-gray-400 italic font-normal text-sm mb-4">Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Commodi aut explicabo harum corporis tenetur libero sequi vitae {{ switchs.certificate }} </p>
+                <p class="text-gray-400 italic font-normal text-sm mb-4">Activate the 'Render Certificate' feature 
+                Once activated, participants will automatically receive their certificates upon completing the quiz.
+                </p>
+                
                 <div class="flex justify-between items-center" v-if="switchs.certificate">
-                    <div class="mt-4 relative" v-if="quizObj && (quizObj.certi_signature || quizObj.titleImg)">
+                    <div class="mt-4 relative" v-if="quizObj && ((quizObj.certi_signature && quizObj.certi_signature != 'null') || quizObj.titleImg)">
                         <div class="py-1 px-1.5 bg-red-400 aspect-square absolute rounded-full cursor-pointer translate-x-1/2 -translate-y-1/2 right-0"
                             @click="cleareTitleImage()">
                             <svg xmlns="http://www.w3.org/2000/svg" class="max-w-2.5 w-full fill-gray-200"
@@ -250,7 +250,7 @@ const cleareTitleImage = () => {
                                     d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
                             </svg>
                         </div>
-                        <img :src="quizObj.titleImg ? quizObj.titleImg : quizObj.certi_signature ? getStorage + quizObj.certi_signature : ''"
+                        <img :src="quizObj.titleImg ? quizObj.titleImg : (quizObj.certi_signature && quizObj.certi_signature != 'null') ? getStorage + quizObj.certi_signature : ''"
                             class="w-full rounded-md border" alt="blob image">
                     </div>
                     <input type="file" @change="(e) => uploadTitleImage(e.target)" v-else>

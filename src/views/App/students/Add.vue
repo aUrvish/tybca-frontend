@@ -5,7 +5,7 @@ import Btn from '@/components/Btn.vue';
 import { minidenticon } from 'minidenticons'
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, numeric } from '@vuelidate/validators'
+import { required, email, numeric, minLength, maxLength } from '@vuelidate/validators'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
@@ -32,7 +32,7 @@ const rules = computed(() => {
     return {
         name: { required },
         email: { required, email },
-        mobile: { required, numeric },
+        mobile: { required, numeric, minLength : minLength(10), maxLength : maxLength(10) },
         city: { required },
         country: { required },
     }
@@ -44,6 +44,7 @@ const userMiniprofile = ref(null)
 const form = ref(null)
 const avatarImg = ref(null)
 const router = useRouter()
+const invalideCource = ref(false)
 
 const changeImg = (value) => {
     avatarImg.value = URL.createObjectURL(value.files[0]);
@@ -83,17 +84,19 @@ const selectCourse = ref([]);
 const addCourse = (obj) => {
     if (selectCourse.value.includes(obj.id)) {
         selectCourse.value = selectCourse.value.filter((curr, index) => curr != obj.id)
+        invalideCource.value = selectCourse.value.length <= 0
         return null;
     }
     selectCourse.value.push(obj.id);
+    invalideCource.value = selectCourse.value.length <= 0
 }
 
 const profileImage = ref(null);
 
 const addUser = () => {
-
+    invalideCource.value = selectCourse.value.length <= 0
     v$.value.$validate();
-    if (v$.value.$invalid) {
+    if (v$.value.$invalid || invalideCource.value) {
         return null
     }
 
@@ -204,6 +207,14 @@ const addUser = () => {
                                 v-if="v$.$dirty && v$.mobile.numeric.$invalid">
                                 <span class="font-bold text-base">!</span> Please enter valid mobile number
                             </div>
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.mobile.minLength.$invalid">
+                                <span class="font-bold text-base">!</span> Please enter valid mobile number
+                            </div>
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.mobile.maxLength.$invalid">
+                                <span class="font-bold text-base">!</span> Please enter valid mobile number
+                            </div>
                         </div>
                         <div>
                             <Textbox id="city" label="City" v-model="user.city" name="city" placeholder="Mumbai"
@@ -255,6 +266,9 @@ const addUser = () => {
                             {{ course.name }}
                         </p>
                     </div>
+                </div>
+                <div class="text-red-400 mt-1 text-sm font-medium" v-if="invalideCource">
+                    <span class="font-bold text-base">!</span> Please select atleast one course
                 </div>
             </div>
         </div>
