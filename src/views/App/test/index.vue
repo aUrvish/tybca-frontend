@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store/auth'
 
 const { getAllTestAction } = useQuizStore();
 const { changeStatusLoading } = useLoadStore();
+const { getAuthProfileAction } = useAuthStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { auth } = storeToRefs(useAuthStore());
 
@@ -28,21 +29,45 @@ const props = defineProps({
 const QuizList = ref([])
 const pendingQuiz = ref([])
 const ActiveQuiz = ref([])
+const userCourse = ref([])
 
 onMounted(
     () => {
+        getAuthProfileAction()
+            .then(
+                (res) => {
+                    let response = res.data.data;
+                    if (response) {
+                        if (response.course.length) {
+                            userCourse.value = [...response.course.map(curr => curr.course_id)]
+                        }else {
+                            userCourse.value = []
+                        }
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.message, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
+            )
+
         changeStatusLoading(true)
         getAllTestAction()
             .then(
                 (res) => {
 
                     if (res.data.data) {
-                        QuizList.value = res.data.data;
-                        changeStatusLoading(false)
+                        console.log(userCourse.value);
+                        QuizList.value = res.data.data.filter(curr => userCourse.value.includes(curr.course_id));
 
                         pendingQuiz.value = QuizList.value.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 2)
                         ActiveQuiz.value = QuizList.value.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 1)
                     }
+                    changeStatusLoading(false)
                 }
             )
             .catch(
@@ -94,7 +119,7 @@ const getPointSum = (arr) => {
     <div class="max-w-screen-xl mx-auto">
         <h1 class="text-[24px] font-semibold">Test</h1>
 
-        <div class="mt-10">
+        <div class="mt-10" v-if="ActiveQuiz.length">
             <h2 class="text-[20px] font-semibold">Active Test</h2>
             <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
                 <div v-for="(test, index) in ActiveQuiz" :key="index" class="group: overflow-hidden group cursor-pointer relative">
@@ -120,7 +145,7 @@ const getPointSum = (arr) => {
             </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-8" v-if="pendingQuiz.length">
             <h2 class="text-[20px] font-semibold">Pending Test</h2>
             <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
                 <div v-for="(test, index) in pendingQuiz" :key="index"

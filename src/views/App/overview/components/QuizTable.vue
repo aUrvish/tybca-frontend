@@ -115,7 +115,7 @@ const getStatus = (start, duration) => {
             <!-- Start coding here -->
             <div class="bg-white relative border sm:rounded-lg overflow-hidden">
                 <div class="flex items-center justify-between p-4 border-b">
-                    <h1 class="text-[20px] font-bold">Student</h1>
+                    <h1 class="text-[20px] font-bold">Quiz</h1>
                     <div class="w-full sm:max-w-[200px] max-w-[150px]">
                         <form class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>

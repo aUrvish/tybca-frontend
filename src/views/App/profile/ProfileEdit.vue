@@ -5,7 +5,7 @@ import Btn from '@/components/Btn.vue';
 import { minidenticon } from 'minidenticons'
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, numeric , minLength, maxLength } from '@vuelidate/validators'
+import { required, email, numeric , minLength, maxLength, alpha } from '@vuelidate/validators'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
@@ -30,11 +30,11 @@ const user = reactive({
 
 const rules = computed(() => {
     return {
-        name: { required },
+        name: { required, alpha },
         email: { required, email },
         mobile: { required, numeric , minLength : minLength(10), maxLength : maxLength(10) },
-        city: { required },
-        country: { required },
+        city: { required, alpha },
+        country: { required, alpha },
     }
 })
 
@@ -162,7 +162,7 @@ const addUser = () => {
         <div class="flex gap-4 items-start flex-col 3lg:flex-row max-w-screen-xl mx-auto">
             <div class="grow w-full">
                 <div class="border rounded-md bg-white p-4 mb-4">
-                    <h1 class="text-[24px] font-semibold">Student</h1>
+                    <h1 class="text-[24px] font-semibold">Profile</h1>
                 </div>
                 <div class="border rounded-md bg-white sm:p-6 p-4">
                     <div
@@ -194,8 +194,12 @@ const addUser = () => {
                         <div>
                             <Textbox id="name" label="Name" name="name" placeholder="jone deo" v-model="user.name"
                                 type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.name.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.name.required.$invalid">
                                 <span class="font-bold text-base">!</span> Name is required
+                            </div>
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.name.alpha.$invalid">
+                                <span class="font-bold text-base">!</span> Please enter valid name
                             </div>
                         </div>
                         <div>
@@ -248,15 +252,23 @@ const addUser = () => {
                         <div>
                             <Textbox id="city" label="City" v-model="user.city" name="city" placeholder="Mumbai"
                                 type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.city.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.city.required.$invalid">
                                 <span class="font-bold text-base">!</span> City is required
+                            </div>
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.city.alpha.$invalid">
+                                <span class="font-bold text-base">!</span> Please enter valid city
                             </div>
                         </div>
                         <div>
                             <Textbox id="country" label="country" v-model="user.country" name="country"
                                 placeholder="India" type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.country.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.country.required.$invalid">
                                 <span class="font-bold text-base">!</span> Country is required
+                            </div>
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.country.alpha.$invalid">
+                                <span class="font-bold text-base">!</span> Please enter valid country
                             </div>
                         </div>
                         <input type="hidden" name="courses" :value="selectCourse.toString()">

@@ -47,7 +47,7 @@ onMounted(
 </script>
 
 <template>
-    <div class="border rounded-md px-4 pt-6 mt-5">
+    <div class="border rounded-md px-4 pt-6 mt-5 bg-white">
         <h1 class="text-[20px] font-bold">Staff</h1>
 
         <div class="grid sm:grid-cols-2 gap-2 pb-4 mt-4">

@@ -13,62 +13,73 @@ import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import Staff from './components/Staff.vue';
+import { useQuizStore } from '@/store/quiz'
 const { auth } = storeToRefs(useAuthStore());
+const { getResult } = useQuizStore();
 const { changeStatusLoading } = useLoadStore();
 const { getOverviewStudentsAction, getOverviewTeachersAction, getStudentsSeacherAction, getTeachersSeacherAction } = useAuthStore();
 
-const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length || 0;
-const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
-const getPropertyArr = (arr, property) => arr.map((curr, index) => curr[property])
 const students = ref([])
 const teachers = ref([])
 const isOpenCourseModel = ref(false)
 
+const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length || 0;
+const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
+const getPropertyArr = (arr, property) => arr.map((curr, index) => curr[property])
+
 const PerformanceData = ref([
     {
-        time: '2018-09-19',
-        data: 95
-    },
-    {
-        time: '2019-04-13',
-        data: 87
-    },
-    {
-        time: '2019-11-05',
-        data: 92
-    },
-    {
-        time: '2020-03-21',
-        data: 98
-    },
-    {
-        time: '2020-10-01',
-        data: 96
+        time: '0',
+        data: 0
     },
 ])
 
-const paymentData = ref([
-    {
-        time: '2018-09-19',
-        data: 6
-    },
-    {
-        time: '2019-04-13',
-        data: 10
-    },
-    {
-        time: '2019-11-05',
-        data: 15
-    },
-    {
-        time: '2020-03-21',
-        data: 20
-    },
-    {
-        time: '2020-10-01',
-        data: 24
-    },
-])
+// const PerformanceData = ref([
+//     {
+//         time: '2018-09-19',
+//         data: 95
+//     },
+//     {
+//         time: '2019-04-13',
+//         data: 87
+//     },
+//     {
+//         time: '2019-11-05',
+//         data: 92
+//     },
+//     {
+//         time: '2020-03-21',
+//         data: 98
+//     },
+//     {
+//         time: '2020-10-01',
+//         data: 96
+//     },
+// ])
+
+// const paymentData = ref([
+//     {
+//         time: '2018-09-19',
+//         data: 6
+//     },
+//     {
+//         time: '2019-04-13',
+//         data: 10
+//     },
+//     {
+//         time: '2019-11-05',
+//         data: 15
+//     },
+//     {
+//         time: '2020-03-21',
+//         data: 20
+//     },
+//     {
+//         time: '2020-10-01',
+//         data: 24
+//     },
+// ])
+const responce = ref([])
 
 onMounted(
     () => {
@@ -95,6 +106,39 @@ onMounted(
                     }
                 )
         }
+
+        if (auth.value.user?.role_id == 2) {
+
+            changeStatusLoading(true)
+            getResult()
+                .then(
+                    (res) => {
+                        if (res.data.data) {
+                            responce.value = res.data.data
+
+                            PerformanceData.value.push(
+                                ...responce.value.map((curr) => {
+                                    return {
+                                        time: new Date(curr.created_at).toLocaleDateString().replaceAll("/", "-"),
+                                        data: (curr.max != 0 ? ((curr.score * 100) / curr.max) : 0),
+                                    }
+                                })
+                            )
+                        }
+                        changeStatusLoading(false)
+                    }
+                )
+                .catch(
+                    (e) => {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                        changeStatusLoading(false)
+                    }
+                )
+        }
+
 
         if (auth.value.user?.role_id == 0) {
 
@@ -179,7 +223,8 @@ watch(
     <div class="3lg:max-w-screen-xl max-w-screen-lg mx-auto">
         <div class="3lg:flex gap-4">
             <div class="grow 2mac:max-w-screen-lg 3lg:max-w-screen-md">
-                <SocialProf class="grid sm:grid-cols-3 grid-cols-1 gap-4 " @courseOpen="() => isOpenCourseModel = true" />
+                <SocialProf class="grid sm:grid-cols-3 grid-cols-1 gap-4 "
+                    @courseOpen="() => isOpenCourseModel = true" />
                 <QuizTable :max="5" />
                 <UserTable :max="5" :data="students" name="Student"
                     v-if="auth.user.role_id == 0 || auth.user.role_id == 1">
@@ -223,8 +268,11 @@ watch(
             </div>
             <div class="max-w-sm w-full 3lg:block hidden grow">
                 <Notice />
-                <Donut :data="PerformanceData" pattern="%" title="Performance" class="mt-4" v-if="auth.user.role_id == 2">
-                    {{ average(getPropertyArr(PerformanceData, 'data')).toFixed(2) }}%
+                <Donut :data="PerformanceData" pattern="%" title="Performance" class="rounded-sm mt-4"
+                    v-if="auth.user.role_id == 2 && PerformanceData.length > 1">
+                    {{ average(getPropertyArr(PerformanceData.filter((curr, index) => index != 0), 'data')).toFixed(
+                        average(getPropertyArr(PerformanceData.filter((curr, index) => index != 0), 'data')) == 100 ? 0 : 2
+                    ) }}%
                 </Donut>
             </div>
         </div>

@@ -2,7 +2,7 @@
 import Auth from '@/layouts/auth.vue'
 import Textbox from '@/components/Textbox.vue'
 import Btn from '@/components/Btn.vue'
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { toast } from "vue3-toastify";
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -69,7 +69,6 @@ const submitForLogin = () => {
     )
 
 }
-
 </script>
 
 <template>

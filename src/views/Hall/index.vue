@@ -20,6 +20,7 @@ import services from '@/plugins/service'
 const { changeStatusLoading } = useLoadStore();
 const { isLoading } = storeToRefs(useLoadStore());
 const { getFetchAction, setResponceAction } = useQuizStore();
+const { getAuthProfileAction } = useAuthStore();
 const { auth } = storeToRefs(useAuthStore());
 const getStorage = services.storageBaseUrl;
 
@@ -41,12 +42,12 @@ onMounted(
                     console.log(res);
                     if (res.status == 200 && res.data.data) {
                         que.value = res.data.data
-                    }else if (res.status == 202) {
+                    } else if (res.status == 202) {
                         status.value = 202
                         que.value = res.data.data
-                    }else if(res.status == 205) {
+                    } else if (res.status == 205) {
                         status.value = 205
-                    }else {
+                    } else {
                         status.value = 201
                     }
                     changeStatusLoading(false)
@@ -55,8 +56,34 @@ onMounted(
             .catch(
                 (e) => {
                     changeStatusLoading(false)
-                    router.push({name : '404'})
+                    router.push({ name: '404' })
                     toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
+            )
+
+        getAuthProfileAction()
+            .then(
+                (res) => {
+                    let response = res.data.data;
+                    if (response) {
+                        console.log(response);
+                        let courceId = response.course.map(curr => curr.course_id)
+                        if (que.value?.course_id) {
+                            if(!courceId.includes(que.value.course_id)) {
+                                router.push({name : '404'});
+                            }
+                        }
+                    } else {
+                        router.push({ name: '404' })
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.message, {
                         "type": "error",
                         "dangerouslyHTMLString": true
                     })
@@ -95,7 +122,7 @@ const saveResponse = () => {
     let allRequiredQuestion = que.value.questions.filter(curr => curr.is_required == 1)
     let allResponceQuestion = responceArr.value.map(curr => curr.que_id)
     allRequiredQuestion.map(
-        (curr , index) => {
+        (curr, index) => {
             if (!allResponceQuestion.includes(curr.id)) {
                 isInvalid.value = true
                 return
@@ -143,21 +170,25 @@ const saveResponse = () => {
 </script>
 <template>
     <Hall :quiz="que" :pagelength="que.questions?.length ? (((page - 1) * 100) / que.questions.length) : 0">
-        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 202" >
-            <p class="text-center md:text-lg text-base font-normal text-gray-500" >The Exam is Currently close and will begin accepting responce on <b>{{ new Date(que.start_at).toLocaleString() }}</b></p>
+        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 202">
+            <p class="text-center md:text-lg text-base font-normal text-gray-500">The Exam is Currently close and will
+                begin accepting responce on <b>{{ new Date(que.start_at).toLocaleString() }}</b></p>
         </div>
-        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 205" >
-            <p class="text-center md:text-lg text-base font-normal text-gray-500" >You've already responded</p>
+        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 205">
+            <p class="text-center md:text-lg text-base font-normal text-gray-500">You've already responded</p>
         </div>
-        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 201" >
-            <p class="text-center md:text-lg text-base font-normal text-gray-500" >This Exam is no longer accepting responses</p>
+        <div class="p-5 bg-gray-100 rounded-lg max-w-md mx-auto" v-if="status == 201">
+            <p class="text-center md:text-lg text-base font-normal text-gray-500">This Exam is no longer accepting
+                responses</p>
         </div>
-        <div class="min-h-[90%] max-w-screen-xl mx-auto flex flex-col px-4 pb-4" v-if="status == 200 && que.questions && !Object.keys(result).length">
+        <div class="min-h-[90%] max-w-screen-xl mx-auto flex flex-col px-4 pb-4"
+            v-if="status == 200 && que.questions && !Object.keys(result).length">
             <div class="grow py-28 flex-col flex justify-around relative">
                 <div class="absolute top-0 w-full translate-y-1/2 mt-1">
                     <div class="flex justify-between items-start">
                         <div :class="auth.user.role_id == 2 ? 'visible' : 'invisible'">
-                            <VueCountdown :time="(new Date(que.start_at).valueOf() - new Date().valueOf()) + 60000 * Number(que.duration)"
+                            <VueCountdown
+                                :time="(new Date(que.start_at).valueOf() - new Date().valueOf()) + 60000 * Number(que.duration)"
                                 v-slot="{ days, hours, minutes, seconds }"
                                 class="font-semibold text-gray-400 text-lg text-left flex items-center gap-1">
                                 <div class="border rounded-[5px] sm:min-w-10 min-w-6 px-1 text-center"> {{ pad(hours) }}
@@ -183,14 +214,15 @@ const saveResponse = () => {
                         </div>
                     </div>
                 </div>
-                <div class="mb-8" >
+                <div class="mb-8">
                     <div class="font-bold md:text-[24px] text-lg flex items-start gap-4 text-gray-500">
                         <span> Q.{{ page }} </span>
                         <h1 v-if="que.questions">
                             {{ que.questions[page - 1].title }}
                         </h1>
                     </div>
-                    <img :src="getStorage + que.questions[page - 1].img" v-if="que.questions[page - 1].img" class="mt-8 max-w-xl" alt="image">
+                    <img :src="getStorage + que.questions[page - 1].img" v-if="que.questions[page - 1].img"
+                        class="mt-8 max-w-xl" alt="image">
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-4 w-full">
@@ -218,7 +250,8 @@ const saveResponse = () => {
                     27 complated</p>
 
                 <div class="flex items-end flex-col">
-                    <p class="text-red-400 mb-1 text-sm font-medium text-right" v-if="isInvalid" ><span class="font-bold text-base">!</span> Please responce all required questions</p>
+                    <p class="text-red-400 mb-1 text-sm font-medium text-right" v-if="isInvalid"><span
+                            class="font-bold text-base">!</span> Please responce all required questions</p>
                     <div class="flex items-center gap-4">
                         <Pagination v-if="que.questions" :totle="que.questions.length"
                             @changePagination="(val) => page = val" />
@@ -226,8 +259,9 @@ const saveResponse = () => {
                             class="flex justify-center items-center gap-3 text-white font-medium rounded-lg text-sm px-3 py-1.5 text-center"
                             :class="isLoading ? 'bg-primary-200' : 'bg-primary'" :disabled="isLoading">
                             Submit
-                            <svg aria-hidden="true" v-if="isLoading" class="w-5 h-5 text-white animate-spin fill-primary"
-                                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg aria-hidden="true" v-if="isLoading"
+                                class="w-5 h-5 text-white animate-spin fill-primary" viewBox="0 0 100 101" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                     fill="currentColor" />
@@ -240,16 +274,23 @@ const saveResponse = () => {
                 </div>
             </div>
         </div>
-        <div class="min-h-[90%] py-12 justify-center flex items-center flex-col" v-if="Object.keys(result).length" >
-            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-green-600" v-if="result.percentage > 34" viewBox="0 0 512 512">
-                <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-red-400" v-else viewBox="0 0 512 512">
-                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+        <div class="min-h-[90%] py-12 justify-center flex items-center flex-col" v-if="Object.keys(result).length">
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-green-600" v-if="result.percentage > 34"
+                viewBox="0 0 512 512">
+                <path
+                    d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z" />
             </svg>
 
-            <p class="mt-6 md:text-[28px] text-[22px] text-center font-medium" >{{ result.percentage < 34 ? 'Oops...' : 'Congratulations' }}! {{ result.user?.name }} you got {{result.percentage}}% marks <br> in {{ result.course }}</p>
-            <p class="md:text-[22px] text-lg text-center font-medium text-gray-500" >You are {{ result.percentage < 34 ? 'fail' : 'pass' }}!</p>
+            <svg xmlns="http://www.w3.org/2000/svg" class="md:w-20 w-12 fill-red-400" v-else viewBox="0 0 512 512">
+                <path
+                    d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
+            </svg>
+
+            <p class="mt-6 md:text-[28px] text-[22px] text-center font-medium">{{ result.percentage < 34 ? 'Oops...'
+        : 'Congratulations' }}! {{ result.user?.name }} you got {{ result.percentage }}% marks <br> in {{
+        result.course }}</p>
+            <p class="md:text-[22px] text-lg text-center font-medium text-gray-500">You are {{ result.percentage < 34
+                    ? 'fail' : 'pass' }}!</p>
         </div>
     </Hall>
 </template>

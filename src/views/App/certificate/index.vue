@@ -24,7 +24,7 @@ onMounted(
                     if (res.data.data) {
                         result.value = res.data.data.filter(
                             (curr, index) => {
-                                return curr.quiz.certi_signature
+                                return curr.quiz.certi_signature && curr.quiz.certi_signature != 'null' && ((curr.score * 100) / curr.max) > 33
                             }
                         );
                     }

@@ -285,15 +285,15 @@ const PerformanceData = ref([
                                 {{ result.quiz?.title || 'Quiz title' }}
                                 <span
                                     class="bg-blue-100 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3 border"
-                                    :class="((result.max * 100) / result.max) < 33 ? 'text-red-500 border-red-500' : 'text-success border-success'"
-                                    v-if="result.score > 0">{{ ((result.max * 100) / result.max) < 33 ? 'Fail' : 'Pass'
+                                    :class="((result.score * 100) / result.max) < 33 ? 'text-red-500 border-red-500' : 'text-success border-success'"
+                                    v-if="result.score >= 0">{{ ((result.score * 100) / result.max) < 33 ? 'Fail' : 'Pass'
                                         }}</span>
                             </h3>
                             <time
                                 class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released
                                 on {{ new Date(result.created_at).toLocaleDateString().replaceAll("/", "-") }}</time>
                             <p class="mb-4 ms:text-base text-sm font-normal text-gray-500 dark:text-gray-400"
-                                v-if="((result.max * 100) / result.max) > 33">
+                                v-if="((result.score * 100) / result.max) > 33">
                                 {{ user.name }} get achievement in the field of education and proves that he is
                                 great success in <span class="uppercase"> {{ result.course.name }} </span>
                             </p>
@@ -305,7 +305,7 @@ const PerformanceData = ref([
                             <div class="flex items-center gap-4">
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"
-                                    @click="isShowSingleCerti = true, selectedObj = result">
+                                    @click="isShowSingleCerti = true, selectedObj = result" v-if="((result.score * 100) / result.max) > 33">
                                     Get Certificate</button>
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"
@@ -350,6 +350,10 @@ const PerformanceData = ref([
             </div>
         </div>
     </div>
+    <CertiModel @close="isShowSingleCerti = null" v-if="isShowSingleCerti" :responceId="isShowSingleCerti"
+        :responce="selectedObj" />
+    <ResultModel @close="isShowSingleResult = null" v-if="isShowSingleResult" :responceId="isShowSingleResult"
+        :responce="selectedObj" />
 </template>
 
 <style scoped>

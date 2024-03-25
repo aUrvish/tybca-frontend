@@ -200,9 +200,9 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                     v-click-outside="() => isShowUserMenu = false" @click="isShowUserMenu = !isShowUserMenu">
                     <!-- <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1> -->
-                    <img :src="getStorage + auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user.avatar"
+                    <img :src="getStorage + auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user?.avatar"
                         alt="avtar">
-                    <div class="w-full" v-html="userMiniprofile"></div>
+                    <div class="w-full" v-html="userMiniprofile" v-else></div>
                 </button>
 
                 <!-- Dropdown menu -->
