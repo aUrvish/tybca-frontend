@@ -34,7 +34,6 @@ onMounted(
                 (res) => {
                     noticeList.value = res.data.data;
                     changeStatusLoading(false)
-                    console.log('hello')
                 }
             )
             .catch(
@@ -173,7 +172,7 @@ const goTourl = (uri) => {
                         <tbody>
                             <tr class="[&>*]:whitespace-nowrap border-b" v-for="(notice, index) in noticeList.data"
                                 :key="index">
-                                <td scope="row" class="px-4 py-3">
+                                <td scope="row" class="px-4 py-3" >
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
                                             <img :src="getStorage + notice.user.avatar"
