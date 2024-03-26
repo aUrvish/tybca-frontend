@@ -9,9 +9,12 @@ const { changeStatusLoading } = useLoadStore();
 const { course } = storeToRefs(useCourseStore());
 const { getCourse, mutationSetCourse } = useCourseStore();
 import services from '@/plugins/service'
+import { useAuthStore } from '@/store/auth'
 
 import { toast } from "vue3-toastify";
 import { useQuizStore } from '@/store/quiz'
+const { auth } = storeToRefs(useAuthStore());
+const { getAuthProfileAction } = useAuthStore();
 const { addQuizAction } = useQuizStore();
 const getStorage = services.storageBaseUrl;
 
@@ -34,7 +37,32 @@ onMounted(
         switchs.value.certificate = (quizObj.certi_signature != null && quizObj.certi_signature != 'null');
         console.log(quizObj.certi_signature);
         changeStatusLoading(true)
-        getCourse()
+
+        if (auth.value.user.role_id != 0) {
+            getAuthProfileAction()
+            .then(
+                (res) => {
+                    let response = res.data.data;
+                    if (response) {
+                        let cource =  response.course.map(curr => curr.subscribe)
+                        mutationSetCourse(cource)
+                    }
+                }
+            )
+            .catch(
+                (e) => {
+                    toast(e.response.data.message, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
+            ).finally(
+                () => {
+                    changeStatusLoading(false)
+                }
+            )
+        }else {
+            getCourse()
             .then(
                 (res) => {
                     mutationSetCourse(res.data.data)
@@ -50,6 +78,7 @@ onMounted(
                     changeStatusLoading(false)
                 }
             )
+        }
     }
 )
 

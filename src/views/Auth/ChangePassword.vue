@@ -71,7 +71,7 @@ const submitForLogin = () => {
 
 <template>
     <Auth>
-        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full">
+        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px]" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Change Password
             </h1>

@@ -5,7 +5,7 @@ import Btn from '@/components/Btn.vue';
 import { minidenticon } from 'minidenticons'
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, numeric , minLength, maxLength, alpha } from '@vuelidate/validators'
+import { required, email, numeric , minLength, maxLength, helpers } from '@vuelidate/validators'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
@@ -30,11 +30,11 @@ const user = reactive({
 
 const rules = computed(() => {
     return {
-        name: { required, alpha },
+        name: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
         email: { required, email },
         mobile: { required, numeric , minLength : minLength(10), maxLength : maxLength(10) },
-        city: { required, alpha },
-        country: { required, alpha },
+        city: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
+        country: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
     }
 })
 
@@ -125,7 +125,7 @@ const profileImage = ref(null);
 const addUser = () => {
     invalideCource.value = selectCourse.value.length <= 0
     v$.value.$validate();
-    if (v$.value.$invalid || invalideCource.value) {
+    if (v$.value.$invalid || (invalideCource.value && auth.value.user.role_id != 0)) {
         return null
     }
 
@@ -292,7 +292,7 @@ const addUser = () => {
                 </div>
 
             </div>
-            <div class="3lg:max-w-[396px]">
+            <div class="3lg:max-w-[396px]" :class="auth.user.role_id == 0 ? 'invisible' : ''">
                 <div class="p-4 border rounded-sm bg-white" v-if="course">
                     <h5 class="text-lg font-semibold mb-4">Course</h5>
                     <div class="flex items-center gap-3 flex-wrap">
