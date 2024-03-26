@@ -34,7 +34,7 @@ onMounted(
                 (res) => {
                     noticeList.value = res.data.data;
                     changeStatusLoading(false)
-                }
+                 }
             )
             .catch(
                 (e) => {
