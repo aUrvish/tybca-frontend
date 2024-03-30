@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import Auth from '@/layouts/auth.vue'
 import Textbox from '@/components/Textbox.vue'
 import Btn from '@/components/Btn.vue'
@@ -73,14 +73,17 @@ const submitForLogin = () => {
 
 <template>
   <Auth>
-    <div class="rounded-lg border-2 p-6 max-w-[400px] shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px] w-full" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
+    <div
+      class="rounded-lg border-2 p-6 max-w-[400px] shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px] w-full"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
       <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
         Sign in to your account
       </h1>
       <p class="text-sm text-gray-400 font-medium">Think safety first</p>
       <form @submit.prevent="submitForLogin">
         <div class="my-5">
-          <Textbox id="loginEmail" label="User ID" name="userid" v-model="user.userId" placeholder="jondeo" type="text" />
+          <Textbox id="loginEmail" label="User ID" name="userid" v-model="user.userId" placeholder="jondeo"
+            type="text" />
           <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.userId.$invalid">
             <span class="font-bold text-base">!</span> User id is required
           </div>
@@ -108,7 +111,9 @@ const submitForLogin = () => {
 
 
         <div class="mt-7">
-          <Btn type="submit" class="w-full flex justify-center items-center gap-3 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center" :class="isLoading ? 'bg-gray-700' : 'bg-gray-950'" :disabled="isLoading">
+          <Btn type="submit"
+            class="w-full flex justify-center items-center gap-3 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center"
+            :class="isLoading ? 'bg-gray-700' : 'bg-gray-950'" :disabled="isLoading">
             Sign In
             <svg aria-hidden="true" v-if="isLoading" class="w-5 h-5 text-white animate-spin fill-gray-950"
               viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +125,8 @@ const submitForLogin = () => {
                 fill="currentFill" />
             </svg>
           </Btn>
-      </div>
-    </form>
-  </div>
-</Auth></template>
+        </div>
+      </form>
+    </div>
+  </Auth>
+</template>

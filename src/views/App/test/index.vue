@@ -40,7 +40,7 @@ onMounted(
                     if (response) {
                         if (response.course.length) {
                             userCourse.value = [...response.course.map(curr => curr.course_id)]
-                        }else {
+                        } else {
                             userCourse.value = []
                         }
                     }
@@ -48,10 +48,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.message, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                 }
             )
 
@@ -72,10 +74,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -122,7 +126,8 @@ const getPointSum = (arr) => {
         <div class="mt-10" v-if="ActiveQuiz.length">
             <h2 class="text-[20px] font-semibold">Active Test</h2>
             <div class="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 gap-4">
-                <div v-for="(test, index) in ActiveQuiz" :key="index" class="group: overflow-hidden group cursor-pointer relative">
+                <div v-for="(test, index) in ActiveQuiz" :key="index"
+                    class="group: overflow-hidden group cursor-pointer relative">
                     <router-link :to="`test/${test.uri}`">
                         <div class="w-full bg-white border rounded-lg aspect-[5/3] px-4 py-2 flex flex-col">
                             <div class="w-2 animate-ping aspect-square absolute top-2 right-3 bg-success rounded-full">
@@ -135,8 +140,10 @@ const getPointSum = (arr) => {
                                     {{ test.course.name }}
                                 </p>
                                 <div class="flex justify-between items-center">
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{ test.questions.length }}</p>
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{ getPointSum(test.questions) }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{
+            test.questions.length }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{
+            getPointSum(test.questions) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -174,8 +181,10 @@ const getPointSum = (arr) => {
                                     {{ test.course.name }}
                                 </p>
                                 <div class="flex justify-between items-center">
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{ test.questions.length }}</p>
-                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{ getPointSum(test.questions) }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL QUESTION : {{
+                                        test.questions.length }}</p>
+                                    <p class="text-[12px] font-semibold text-gray-400">TOTAL MARKS : {{
+                                        getPointSum(test.questions) }}</p>
                                 </div>
                             </div>
                         </div>

@@ -43,59 +43,63 @@ const user = reactive(
 
 const getActivictyAction = () => {
     changeStatusLoading(true)
-        getUserResult(route.params.id)
+    getUserResult(route.params.id)
+        .then(
+            (res) => {
+                console.log(res);
+                if (res.data.data) {
+                    responce.value = res.data.data
+
+                    PerformanceData.value.push(
+                        ...responce.value.map((curr) => {
+                            return {
+                                time: new Date(curr.created_at).toLocaleDateString().replaceAll("/", "-"),
+                                data: (curr.max != 0 ? ((curr.score * 100) / curr.max) : 0),
+                            }
+                        })
+                    )
+                }
+                changeStatusLoading(false)
+            }
+        )
+        .catch(
+            (e) => {
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
+                changeStatusLoading(false)
+            }
+        )
+
+    if (user.role_id != 2) {
+
+
+        changeStatusLoading(true)
+        getProfilesActivityAction(route.params.id)
             .then(
                 (res) => {
-                    console.log(res);
                     if (res.data.data) {
+                        console.log(res.data.data);
                         responce.value = res.data.data
-
-                        PerformanceData.value.push(
-                            ...responce.value.map((curr) => {
-                                return {
-                                    time: new Date(curr.created_at).toLocaleDateString().replaceAll("/", "-"),
-                                    data: (curr.max != 0 ? ((curr.score * 100) / curr.max) : 0),
-                                }
-                            })
-                        )
                     }
                     changeStatusLoading(false)
                 }
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
-                    changeStatusLoading(false)
-                }
-            )
-
-        if (user.role_id != 2) {
-
-
-            changeStatusLoading(true)
-            getProfilesActivityAction(route.params.id)
-                .then(
-                    (res) => {
-                        if (res.data.data) {
-                            console.log(res.data.data);
-                            responce.value = res.data.data
-                        }
-                        changeStatusLoading(false)
-                    }
-                )
-                .catch(
-                    (e) => {
+                    if (e.response?.status != 401) {
                         toast(e.response.data.messages, {
                             "type": "error",
                             "dangerouslyHTMLString": true
                         })
-                        changeStatusLoading(false)
                     }
-                )
-        }
+                    changeStatusLoading(false)
+                }
+            )
+    }
 }
 
 onMounted(
@@ -130,10 +134,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.message, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                 }
             )
     }
@@ -286,8 +292,8 @@ const PerformanceData = ref([
                                 <span
                                     class="bg-blue-100 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3 border"
                                     :class="((result.score * 100) / result.max) < 33 ? 'text-red-500 border-red-500' : 'text-success border-success'"
-                                    v-if="result.score >= 0">{{ ((result.score * 100) / result.max) < 33 ? 'Fail' : 'Pass'
-                                        }}</span>
+                                    v-if="result.score >= 0">{{ ((result.score * 100) / result.max) < 33 ? 'Fail'
+                        : 'Pass' }}</span>
                             </h3>
                             <time
                                 class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released
@@ -305,7 +311,8 @@ const PerformanceData = ref([
                             <div class="flex items-center gap-4">
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"
-                                    @click="isShowSingleCerti = true, selectedObj = result" v-if="((result.score * 100) / result.max) > 33">
+                                    @click="isShowSingleCerti = true, selectedObj = result"
+                                    v-if="((result.score * 100) / result.max) > 33">
                                     Get Certificate</button>
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"

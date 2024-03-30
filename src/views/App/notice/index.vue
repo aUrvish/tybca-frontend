@@ -19,15 +19,15 @@ const router = useRouter()
 const createNotice = () => {
 
     let payload = {
-        title : "Notice title",
-        caption : "Caption ..."
+        title: "Notice title",
+        caption: "Caption ..."
     }
 
     changeStatusLoading(true)
     noticeSaveAction(payload)
         .then(
             (res) => {
-                if (res.data.data) {   
+                if (res.data.data) {
                     router.push(`notice/edit/${res.data.data.id}`)
                 }
                 changeStatusLoading(false)
@@ -35,10 +35,12 @@ const createNotice = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -47,16 +49,16 @@ const createNotice = () => {
 
 <template>
     <div class="max-w-screen-xl mx-auto">
-        <div class="flex justify-between items-center" >
+        <div class="flex justify-between items-center">
             <h1 class="text-[24px] font-semibold">Notice</h1>
-            <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center" 
-            v-if="auth.user.role_id != 2" @click="createNotice">
+            <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center"
+                v-if="auth.user.role_id != 2" @click="createNotice">
                 Create Notice
             </Btn>
         </div>
 
-        <div class="mt-4" >
-            <NoticeTable :max="10"/>
+        <div class="mt-4">
+            <NoticeTable :max="10" />
         </div>
     </div>
 </template>

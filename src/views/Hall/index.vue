@@ -57,10 +57,12 @@ onMounted(
                 (e) => {
                     changeStatusLoading(false)
                     router.push({ name: '404' })
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                 }
             )
 
@@ -72,8 +74,8 @@ onMounted(
                         console.log(response);
                         let courceId = response.course.map(curr => curr.course_id)
                         if (que.value?.course_id) {
-                            if(!courceId.includes(que.value.course_id)) {
-                                router.push({name : '404'});
+                            if (!courceId.includes(que.value.course_id)) {
+                                router.push({ name: '404' });
                             }
                         }
                     } else {
@@ -83,10 +85,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.message, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                 }
             )
     }
@@ -158,10 +162,12 @@ const saveResponse = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )

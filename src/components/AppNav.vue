@@ -9,7 +9,7 @@ import { toast } from "vue3-toastify";
 import { useNoticeStore } from '@/store/notice'
 import services from '@/plugins/service'
 
-const { noticeGetAllPublishAction,  setLatestNotice, setLastCheckout, setClearLatestNotice } = useNoticeStore();
+const { noticeGetAllPublishAction, setLatestNotice, setLastCheckout, setClearLatestNotice } = useNoticeStore();
 
 const userMiniprofile = ref(null)
 
@@ -52,10 +52,12 @@ const logout = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -93,10 +95,10 @@ const fetchLetast = () => {
                 if (res.data.data) {
                     let data = res.data.data
                     if (lastCheckout.value) {
-                        let latastData = data.filter((curr) => 
-                        new Date(curr.updated_at) > new Date(lastCheckout.value) && curr.user.role_id != auth.value.user.role_id)
+                        let latastData = data.filter((curr) =>
+                            new Date(curr.updated_at) > new Date(lastCheckout.value) && curr.user.role_id != auth.value.user.role_id)
                         setLatestNotice(latastData)
-                    }else{
+                    } else {
                         setLastCheckout(data[0].updated_at)
                         setLatestNotice(data)
                     }
@@ -106,11 +108,12 @@ const fetchLetast = () => {
         )
         .catch(
             (e) => {
-                console.log(e);
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -147,7 +150,8 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                     v-click-outside="() => isShowNotification = false">
                     <!-- Bell icon -->
                     <img src="../assets/svgs/bell.svg" class="w-5 h-5" alt="bell">
-                    <div class="w-2 aspect-square rounded-full bg-red-500 absolute right-0" v-if="latestNotice.length"></div>
+                    <div class="w-2 aspect-square rounded-full bg-red-500 absolute right-0" v-if="latestNotice.length">
+                    </div>
                 </button>
 
                 <!-- Dropdown menu -->
@@ -157,12 +161,14 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                         Notifications
                     </div>
                     <div class="border-y">
-                        <a :href="`/notice/${notice.uri}`" class="flex py-3 px-4 hover:bg-gray-100" v-for="(notice , index) in latestNotice.filter((curr, i) => i < 3)" :key="index">
+                        <a :href="`/notice/${notice.uri}`" class="flex py-3 px-4 hover:bg-gray-100"
+                            v-for="(notice, index) in latestNotice.filter((curr, i) => i < 3)" :key="index">
                             <div class="flex-shrink-0">
-                                    <div class="w-11 h-11 rounded-full overflow-hidden" >
-                                        <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full" v-if="notice.user.avatar" alt="avtar">
-                                        <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-gray-100"></div>
-                                    </div>
+                                <div class="w-11 h-11 rounded-full overflow-hidden">
+                                    <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full"
+                                        v-if="notice.user.avatar" alt="avtar">
+                                    <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-gray-100"></div>
+                                </div>
                             </div>
                             <div class="pl-3 w-full">
                                 <div class="text-gray-500 font-normal text-sm mb-1.5">
@@ -174,7 +180,8 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                             </div>
                         </a>
                     </div>
-                    <a href="#" @click="router.push('/notice')" class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
+                    <a href="#" @click="router.push('/notice')"
+                        class="block py-2 text-md font-medium text-center text-gray-900 hover:bg-gray-100">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500" fill="currentColor"
                                 viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -200,8 +207,8 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                     v-click-outside="() => isShowUserMenu = false" @click="isShowUserMenu = !isShowUserMenu">
                     <!-- <h1 class="text-white" :class="isUsernameWordSingle ? 'text-xl font-normal' : 'font-bold'">{{ nameInit
                     }}</h1> -->
-                    <img :src="getStorage + auth.user.avatar" class="w-full h-full object-cover" v-if="auth.user?.avatar"
-                        alt="avtar">
+                    <img :src="getStorage + auth.user.avatar" class="w-full h-full object-cover"
+                        v-if="auth.user?.avatar" alt="avtar">
                     <div class="w-full" v-html="userMiniprofile" v-else></div>
                 </button>
 

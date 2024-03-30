@@ -47,10 +47,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -65,10 +67,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -94,10 +98,12 @@ watch(search,
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -119,10 +125,12 @@ watch(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -147,10 +155,12 @@ watch(
                 )
                 .catch(
                     (e) => {
-                        toast(e.response.data.messages, {
-                            "type": "error",
-                            "dangerouslyHTMLString": true
-                        })
+                        if (e.response?.status != 401) {
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                         changeStatusLoading(false)
                     }
                 )
@@ -165,10 +175,12 @@ watch(
                 )
                 .catch(
                     (e) => {
-                        toast(e.response.data.messages, {
-                            "type": "error",
-                            "dangerouslyHTMLString": true
-                        })
+                        if (e.response?.status != 401) {
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                         changeStatusLoading(false)
                     }
                 )
@@ -188,11 +200,12 @@ const removeUserFunc = (id) => {
         )
         .catch(
             (e) => {
-                console.log(e);
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         ).finally(
@@ -218,11 +231,12 @@ const changeStatus = (status, id) => {
         )
         .catch(
             (e) => {
-                console.log(e);
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         ).finally(
@@ -342,7 +356,7 @@ const changeStatus = (status, id) => {
                             </tr>
                         </tbody>
                     </table>
-                    <p v-if="studentList.data?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
+                    <p v-if="studentList.data?.length == 0" class="px-4 py-2 border-b">No Data Found</p>
                 </div>
                 <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">

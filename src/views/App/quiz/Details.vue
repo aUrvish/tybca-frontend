@@ -44,10 +44,12 @@ const getQuiz = () => {
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401){
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                     changeStatusLoading(false)
                     router.back(1)
                 }
@@ -75,10 +77,12 @@ watch(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401){
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                     changeStatusLoading(false)
                 }
             )
@@ -128,7 +132,7 @@ const goTourl = () => {
                 </div>
 
                 <div class="mt-6 flex justify-between items-center flex-wrap gap-2">
-                        <p class="px-2 py-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium lg:text-sm text-[12px] text-[#FF9432] cursor-pointer" v-if="quiz.course"
+                        <p class="px-2 py-1 w-fit bg-[#FF94321A] rounded-[8px] font-medium lg:text-sm text-[12px] text-[#FF9432] cursor-pointer" @click="activeTabIndex = 2" v-if="quiz.course"
                             :style="{ color: quiz.course.primary_color, backgroundColor: `${quiz.course.primary_color}1A` }">
                             {{ quiz.course.name }}
                         </p>

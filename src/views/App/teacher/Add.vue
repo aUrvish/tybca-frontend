@@ -5,7 +5,7 @@ import Btn from '@/components/Btn.vue';
 import { minidenticon } from 'minidenticons'
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, numeric , minLength, maxLength, helpers } from '@vuelidate/validators'
+import { required, email, numeric, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
@@ -30,11 +30,11 @@ const user = reactive({
 
 const rules = computed(() => {
     return {
-        name: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
+        name: { required, alpha: helpers.regex(/^[a-zA-Z ]*$/i) },
         email: { required, email },
-        mobile: { required, numeric, minLength : minLength(10), maxLength : maxLength(10) },
-        city: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
-        country: { required, alpha : helpers.regex(/^[a-zA-Z ]*$/i) },
+        mobile: { required, numeric, minLength: minLength(10), maxLength: maxLength(10) },
+        city: { required, alpha: helpers.regex(/^[a-zA-Z ]*$/i) },
+        country: { required, alpha: helpers.regex(/^[a-zA-Z ]*$/i) },
     }
 })
 
@@ -62,10 +62,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -97,7 +99,7 @@ const addUser = () => {
     invalideCource.value = selectCourse.value.length <= 0
     v$.value.$validate();
 
-    if (v$.value.$invalid  || invalideCource.value) {
+    if (v$.value.$invalid || invalideCource.value) {
         return null
     }
 
@@ -113,16 +115,18 @@ const addUser = () => {
                     "dangerouslyHTMLString": true
                 })
 
-                router.push( {name : 'TeacherList' })
+                router.push({ name: 'TeacherList' })
                 changeStatusLoading(false)
             }
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -140,11 +144,12 @@ const addUser = () => {
                 <div class="border rounded-md bg-white sm:p-6 p-4">
                     <div
                         class="w-40 group aspect-square border-2 relative rounded-full grid place-items-center bg-white mx-auto overflow-hidden cursor-pointer">
-                        
+
                         <div class="w-full h-full" v-if="avatarImg">
                             <img :src="avatarImg" class="w-full h-full object-cover" alt="img">
                         </div>
-                        <svg v-else-if="!avatarImg && !userMiniprofile" xmlns="http://www.w3.org/2000/svg" class="w-2/4 fill-gray-300" viewBox="0 0 448 512">
+                        <svg v-else-if="!avatarImg && !userMiniprofile" xmlns="http://www.w3.org/2000/svg"
+                            class="w-2/4 fill-gray-300" viewBox="0 0 448 512">
                             <path
                                 d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                         </svg>
@@ -167,7 +172,8 @@ const addUser = () => {
                         <div>
                             <Textbox id="name" label="Name" name="name" placeholder="jone deo" v-model="user.name"
                                 type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.name.required.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.name.required.$invalid">
                                 <span class="font-bold text-base">!</span> Name is required
                             </div>
                             <div class="text-red-400 mt-1 text-sm font-medium"
@@ -225,7 +231,8 @@ const addUser = () => {
                         <div>
                             <Textbox id="city" label="City" v-model="user.city" name="city" placeholder="Mumbai"
                                 type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.city.required.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.city.required.$invalid">
                                 <span class="font-bold text-base">!</span> City is required
                             </div>
                             <div class="text-red-400 mt-1 text-sm font-medium"
@@ -236,7 +243,8 @@ const addUser = () => {
                         <div>
                             <Textbox id="country" label="country" v-model="user.country" name="country"
                                 placeholder="India" type="text" />
-                            <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.country.required.$invalid">
+                            <div class="text-red-400 mt-1 text-sm font-medium"
+                                v-if="v$.$dirty && v$.country.required.$invalid">
                                 <span class="font-bold text-base">!</span> Country is required
                             </div>
                             <div class="text-red-400 mt-1 text-sm font-medium"

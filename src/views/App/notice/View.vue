@@ -19,10 +19,10 @@ const router = useRouter()
 
 
 const download = () => {
-    htmltoPdf(notice.textarea , {
-        margin : 1,
-        filename : 'notice.pdf',
-        image:{ type: 'png', quality: 0.98 },
+    htmltoPdf(notice.textarea, {
+        margin: 1,
+        filename: 'notice.pdf',
+        image: { type: 'png', quality: 0.98 },
     })
 }
 
@@ -59,19 +59,21 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
-                    router.push({ name : '404'})
+                    router.push({ name: '404' })
                 }
             )
     }
 )
 </script>
 <template>
-    <Notice v-if="notice.title" >
+    <Notice v-if="notice.title">
         <template #bar>
             <nav class="bg-white border-b border-gray-200 sm:px-4 px-2 py-2 z-50">
                 <div class="flex justify-between flex-wrap items-center">
@@ -84,7 +86,8 @@ onMounted(
                         <p class="font-semibold text-gray-400">{{ notice.user?.name }}</p>
                     </div>
 
-                    <Btn class="py-1.5 px-3 bg-red-500 rounded-lg text-white text-sm flex items-center gap-2" @click="download">
+                    <Btn class="py-1.5 px-3 bg-red-500 rounded-lg text-white text-sm flex items-center gap-2"
+                        @click="download">
                         Download
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 fill-white">
                             <path
@@ -101,7 +104,7 @@ onMounted(
                 </div>
                 <p class="md:text-base text-gray-400 font-semibold">{{ notice.caption }}</p>
 
-                <div class="mt-6 overflow-hidden" v-html="notice.textarea" ></div>
+                <div class="mt-6 overflow-hidden" v-html="notice.textarea"></div>
             </div>
         </div>
     </Notice>

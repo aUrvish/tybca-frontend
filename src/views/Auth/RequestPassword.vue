@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import Auth from '@/layouts/auth.vue'
 import Textbox from '@/components/Textbox.vue'
 import Btn from '@/components/Btn.vue'
@@ -66,15 +66,16 @@ const submitForLogin = () => {
 
 <template>
     <Auth>
-        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px]" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
+        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px]"
+            style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Forgot Password?
             </h1>
             <p class="text-sm text-gray-400 font-medium">No worries, we'll send you reset-insrtuction</p>
             <form @submit.prevent="submitForLogin">
                 <div class="my-5">
-                    <Textbox id="Email" label="Email" name="email" v-model="user.email" placeholder="jonedeo@example.com"
-                        type="email" />
+                    <Textbox id="Email" label="Email" name="email" v-model="user.email"
+                        placeholder="jonedeo@example.com" type="email" />
                     <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.email.required.$invalid">
                         <span class="font-bold text-base">!</span> Email is required
                     </div>

@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import Auth from '@/layouts/auth.vue'
 import Textbox from '@/components/Textbox.vue'
 import Btn from '@/components/Btn.vue'
@@ -72,7 +72,8 @@ const submitForLogin = () => {
 
 <template>
     <Auth>
-        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px]" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
+        <div class="rounded-lg border-2 p-6 max-w-[400px] w-full shadow-[rgba(50,50,93,0.25)_0px_30px_60px_-12px,rgba(0,0,0,0.3)_0px_18px_36px_-18px]"
+            style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Reset Password
             </h1>
@@ -81,17 +82,20 @@ const submitForLogin = () => {
                 <div class="my-5">
                     <Textbox id="password" label="New Password" name="password" v-model="user.password"
                         placeholder="••••••••" type="password" />
-                    <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.password.required.$invalid">
+                    <div class="text-red-400 mt-1 text-sm font-medium"
+                        v-if="v$.$dirty && v$.password.required.$invalid">
                         <span class="font-bold text-base">!</span> Password is required
                     </div>
-                    <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.password.minLength.$invalid">
+                    <div class="text-red-400 mt-1 text-sm font-medium"
+                        v-if="v$.$dirty && v$.password.minLength.$invalid">
                         <span class="font-bold text-base">!</span> The password should be at least 8 characters long
                     </div>
                 </div>
                 <div class="my-5">
                     <Textbox id="cpassword" label="Confirm Password" name="cpassword" v-model="user.cpassword"
                         placeholder="••••••••" type="password" />
-                    <div class="text-red-400 mt-1 text-sm font-medium" v-if="v$.$dirty && v$.cpassword.required.$invalid">
+                    <div class="text-red-400 mt-1 text-sm font-medium"
+                        v-if="v$.$dirty && v$.cpassword.required.$invalid">
                         <span class="font-bold text-base">!</span> Confirm password is required
                     </div>
                     <div class="text-red-400 mt-1 text-sm font-medium"

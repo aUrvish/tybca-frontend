@@ -34,14 +34,16 @@ onMounted(
                 (res) => {
                     noticeList.value = res.data.data;
                     changeStatusLoading(false)
-                 }
+                }
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -65,10 +67,12 @@ watch(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -89,10 +93,12 @@ watch(search,
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -111,11 +117,12 @@ const removeUserFunc = (id) => {
         )
         .catch(
             (e) => {
-                console.log(e);
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         ).finally(
@@ -172,7 +179,7 @@ const goTourl = (uri) => {
                         <tbody>
                             <tr class="[&>*]:whitespace-nowrap border-b" v-for="(notice, index) in noticeList.data"
                                 :key="index">
-                                <td scope="row" class="px-4 py-3" >
+                                <td scope="row" class="px-4 py-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-8 aspect-square overflow-hidden border rounded-full">
                                             <img :src="getStorage + notice.user.avatar"
@@ -189,9 +196,9 @@ const goTourl = (uri) => {
                                 <td class="px-4 py-3 max-w-[200px] text-ellipsis overflow-hidden">{{ notice.caption }}
                                 </td>
                                 <td class="px-4 py-3 text-center">{{ new
-                                Date(notice.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                    Date(notice.created_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">{{ new
-                                Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
+                                    Date(notice.updated_at).toLocaleDateString().replaceAll("/", "-") }}</td>
                                 <td class="px-4 py-3 text-center">
                                     <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2"
                                         v-if="notice.status">Published</span>
@@ -224,7 +231,7 @@ const goTourl = (uri) => {
                             </tr>
                         </tbody>
                     </table>
-                    <p v-if="noticeList.data?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
+                    <p v-if="noticeList.data?.length == 0" class="px-4 py-2 border-b">No Data Found</p>
                 </div>
                 <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">

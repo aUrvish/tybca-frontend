@@ -35,10 +35,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401){
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                     changeStatusLoading(false)
                 }
             )

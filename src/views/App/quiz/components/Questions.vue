@@ -67,10 +67,12 @@ const addOption = (que_id, index) => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -89,10 +91,12 @@ const removeOption = (optId, queIndex, optIndex) => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -123,10 +127,12 @@ const addQuestion = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -143,14 +149,14 @@ watch(questions.value,
             (ques, index) => {
 
                 let formData = new FormData();
-                formData.append('id' , ques.id)
-                formData.append('quiz_id' , props.quiz.id)
-                formData.append('title' , ques.title)
-                formData.append('type' , ques.type)
-                formData.append('stand_index' , ques.stand_index)
-                formData.append('point' , ques.point)
-                formData.append('is_required' , ques.is_required)
-                formData.append('img' , ques.img)
+                formData.append('id', ques.id)
+                formData.append('quiz_id', props.quiz.id)
+                formData.append('title', ques.title)
+                formData.append('type', ques.type)
+                formData.append('stand_index', ques.stand_index)
+                formData.append('point', ques.point)
+                formData.append('is_required', ques.is_required)
+                formData.append('img', ques.img)
                 // change question
                 changeStatusLoading(true)
                 addQuestionAction(formData)
@@ -161,10 +167,12 @@ watch(questions.value,
                     )
                     .catch(
                         (e) => {
-                            toast(e.response.data.messages, {
-                                "type": "error",
-                                "dangerouslyHTMLString": true
-                            })
+                            if (e.response?.status != 401) {
+                                toast(e.response.data.messages, {
+                                    "type": "error",
+                                    "dangerouslyHTMLString": true
+                                })
+                            }
                             changeStatusLoading(false)
                         }
                     )
@@ -178,7 +186,7 @@ watch(questions.value,
                             quiz_id: props.quiz.id,
                             question_id: ques.id,
                             name: option.name,
-                            is_answer : option.is_answer
+                            is_answer: option.is_answer
                         }
                         addQuestionInputAction(payloadOption)
                             .then(
@@ -188,10 +196,12 @@ watch(questions.value,
                             )
                             .catch(
                                 (e) => {
-                                    toast(e.response.data.messages, {
-                                        "type": "error",
-                                        "dangerouslyHTMLString": true
-                                    })
+                                    if (e.response?.status != 401) {
+                                        toast(e.response.data.messages, {
+                                            "type": "error",
+                                            "dangerouslyHTMLString": true
+                                        })
+                                    }
                                     changeStatusLoading(false)
                                 }
                             )
@@ -216,10 +226,12 @@ const removeQuestion = (queId, index) => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -329,7 +341,8 @@ onMounted(
                                         d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
                                 </svg>
                             </div>
-                            <img :src="que.titleImg ? que.titleImg : que.img ? getStorage + que.img : ''" class="w-full rounded-md border" alt="blob image">
+                            <img :src="que.titleImg ? que.titleImg : que.img ? getStorage + que.img : ''"
+                                class="w-full rounded-md border" alt="blob image">
                         </div>
 
                         <div class="grid md:grid-cols-2 md:gap-5 gap-3 mt-6">
@@ -341,7 +354,7 @@ onMounted(
                                         v-if="que.type == 'options'" :checked="ind == 0" disabled>
                                     <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
                                         v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
-                                    <p class="font-semibold text-gray-500" v-else>{{ ind +1 }}.</p>
+                                    <p class="font-semibold text-gray-500" v-else>{{ ind + 1 }}.</p>
                                     <input class="ml-3 outline-0 w-full" v-model="option.name">
                                 </div>
 

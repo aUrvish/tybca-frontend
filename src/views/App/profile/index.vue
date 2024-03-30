@@ -71,10 +71,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.message, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                 }
             )
 
@@ -99,10 +101,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -123,10 +127,12 @@ onMounted(
                 )
                 .catch(
                     (e) => {
-                        toast(e.response.data.messages, {
-                            "type": "error",
-                            "dangerouslyHTMLString": true
-                        })
+                        if (e.response?.status != 401) {
+                            toast(e.response.data.messages, {
+                                "type": "error",
+                                "dangerouslyHTMLString": true
+                            })
+                        }
                         changeStatusLoading(false)
                     }
                 )
@@ -281,8 +287,8 @@ const PerformanceData = ref([
                                 <span
                                     class="bg-blue-100 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3 border"
                                     :class="((result.score * 100) / result.max) < 33 ? 'text-red-500 border-red-500' : 'text-success border-success'"
-                                    v-if="result.score >= 0">{{ ((result.score * 100) / result.max) < 33 ? 'Fail' : 'Pass'
-                                        }}</span>
+                                    v-if="result.score >= 0">{{ ((result.score * 100) / result.max) < 33 ? 'Fail'
+                        : 'Pass' }}</span>
                             </h3>
                             <time
                                 class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released
@@ -300,7 +306,8 @@ const PerformanceData = ref([
                             <div class="flex items-center gap-4">
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"
-                                    @click="isShowSingleCerti = true, selectedObj = result" v-if="((result.score * 100) / result.max) > 33">
+                                    @click="isShowSingleCerti = true, selectedObj = result"
+                                    v-if="((result.score * 100) / result.max) > 33">
                                     Get Certificate</button>
                                 <button
                                     class="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-primary bg-primary-50 rounded-lg border border-primary-200"

@@ -53,10 +53,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -81,10 +83,12 @@ watch(search,
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -106,10 +110,12 @@ watch(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -128,11 +134,12 @@ const removeUserFunc = (id) => {
         )
         .catch(
             (e) => {
-                console.log(e);
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         ).finally(
@@ -157,7 +164,7 @@ const getStatus = (start, duration) => {
         if (now.valueOf() >= startAt.valueOf() && now.valueOf() <= endAt.valueOf()) {
             return 1
         }
-    }else {
+    } else {
         return 1
     }
 }
@@ -217,12 +224,14 @@ const getStatus = (start, duration) => {
                                 <td class="px-4 py-3 text-center">{{ std.questions.length }}</td>
                                 <td class="px-4 py-3 text-center">0</td>
                                 <td class="px-4 py-3 text-center">{{ std.start_at ? new
-            Date(std.start_at).toLocaleDateString().replaceAll("/", "-") : "-" }}</td>
+                                        Date(std.start_at).toLocaleDateString().replaceAll("/", "-") : "-" }}</td>
                                 <td class="px-4 py-3 text-center">
-                                    <span
-                                    class="text-[12px] border text-success rounded-md border-success py-1 px-2" v-if="getStatus(std.start_at, std.duration) == 1">Active</span>
-                                    <span class="text-[12px] border text-warning rounded-md border-warning py-1 px-2" v-else-if="getStatus(std.start_at, std.duration) == 2" >Pending</span>
-                                    <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2" v-else >Ended</span>
+                                    <span class="text-[12px] border text-success rounded-md border-success py-1 px-2"
+                                        v-if="getStatus(std.start_at, std.duration) == 1">Active</span>
+                                    <span class="text-[12px] border text-warning rounded-md border-warning py-1 px-2"
+                                        v-else-if="getStatus(std.start_at, std.duration) == 2">Pending</span>
+                                    <span class="text-[12px] border text-primary rounded-md border-primary py-1 px-2"
+                                        v-else>Ended</span>
 
                                 </td>
 
@@ -254,7 +263,7 @@ const getStatus = (start, duration) => {
                             </tr>
                         </tbody>
                     </table>
-                    <p v-if="QuizList.data?.length == 0" class="px-4 py-2 border-b" >No Data Found</p>
+                    <p v-if="QuizList.data?.length == 0" class="px-4 py-2 border-b">No Data Found</p>
                 </div>
                 <nav class="flex justify-between items-center space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500">

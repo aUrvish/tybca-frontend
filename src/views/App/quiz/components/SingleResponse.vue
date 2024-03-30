@@ -14,8 +14,8 @@ const getStorage = services.storageBaseUrl;
 const { getCourse } = useCourseStore();
 
 const props = defineProps({
-    responceId : {
-        require :true,
+    responceId: {
+        require: true,
     }
 })
 
@@ -36,10 +36,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.message, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -75,8 +77,7 @@ onMounted(
 
                     <div class="relative overflow-x-auto sm:rounded-lg">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
                                         Questions
@@ -87,10 +88,9 @@ onMounted(
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    class="odd:bg-white even:bg-gray-100 border-b" v-for="(res, index) in responceList" :key="index">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 uppercase">
+                                <tr class="odd:bg-white even:bg-gray-100 border-b" v-for="(res, index) in responceList"
+                                    :key="index">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 uppercase">
                                         {{ res.question.title }}
                                     </th>
                                     <td class="px-6 py-4 uppercase">

@@ -25,14 +25,14 @@ const router = useRouter()
 const createQuiz = () => {
 
     let payload = {
-        title : "Quiz title",
+        title: "Quiz title",
     }
 
     changeStatusLoading(true)
     addQuizAction(payload)
         .then(
             (res) => {
-                if (res.data.data) {   
+                if (res.data.data) {
                     router.push(`quiz/details/${res.data.data.id}`)
                 }
                 changeStatusLoading(false)
@@ -40,10 +40,12 @@ const createQuiz = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -91,10 +93,12 @@ const submitCourse = () => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
             }
         )
         .finally(
@@ -120,10 +124,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    toast(e.response.data.messages, {
-                        "type": "error",
-                        "dangerouslyHTMLString": true
-                    })
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -153,10 +159,12 @@ const removeCourseFunc = (id) => {
         )
         .catch(
             (e) => {
-                toast(e.response.data.messages, {
-                    "type": "error",
-                    "dangerouslyHTMLString": true
-                })
+                if (e.response?.status != 401) {
+                    toast(e.response.data.messages, {
+                        "type": "error",
+                        "dangerouslyHTMLString": true
+                    })
+                }
                 changeStatusLoading(false)
             }
         )
@@ -186,7 +194,8 @@ const updateCourse = (change_course) => {
                         Create Quiz
                     </RouterLink> -->
 
-                    <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center"  @click="createQuiz">
+                    <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center"
+                        @click="createQuiz">
                         Create Quiz
                     </Btn>
                 </div>
