@@ -23,6 +23,8 @@ const props = defineProps({
         require: true
     }
 })
+
+const emit = defineEmits(['changeQuizSetting'])
 const switchs = ref({
     schedule: false,
     nagative: false,
@@ -35,7 +37,6 @@ onMounted(
         switchs.value.schedule = quizObj.start_at;
         switchs.value.nagative = quizObj.nagative_point;
         switchs.value.certificate = (quizObj.certi_signature != null && quizObj.certi_signature != 'null');
-        console.log(quizObj.certi_signature);
         changeStatusLoading(true)
 
         if (auth.value.user.role_id != 0) {
@@ -88,6 +89,13 @@ onMounted(
 
 watch(
     quizObj,
+    debounce((newX) => {
+        emit('changeQuizSetting' , quizObj)
+    }, 800)
+)
+
+watch(
+    () => quizObj.certi_signature,
     debounce((newX) => {
         let formData = new FormData()
         formData.append('id' , props.quiz.id)

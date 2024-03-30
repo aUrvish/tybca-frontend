@@ -200,7 +200,7 @@ const logout = () => {
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="{ name: 'QuizList' }"
+                    <RouterLink :to="{ name: 'QuizList' }" :class="['QuizDetails'].includes(route.name) ? 'router-link-exact-active' : ''"
                         class="flex items-center p-2 text-base font-medium text-white rounded-md hover:bg-[#38445e] group">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 text-white group-hover:text-gray transition duration-75" fill="currentColor"

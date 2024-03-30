@@ -22,7 +22,8 @@ const router = useRouter()
 const activeTabIndex = ref(0)
 const route = useRoute()
 
-const quiz = ref({})
+const quiz = reactive({})
+const isTitleRequire = ref(false)
 
 onMounted(
     () => {
@@ -37,13 +38,29 @@ const getQuiz = () => {
                 (res) => {
                     if (res.data.data) {
                         let data = res.data.data;
-                        quiz.value = data
+
+                        quiz.id = data.id;
+                        quiz.certi_signature = data.certi_signature;
+                        // quiz.certi_stamp = data.certi_stamp;
+                        quiz.course_id = data.course_id;
+                        quiz.course = data.course;
+                        quiz.duration = data.duration;
+                        quiz.is_notify = data.is_notify;
+                        quiz.is_random = data.is_random;
+                        quiz.nagative_point = data.nagative_point;
+                        quiz.title = data.title;
+                        quiz.questions = data.questions;
+                        quiz.start_at = data.start_at;
+                        quiz.created_at = data.created_at;
+                        quiz.updated_at = data.updated_at;
+                        quiz.uri = data.uri;
                     }
                     changeStatusLoading(false)
                 }
             )
             .catch(
                 (e) => {
+                    console.log(e);
                     if (e.response?.status != 401){
                             toast(e.response.data.messages, {
                                 "type": "error",
@@ -57,20 +74,41 @@ const getQuiz = () => {
 }
 
 watch(
-    () => quiz.value.title,
+    quiz,
     debounce((newX) => {
-        getQuiz()
-        let payload = {
-            ...quiz.value , title : newX
+
+        if (!quiz.title) {
+            isTitleRequire.value = true
+            return null;
         }
+        isTitleRequire.value = false
+
+        let formData = new FormData()
+        formData.append('id' , quiz.id)
+        formData.append('certi_signature' , quiz.certi_signature)
+        formData.append('course_id' , quiz.course_id)
+        formData.append('duration' , quiz.duration)
+        formData.append('is_notify' , quiz.is_notify)
+        formData.append('is_random' , quiz.is_random)
+        formData.append('nagative_point' , quiz.nagative_point)
+        formData.append('start_at' , quiz.start_at ? quiz.start_at : null)
+        formData.append('title' , quiz.title)
 
         changeStatusLoading(true)
-        addQuizAction(payload)
+        addQuizAction(formData)
             .then(
                 (res) => {
                     if (res.data.data) {
                         let data = res.data.data
-                        quiz.value.title = data.title 
+
+                        quiz.certi_signature = data.certi_signature;
+                        // quiz.certi_stamp = data.certi_stamp;
+                        quiz.course_id = data.course_id;
+                        quiz.duration = data.duration;
+                        quiz.is_notify = data.is_notify;
+                        quiz.is_random = data.is_random;
+                        quiz.nagative_point = data.nagative_point;
+                        quiz.title = data.title;
                     }
                     changeStatusLoading(false)
                 }
@@ -86,11 +124,11 @@ watch(
                     changeStatusLoading(false)
                 }
             )
-    }, 1500)
+    }, 800)
 )
 
 const copyUrl = () => {
-    navigator.clipboard.writeText(window.location.origin + '/test/' + quiz.value.uri);
+    navigator.clipboard.writeText(window.location.origin + '/test/' + quiz.uri);
     toast("URL Copied Successfully", {
         "type": "success",
         "dangerouslyHTMLString": true
@@ -98,7 +136,7 @@ const copyUrl = () => {
 }
 
 const goTourl = () => {
-    window.open('/test/' + quiz.value.uri, '_blank');
+    window.open('/test/' + quiz.uri, '_blank');
 }
 </script>
 
@@ -112,6 +150,9 @@ const goTourl = () => {
 
                     <div>
                         <input type="text" class="text-[20px] font-semibold outline-none w-full" v-model="quiz.title">
+                        <div class="text-red-400 mb-2 text-sm font-medium" v-if="isTitleRequire">
+                                <span class="font-bold text-base">!</span> Title is required
+                        </div>
                         <p class="text-gray-400 md:text-sm text-[12px]" v-if="quiz.created_at">Created at <span class="font-semibold">
                             {{ new Date(quiz.created_at).toLocaleDateString().replaceAll("/", "-") }}
                         </span> </p>
@@ -160,7 +201,7 @@ const goTourl = () => {
             <Questions @changeQue="(point , que) => {totolePoint = point , totoleQue = que}" :quiz="quiz" :data="quiz.questions"
              v-if="activeTabIndex == 0 && quiz && quiz.questions" />
             <Responses v-else-if="activeTabIndex == 1" />
-            <Settings v-else-if="activeTabIndex == 2" :quiz="quiz" @changeCourse="(value) => quiz.course = value" />
+            <Settings v-else-if="activeTabIndex == 2" :quiz="quiz" @changeQuizSetting="(quizVal) => quiz = quizVal" @changeCourse="(value) => quiz.course = value" />
         </div>
     </div>
 </template>
