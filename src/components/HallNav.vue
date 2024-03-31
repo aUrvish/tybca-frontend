@@ -25,7 +25,7 @@ const getPointSum = (arr) => {
             <div v-if="quiz.title">
                 <p class="font-semibold text-gray-400 sm:text-base text-sm">{{ quiz.title }}</p>
             </div>
-            <div v-if="quiz.course">
+            <div v-if="quiz.course && quiz.course.name && quiz">
                 <p class="xsm:px-3 px-2 py-1 w-fit mx-auto rounded-[8px] font-medium lg:text-base text-[12px]"
                     :style="{ color: quiz.course.primary_color, backgroundColor: `${quiz.course.primary_color}1A` }">
                     {{ quiz.course.name }}

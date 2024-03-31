@@ -164,17 +164,17 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                         <a :href="`/notice/${notice.uri}`" class="flex py-3 px-4 hover:bg-gray-100"
                             v-for="(notice, index) in latestNotice.filter((curr, i) => i < 3)" :key="index">
                             <div class="flex-shrink-0">
-                                <div class="w-11 h-11 rounded-full overflow-hidden">
+                                <div class="w-11 h-11 rounded-full overflow-hidden" v-if="notice.user">
                                     <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full"
                                         v-if="notice.user.avatar" alt="avtar">
                                     <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-gray-100"></div>
                                 </div>
                             </div>
                             <div class="pl-3 w-full">
-                                <div class="text-gray-500 font-normal text-sm mb-1.5">
+                                <div class="text-gray-500 font-normal text-sm mb-1.5" v-if="notice.user && notice.user.name">
                                     New message from {{ notice.user.name }} "{{ notice.title }}"
                                 </div>
-                                <div class="text-xs font-medium">
+                                <div class="text-xs font-medium" v-if="notice.updated_at">
                                     {{ new Date(notice.updated_at).toLocaleString() }}
                                 </div>
                             </div>
@@ -216,8 +216,8 @@ window.Echo.channel('notice-publish').listen('NoticePublish', () => fetchLetast(
                 <div class="absolute top-full right-5 z-50 my-4 w-56 text-base list-none bg-white divide-y border rounded-md"
                     :class="isShowUserMenu ? '' : 'hidden'" id="dropdown">
                     <div class="py-3 px-4">
-                        <p class="block text-sm font-semibold text-gray-900">{{ auth.user.name }}</p>
-                        <p class="block text-sm text-gray-900 truncate">{{ auth.user.email }}</p>
+                        <p class="block text-sm font-semibold text-gray-900" v-if="auth && auth.user && auth.user.name">{{ auth.user.name }}</p>
+                        <p class="block text-sm text-gray-900 truncate" v-if="auth && auth.user && auth.user.email">{{ auth.user.email }}</p>
                     </div>
                     <ul class="py-1 text-gray-700" aria-labelledby="dropdown">
                         <li>
