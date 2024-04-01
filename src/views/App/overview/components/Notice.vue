@@ -59,7 +59,7 @@ const miniavtar = (name) => {
             <a :href="`/notice/${notice.uri}`" target="_blank" class="flex py-3 px-4 hover:bg-gray-100"
                 v-for="(notice, index) in noticeList.filter((curr, i) => i < (auth.user.role_id == 2 ? 7 : 10) )" :key="index">
                 <div class="flex-shrink-0">
-                    <div class="w-11 h-11 rounded-full overflow-hidden" v-if="notice.user && notice.user.avatar">
+                    <div class="w-11 h-11 rounded-full overflow-hidden" v-if="notice.user">
                         <img :src="getStorage + notice.user.avatar" class="object-cover w-full h-full"
                             v-if="notice.user.avatar" alt="avtar">
                         <div v-html="miniavtar(notice.user.name)" v-else class="w-full bg-gray-100"></div>

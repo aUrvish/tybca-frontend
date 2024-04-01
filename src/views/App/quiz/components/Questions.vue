@@ -139,9 +139,33 @@ const addQuestion = () => {
 }
 
 const sum = (arr) => arr.reduce((p, c) => p + c, 0) || 0;
+const invalid = ref(false);
 
 watch(questions.value,
     debounce((newX) => {
+
+        invalid.value = false
+
+        questions.value.map(curr => {
+            if (!curr.title) {
+                invalid.value = true
+                return
+            }
+
+            curr.inputs.map( currData =>
+                {
+                    if (!currData.name) {
+                        invalid.value = true
+                        return
+                    }
+                }
+            )
+        })
+
+        if (invalid.value) {
+            return null;
+        }
+
         let findSumofPoint = sum([...questions.value.map((curr, index) => curr.point || 0)])
         emit('changeQue', findSumofPoint, questions.value.length)
 
@@ -295,6 +319,8 @@ onMounted(
                                     <div>
                                         <input type="text" class="md:text-lg font-semibold outline-0 w-full"
                                             v-model="questions[index].title">
+                                        <p class="text-sm -mt-1 mb-1 text-red-500" v-if="!questions[index].title"> <span
+                                                class="font-bold text-base">!</span> Title is required</p>
                                         <p class="text-gray-400 text-sm -mt-1">Title</p>
                                         <input type="file" class="w-0 h-0 hidden" ref="mediaOnTitle"
                                             @change="(e) => uploadTitleImage(index, e.target)">
@@ -324,9 +350,7 @@ onMounted(
                                     :class="isDropDownShow[que.stand_index] ? '' : 'hidden'">
                                     <li class="py-2 px-3 hover:bg-gray-100 rounded-md cursor-pointer capitalize"
                                         v-for="(item, ind) in dropItem" :key="ind"
-                                        @click="setDropdownItem(index, item)">{{
-            item
-        }}
+                                        @click="setDropdownItem(index, item)">{{ item }}
                                     </li>
                                 </ul>
                             </div>
@@ -346,32 +370,36 @@ onMounted(
                         </div>
 
                         <div class="grid md:grid-cols-2 md:gap-5 gap-3 mt-6">
-                            <div class="flex items-center justify-between border rounded-md py-3 px-4 group-option"
-                                v-for="(option, ind) in que.inputs" :key="ind"
-                                :class="option.is_answer ? 'border-green-400' : ''">
-                                <div class="grow items-center flex">
-                                    <input :name="`que${index}`" type="radio" class="w-4 h-4"
-                                        v-if="que.type == 'options'" :checked="ind == 0" disabled>
-                                    <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
-                                        v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
-                                    <p class="font-semibold text-gray-500" v-else>{{ ind + 1 }}.</p>
-                                    <input class="ml-3 outline-0 w-full" v-model="option.name">
-                                </div>
+                            <div v-for="(option, ind) in que.inputs" :key="ind">
+                                <div class="flex items-center justify-between border rounded-md py-3 px-4 group-option"
+                                    :class="option.is_answer ? 'border-green-400' : ''">
+                                    <div class="grow items-center flex">
+                                        <input :name="`que${index}`" type="radio" class="w-4 h-4"
+                                            v-if="que.type == 'options'" :checked="ind == 0" disabled>
+                                        <input :name="`que${index}`" type="checkbox" class="w-4 h-4"
+                                            v-else-if="que.type == 'checkboxes'" :checked="ind == 0" disabled>
+                                        <p class="font-semibold text-gray-500" v-else>{{ ind + 1 }}.</p>
+                                        <input class="ml-3 outline-0 w-full" v-model="option.name">
+                                    </div>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                                    class="max-w-4 ml-3 cursor-pointer group-option-svg invisible" :class="option.is_answer
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                        class="max-w-4 ml-3 cursor-pointer group-option-svg invisible" :class="option.is_answer
             ? 'fill-green-400' : 'fill-gray-300'" @click="is_answerOption(index, ind)">
-                                    <path
-                                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                                </svg>
+                                        <path
+                                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                                    </svg>
 
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="max-w-4 ml-3 fill-gray-400 cursor-pointer group-option-svg invisible"
-                                    viewBox="0 0 384 512" @click="removeOption(option.id, index, ind)">
-                                    <path
-                                        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                                </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="max-w-4 ml-3 fill-gray-400 cursor-pointer group-option-svg invisible"
+                                        viewBox="0 0 384 512" @click="removeOption(option.id, index, ind)">
+                                        <path
+                                            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                    </svg>
+                                </div>
+                                <p class="text-sm mt-1 text-red-500" v-if="!option.name"> <span class="font-bold text-base">!</span>
+                                    Option is required</p>
                             </div>
+
                             <div class="flex items-center cursor-pointer" @click="addOption(que.id, index)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="max-w-5 fill-gray-400"
                                     viewBox="0 0 512 512">
