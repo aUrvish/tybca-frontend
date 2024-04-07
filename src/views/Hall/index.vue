@@ -152,7 +152,6 @@ const saveResponse = () => {
                     "dangerouslyHTMLString": true
                 })
                 changeStatusLoading(false)
-                page.value++
 
                 if (res.data.data) {
                     let data = res.data.data
