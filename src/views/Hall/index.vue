@@ -74,7 +74,7 @@ onMounted(
                         console.log(response);
                         let courceId = response.course.map(curr => curr.course_id)
                         if (que.value?.course_id) {
-                            if (!courceId.includes(que.value.course_id)) {
+                            if (!courceId.includes(que.value.course_id) && auth.value?.user.role_id == 2) {
                                 router.push({ name: '404' });
                             }
                         }
