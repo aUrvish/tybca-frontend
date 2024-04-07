@@ -1,10 +1,10 @@
-<script setup >
-import {onMounted, ref} from 'vue'
+<script setup>
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/store/auth'
 import { useLoadStore } from '@/store/loading'
 import { toast } from "vue3-toastify";
-const { getOverviewAction } = useAuthStore();
+const { getOverviewAction, getAuthProfileAction } = useAuthStore();
 const { changeStatusLoading } = useLoadStore();
 const { auth } = storeToRefs(useAuthStore());
 const { isLoading } = storeToRefs(useLoadStore());
@@ -13,9 +13,9 @@ const { getAllTestAction } = useQuizStore();
 
 const ActiveQuiz = ref([])
 const social = ref({
-    students : 0,
-    teachers : 0,
-    course : 0
+    students: 0,
+    teachers: 0,
+    course: 0
 })
 
 const getStatus = (start, duration) => {
@@ -47,7 +47,7 @@ onMounted(
             .then(
                 (res) => {
                     changeStatusLoading(false)
-                    if(res.data.data){
+                    if (res.data.data) {
                         let data = res.data.data;
                         social.value.students = data.students;
                         social.value.teachers = data.teachers;
@@ -57,12 +57,12 @@ onMounted(
             )
             .catch(
                 (e) => {
-                    if (e.response?.status != 401){
-                            toast(e.response.data.messages, {
-                                "type": "error",
-                                "dangerouslyHTMLString": true
-                            })
-                        }
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -74,18 +74,34 @@ onMounted(
 
                     if (res.data.data) {
                         changeStatusLoading(false)
-                        ActiveQuiz.value = res.data.data.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 1)
+
+                        getAuthProfileAction()
+                            .then(
+                                (resCource) => {
+                                    let response = resCource.data.data;
+                                    if (response) {
+                                        console.log(response);
+                                        let courceId = response.course.map(curr => curr.course_id)
+                                        ActiveQuiz.value = res.data.data.filter((curr, index) => getStatus(curr.start_at, curr.duration) == 1 && courceId.includes(curr.course_id))
+                                    }
+                                }
+                            )
+                            .catch(
+                                (e) => {
+                                    console.log(e);
+                                }
+                            )
                     }
                 }
             )
             .catch(
                 (e) => {
-                    if (e.response?.status != 401){
-                            toast(e.response.data.messages, {
-                                "type": "error",
-                                "dangerouslyHTMLString": true
-                            })
-                        }
+                    if (e.response?.status != 401) {
+                        toast(e.response.data.messages, {
+                            "type": "error",
+                            "dangerouslyHTMLString": true
+                        })
+                    }
                     changeStatusLoading(false)
                 }
             )
@@ -94,7 +110,7 @@ onMounted(
 </script>
 <template>
     <div>
-        <RouterLink :to="{name : 'StudentList'}" class="p-4 bg-[#e7e6fb] rounded-md" v-if="auth.user.role_id != 2">
+        <RouterLink :to="{ name: 'StudentList' }" class="p-4 bg-[#e7e6fb] rounded-md" v-if="auth.user.role_id != 2">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#6151fb]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" class="h-8 w-8 fill-white"
                     viewBox="0 0 640 512">
@@ -105,7 +121,8 @@ onMounted(
             <h4 class="mt-1 text-center font-bold font-sans sm:text-[20px] text-[18px]">Total Students</h4>
             <p class="text-center font-bold font-sans sm:text-[30px] text-[24px]">{{ social.students }}</p>
         </RouterLink>
-        <RouterLink :to="auth.user.role_id == 0 ? {name : 'TeacherList'} : {name : 'UserTeacherList'}"  class="p-4 bg-[#f9e5ea] rounded-md">
+        <RouterLink :to="auth.user.role_id == 0 ? { name: 'TeacherList' } : { name: 'UserTeacherList' }"
+            class="p-4 bg-[#f9e5ea] rounded-md">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#ef2b58]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" class="h-8 w-8 fill-white"
                     viewBox="0 0 640 512">
@@ -127,7 +144,7 @@ onMounted(
             <h4 class="mt-1 text-center font-bold font-sans sm:text-[20px] text-[18px]">Total Courses</h4>
             <p class="text-center font-bold font-sans sm:text-[30px] text-[24px]">{{ social.course }}</p>
         </div>
-        <RouterLink :to="{name : 'testList'}" class="p-4 bg-[#fbedd9] rounded-md" v-if="auth.user.role_id == 2">
+        <RouterLink :to="{ name: 'testList' }" class="p-4 bg-[#fbedd9] rounded-md" v-if="auth.user.role_id == 2">
             <div class="w-fit p-4 rounded-full mx-auto bg-[#ffa426]">
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" class="h-8 w-8 fill-white"
                     viewBox="0 0 512 512">
