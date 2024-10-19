@@ -1,5 +1,5 @@
 <template>
-    <button :type="type">
+    <button :type="type" :disabled="disabled">
         <slot />
     </button>
 </template>
@@ -10,6 +10,9 @@ const props = defineProps(
         type: {
             default: 'button',
         },
+        disabled : {
+            default : false
+        }
     }
 )
 </script>

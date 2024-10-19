@@ -1,13 +1,27 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+const emit = defineEmits(['changePagination'])
 
 const currentPage = ref(1)
+
+const props = defineProps({
+  totle : {
+    default : 1
+  }
+})
+
+watch(
+  currentPage,
+  (newVal) => {
+    emit('changePagination', currentPage.value)
+  }
+)
 </script>
 
 <template>
   <div class="pagination">
     <vue-awesome-paginate
-      :total-items="20"
+      :total-items="totle"
       v-model="currentPage"
       :items-per-page="1"
       :max-pages-shown="3"

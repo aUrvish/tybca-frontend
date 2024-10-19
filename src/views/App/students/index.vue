@@ -1,19 +1,24 @@
 <script setup>
-import Btn from '@/components/Btn.vue'
 import UserTable from './components/UserTable.vue';
+
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/store/auth'
+const { auth } = storeToRefs(useAuthStore());
 </script>
 
 <template>
     <div class="max-w-screen-xl mx-auto">
-        <div class="flex justify-between items-center" >
-            <h1 class="text-[24px] font-semibold">Users</h1>
-            <Btn class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
-                Add User
-            </Btn>
-        </div>
+        <div>
+            <div class="border rounded-md bg-white p-4 flex items-center justify-between">
+                <h1 class="text-[24px] font-semibold">Students</h1>
+                <div>
+                    <RouterLink :to="{ name : 'StudentAdd'}" v-if="auth.user.role_id == 0" class="text-white bg-gray-950 font-medium rounded-md text-sm px-4 py-2 text-center">
+                        Add Student
+                    </RouterLink>
+                </div>
+            </div>
 
-        <div class="mt-4" >
-            <UserTable :max="10"/>
+            <UserTable :max="10" />
         </div>
     </div>
 </template>

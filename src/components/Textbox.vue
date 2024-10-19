@@ -1,9 +1,9 @@
 <template>
     <div class="relative" >
         <label :for="id" class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
-        <input :type="id" :name="name" :id="id"
+        <input :type="type" :name="name" :id="id"
             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md block w-full p-2.5 outline-none"
-            :placeholder="placeholder">
+            :placeholder="placeholder" @input="$emit('update:modelValue', $event.target.value)" :value="props.modelValue">
     </div>
 </template>
 
@@ -24,6 +24,9 @@ const props = defineProps(
         },
         type: {
             default: 'text',
+        },
+        modelValue : {
+            default : "",
         }
     }
 )
